@@ -1,0 +1,14 @@
+guint32 magic_number;   d4c3 b2a1       => a1b2 c3d4    /* magic number */
+guint16 version_major;  0200            => 0002         /* major version number */
+guint16 version_minor;  0400            => 0004         /* minor version number */
+gint32  thiszone;       0000 0000       => 0000 0000    /* GMT to local correction */
+guint32 sigfigs;        0000 0000       => 0000 0000    /* accuracy of timestamps */
+guint32 snaplen;        0000 0400       => 0004 0000    /* max length of captured packets, in octets */
+guint32 network;        0100 0000       => 0000 0001    /* data link type */
+
+magic number: if d4c3 b2a1 => must read with swapped byte format
+
+guint32 ts_sec;         edc6 5d61       => 615d c6ed    /* timestamp seconds */
+guint32 ts_usec;        c44b 0d00       => 000d 4bc4    /* timestamp microseconds */
+guint32 incl_len;       5a00 0000       => 0000 005a    /* number of octets of packet saved in file */
+guint32 orig_len;       5a00 0000       => 0000 005a    /* actual length of packet */
