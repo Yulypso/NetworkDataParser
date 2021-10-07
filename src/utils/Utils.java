@@ -2,7 +2,6 @@ package utils;
 
 import java.io.FileInputStream;
 import java.io.InputStream;
-import java.util.Locale;
 
 public class Utils {
 
@@ -28,15 +27,24 @@ public class Utils {
         return raw;
     }
 
-    public static long read4bytesFromIndex(String raw, int pos) {
+    public static long read4bytesFromIndex(String raw, int pos, boolean isBigEndian) {
         pos *= 2;
-        String s = (""+raw.charAt(pos)+raw.charAt(pos+1)+raw.charAt(pos+2)+raw.charAt(pos+3)+raw.charAt(pos+4)+raw.charAt(pos+5)+raw.charAt(pos+6)+raw.charAt(pos+7));
+        String s;
+
+        if (isBigEndian)
+            s = ("" + raw.charAt(pos) + raw.charAt(pos + 1) + raw.charAt(pos + 2) + raw.charAt(pos + 3) + raw.charAt(pos + 4) + raw.charAt(pos + 5) + raw.charAt(pos + 6) + raw.charAt(pos + 7));
+        else
+            s = ("" + raw.charAt(pos + 6) + raw.charAt(pos + 7) + raw.charAt(pos + 4) + raw.charAt(pos + 5) + raw.charAt(pos + 2) + raw.charAt(pos + 3) + raw.charAt(pos) + raw.charAt(pos + 1));
         return Long.parseLong(s, 16);
     }
 
-    public static int read2bytesFromIndex(String raw, int pos) {
+    public static int read2bytesFromIndex(String raw, int pos, boolean isBigEndian) {
         pos *= 2;
-        String s = (""+raw.charAt(pos)+raw.charAt(pos+1)+raw.charAt(pos+2)+raw.charAt(pos+3));
+        String s;
+        if (isBigEndian)
+            s = ("" + raw.charAt(pos) + raw.charAt(pos + 1) + raw.charAt(pos + 2) + raw.charAt(pos + 3));
+        else
+            s = ("" + raw.charAt(pos + 2) + raw.charAt(pos + 3) + raw.charAt(pos) + raw.charAt(pos + 1));
         return Integer.parseInt(s,16);
     }
 

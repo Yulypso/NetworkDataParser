@@ -11,14 +11,14 @@ public class GlobalHeader {           // 24 bytes
     private final long snapLen;        // 4 bytes 16-19
     private final long network;        // 4 bytes 20-23
 
-    public GlobalHeader(String raw) {
-        this.magicNumber = Utils.read4bytesFromIndex(raw, 0);
-        this.versionMajor = Utils.read2bytesFromIndex(raw, 4);
-        this.VersionMinor = Utils.read2bytesFromIndex(raw, 6);
-        this.thisZone = Utils.read4bytesFromIndex(raw, 8);
-        this.sigFigs = Utils.read4bytesFromIndex(raw, 12);
-        this.snapLen = Utils.read4bytesFromIndex(raw, 16);
-        this.network = Utils.read4bytesFromIndex(raw, 20);
+    public GlobalHeader(String raw, boolean isBigEndian) {
+        this.magicNumber = Utils.read4bytesFromIndex(raw, 0, isBigEndian);
+        this.versionMajor = Utils.read2bytesFromIndex(raw, 4, isBigEndian);
+        this.VersionMinor = Utils.read2bytesFromIndex(raw, 6, isBigEndian);
+        this.thisZone = Utils.read4bytesFromIndex(raw, 8, isBigEndian);
+        this.sigFigs = Utils.read4bytesFromIndex(raw, 12, isBigEndian);
+        this.snapLen = Utils.read4bytesFromIndex(raw, 16, isBigEndian);
+        this.network = Utils.read4bytesFromIndex(raw, 20, isBigEndian);
     }
 
     public long getMagicNumber() {

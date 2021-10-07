@@ -16,8 +16,9 @@ public class Pcap {
         // TODO : write globalHeader (little endian)
         String raw = Utils.readPcap(path);
         System.out.println(raw);
-        this.globalHeader = new GlobalHeader(raw);
-        this.isBigEndian = checkIsBigEndian(Utils.toHexString(this.globalHeader.getMagicNumber()));
+        this.isBigEndian = checkIsBigEndian(Utils.toHexString(Utils.read4bytesFromIndex(raw, 0, true)));
+        this.globalHeader = new GlobalHeader(raw, this.isBigEndian());
+
         Utils.displayHex(this.globalHeader.getMagicNumber());
         Utils.displayHex(this.globalHeader.getVersionMajor());
         Utils.displayHex(this.globalHeader.getVersionMinor());
@@ -25,8 +26,6 @@ public class Pcap {
         Utils.displayHex(this.globalHeader.getSigFigs());
         Utils.displayHex(this.globalHeader.getSnapLen());
         Utils.displayHex(this.globalHeader.getNetwork());
-
-        System.out.println("\nis big endian: " + this.isBigEndian());
 
         // TODO : write packetHeaderList
         //this.globalHeader = new GlobalHeader();
@@ -41,7 +40,7 @@ public class Pcap {
         } else if (hexMn.equalsIgnoreCase("d4c3b2a1")) {
             isBigEndian = false;
         }
-
+        System.out.println("\nis big endian? : " + this.isBigEndian());
         return isBigEndian;
     }
 
