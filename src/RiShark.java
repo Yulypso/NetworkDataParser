@@ -1,5 +1,4 @@
 import rishark.Pcap;
-import utils.PcapReader;
 
 public class RiShark {
 

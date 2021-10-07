@@ -2,39 +2,59 @@ package rishark;
 
 import rishark.headers.GlobalHeader;
 import rishark.headers.PacketHeader;
-import utils.PcapReader;
+import utils.Utils;
 
 import java.util.List;
 
 // Contains raw data from pcap file
 public class Pcap {
-    GlobalHeader globalHeader;
-    List<PacketHeader> packetHeaderList;
+    private final boolean isBigEndian;
+    private final GlobalHeader globalHeader;
+    //private final List<PacketHeader> packetHeaderList;
 
     public Pcap(String path) {
-        PcapReader pcapReader = new PcapReader(path);
-        System.out.println((pcapReader.getRaw())); // raw data here
-
         // TODO : write globalHeader (little endian)
+        String raw = Utils.readPcap(path);
+        System.out.println(raw);
+        this.globalHeader = new GlobalHeader(raw);
+        this.isBigEndian = checkIsBigEndian(Utils.toHexString(this.globalHeader.getMagicNumber()));
+        Utils.displayHex(this.globalHeader.getMagicNumber());
+        Utils.displayHex(this.globalHeader.getVersionMajor());
+        Utils.displayHex(this.globalHeader.getVersionMinor());
+        Utils.displayHex(this.globalHeader.getThisZone());
+        Utils.displayHex(this.globalHeader.getSigFigs());
+        Utils.displayHex(this.globalHeader.getSnapLen());
+        Utils.displayHex(this.globalHeader.getNetwork());
+
+        System.out.println("\nis big endian: " + this.isBigEndian());
 
         // TODO : write packetHeaderList
         //this.globalHeader = new GlobalHeader();
         //this.packetHeaderList = new ArrayList<PacketHeader>();
     }
 
+    private boolean checkIsBigEndian(String hexMn){
+        boolean isBigEndian = true;
+        if (!(hexMn.equalsIgnoreCase("d4c3b2a1")) || hexMn.equalsIgnoreCase("a1b2c3d4")) {
+            System.out.println("Incorrect pcap Magic Number format");
+            System.exit(-1);
+        } else if (hexMn.equalsIgnoreCase("d4c3b2a1")) {
+            isBigEndian = false;
+        }
+
+        return isBigEndian;
+    }
+
     public GlobalHeader getGlobalHeader() {
         return globalHeader;
     }
 
-    public void setGlobalHeader(GlobalHeader globalHeader) {
-        this.globalHeader = globalHeader;
-    }
-
-    public List<PacketHeader> getPacketHeaderList() {
+    /*public List<PacketHeader> getPacketHeaderList() {
         return packetHeaderList;
     }
+    */
 
-    public void setPacketHeaderList(List<PacketHeader> packetHeaderList) {
-        this.packetHeaderList = packetHeaderList;
+    public boolean isBigEndian() {
+        return isBigEndian;
     }
 }
