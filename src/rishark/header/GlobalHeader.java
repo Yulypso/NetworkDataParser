@@ -1,20 +1,17 @@
-package rishark.headers;
+package rishark.header;
 
 import utils.Utils;
 
-public class GlobalHeader {           // 24 bytes
+public class GlobalHeader {            // 24 bytes
     private final long magicNumber;    // 4 bytes 0-3
-    private final int versionMajor;   // 2 bytes 4-5
-    private final int VersionMinor;   // 2 bytes 6-7
+    private final int versionMajor;    // 2 bytes 4-5
+    private final int VersionMinor;    // 2 bytes 6-7
     private final long thisZone;       // 4 bytes 8-11
     private final long sigFigs;        // 4 bytes 12-15
     private final long snapLen;        // 4 bytes 16-19
     private final long network;        // 4 bytes 20-23
 
     public GlobalHeader(String raw, boolean isBigEndian) {
-
-
-        //this.magicNumber = Utils.read4bytesFromIndex(raw, 0, isBigEndian);
         this.magicNumber = Utils.hexStringToLong(Utils.readBytesFromIndex(raw, 0, 4, isBigEndian));
         this.versionMajor = Utils.hexStringToInt(Utils.readBytesFromIndex(raw, 4, 2, isBigEndian));
         this.VersionMinor = Utils.hexStringToInt(Utils.readBytesFromIndex(raw, 6, 2, isBigEndian));
@@ -50,5 +47,9 @@ public class GlobalHeader {           // 24 bytes
 
     public long getNetwork() {
         return network;
+    }
+
+    public int getLength() {
+        return 24;
     }
 }

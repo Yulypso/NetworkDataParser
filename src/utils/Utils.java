@@ -51,7 +51,6 @@ public class Utils {
         return Integer.parseInt(s,16);
     }
 
-
     public static String toHexString(long l) {
         return String.format("%08x", l);
     }

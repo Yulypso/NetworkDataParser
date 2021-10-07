@@ -1,41 +1,49 @@
 package rishark;
 
-import rishark.headers.GlobalHeader;
-import rishark.headers.PacketHeader;
+import rishark.header.GlobalHeader;
+import rishark.packets.Packet;
 import utils.Utils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 // Contains raw data from pcap file
 public class Pcap {
     private final boolean isBigEndian;
     private final GlobalHeader globalHeader;
-    //private final List<PacketHeader> packetHeaderList;
+    private final List<Packet> packetList;
+
 
     public Pcap(String path) {
-        // TODO : write globalHeader (little endian)
+
+        /* GlobalHeader */
         String raw = Utils.readPcap(path);
         System.out.println(raw);
         this.isBigEndian = checkIsBigEndian(Utils.readBytesFromIndex(raw, 0, 4,true));
         this.globalHeader = new GlobalHeader(raw, this.isBigEndian());
 
-        Utils.displayHex(this.globalHeader.getMagicNumber());
-        System.out.print(" ");
-        Utils.displayHex(this.globalHeader.getVersionMajor());
-        System.out.print(" ");
-        Utils.displayHex(this.globalHeader.getVersionMinor());
-        System.out.print(" ");
-        Utils.displayHex(this.globalHeader.getThisZone());
-        System.out.print(" ");
-        Utils.displayHex(this.globalHeader.getSigFigs());
-        System.out.print(" ");
-        Utils.displayHex(this.globalHeader.getSnapLen());
-        System.out.print(" ");
-        Utils.displayHex(this.globalHeader.getNetwork());
+        System.out.println("GlobalHeader:");
+        System.out.println(Utils.toHexString(this.globalHeader.getMagicNumber()));
+        System.out.println(Utils.toHexString(this.globalHeader.getVersionMajor()));
+        System.out.println(Utils.toHexString(this.globalHeader.getVersionMinor()));
+        System.out.println(Utils.toHexString(this.globalHeader.getThisZone()));
+        System.out.println(Utils.toHexString(this.globalHeader.getSigFigs()));
+        System.out.println(Utils.toHexString(this.globalHeader.getSnapLen()));
+        System.out.println(Utils.toHexString(this.globalHeader.getNetwork()));
 
-        // TODO : write packetHeaderList
-        //this.globalHeader = new GlobalHeader();
-        //this.packetHeaderList = new ArrayList<PacketHeader>();
+
+        /* PacketHeaderList */
+        long pcapLength = raw.length() / 2;
+        System.out.println("raw length (bytes): " + pcapLength);
+        int currentPos = this.globalHeader.getLength();
+        this.packetList = new ArrayList<>();
+
+        while (currentPos != pcapLength) {
+            Packet packet = new Packet(raw, currentPos, this.isBigEndian());
+            this.packetList.add(packet);
+            currentPos = packet.getLastPos();
+            //System.out.println("curr pos: " + pos);
+        }
     }
 
     private boolean checkIsBigEndian(String hexMn){
@@ -61,5 +69,9 @@ public class Pcap {
 
     public boolean isBigEndian() {
         return isBigEndian;
+    }
+
+    public List<Packet> getPacketList() {
+        return packetList;
     }
 }

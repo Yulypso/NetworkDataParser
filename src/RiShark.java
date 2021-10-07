@@ -9,7 +9,7 @@ public class RiShark {
             System.exit(-1);
         }
 
-
         Pcap pcap = new Pcap(args[0]); //call reader + writer
+        System.out.println("Total Packets: " + pcap.getPacketList().size());
     }
 }
