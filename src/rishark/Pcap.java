@@ -16,15 +16,21 @@ public class Pcap {
         // TODO : write globalHeader (little endian)
         String raw = Utils.readPcap(path);
         System.out.println(raw);
-        this.isBigEndian = checkIsBigEndian(Utils.toHexString(Utils.read4bytesFromIndex(raw, 0, true)));
+        this.isBigEndian = checkIsBigEndian(Utils.readBytesFromIndex(raw, 0, 4,true));
         this.globalHeader = new GlobalHeader(raw, this.isBigEndian());
 
         Utils.displayHex(this.globalHeader.getMagicNumber());
+        System.out.print(" ");
         Utils.displayHex(this.globalHeader.getVersionMajor());
+        System.out.print(" ");
         Utils.displayHex(this.globalHeader.getVersionMinor());
+        System.out.print(" ");
         Utils.displayHex(this.globalHeader.getThisZone());
+        System.out.print(" ");
         Utils.displayHex(this.globalHeader.getSigFigs());
+        System.out.print(" ");
         Utils.displayHex(this.globalHeader.getSnapLen());
+        System.out.print(" ");
         Utils.displayHex(this.globalHeader.getNetwork());
 
         // TODO : write packetHeaderList

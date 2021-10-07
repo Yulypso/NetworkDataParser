@@ -27,26 +27,30 @@ public class Utils {
         return raw;
     }
 
-    public static long read4bytesFromIndex(String raw, int pos, boolean isBigEndian) {
+    public static String readBytesFromIndex(String raw, int pos, int nbBytes, boolean isBigEndian){
         pos *= 2;
-        String s;
+        StringBuilder sb = new StringBuilder();
 
-        if (isBigEndian)
-            s = ("" + raw.charAt(pos) + raw.charAt(pos + 1) + raw.charAt(pos + 2) + raw.charAt(pos + 3) + raw.charAt(pos + 4) + raw.charAt(pos + 5) + raw.charAt(pos + 6) + raw.charAt(pos + 7));
-        else
-            s = ("" + raw.charAt(pos + 6) + raw.charAt(pos + 7) + raw.charAt(pos + 4) + raw.charAt(pos + 5) + raw.charAt(pos + 2) + raw.charAt(pos + 3) + raw.charAt(pos) + raw.charAt(pos + 1));
+        if (isBigEndian){
+            for (int i = 0; i < nbBytes * 2; i+=2) {
+                sb.append(raw.charAt(pos + i)).append(raw.charAt(pos + i+1));
+            }
+        } else {
+            for (int i = nbBytes * 2 - 1; i >= 0; i-=2) {
+                sb.append(raw.charAt(pos + i - 1)).append(raw.charAt(pos + i));
+            }
+        }
+        return sb.toString();
+    }
+
+    public static long hexStringToLong(String s) {
         return Long.parseLong(s, 16);
     }
 
-    public static int read2bytesFromIndex(String raw, int pos, boolean isBigEndian) {
-        pos *= 2;
-        String s;
-        if (isBigEndian)
-            s = ("" + raw.charAt(pos) + raw.charAt(pos + 1) + raw.charAt(pos + 2) + raw.charAt(pos + 3));
-        else
-            s = ("" + raw.charAt(pos + 2) + raw.charAt(pos + 3) + raw.charAt(pos) + raw.charAt(pos + 1));
+    public static int hexStringToInt(String s) {
         return Integer.parseInt(s,16);
     }
+
 
     public static String toHexString(long l) {
         return String.format("%08x", l);
