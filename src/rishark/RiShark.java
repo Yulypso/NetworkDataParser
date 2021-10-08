@@ -1,4 +1,6 @@
-import rishark.Pcap;
+package rishark;
+
+import rishark.pcap.Pcap;
 
 public class RiShark {
 

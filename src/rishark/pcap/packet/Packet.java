@@ -1,17 +1,17 @@
-package rishark.packets;
+package rishark.pcap.packet;
 
-import rishark.packets.header.PacketHeader;
+import rishark.pcap.packet.header.PacketHeader;
 import utils.Utils;
 
 public class Packet {
     private final PacketHeader packetHeader;
-    private final String packetData; //retrieve size + position start
+    private final String packetData; //retrieve size + position start: Blob without any specific byte order
     private final int lastPos;
 
     public Packet(String raw, int pos, boolean isBigEndian) {
         this.packetHeader = new PacketHeader(raw, pos, isBigEndian);
         final int packetDataLength = (int) this.packetHeader.getOrigLen();
-        this.packetData = Utils.readBytesFromIndex(raw, this.packetHeader.getLastPos(), packetDataLength, isBigEndian);
+        this.packetData = Utils.readBytesFromIndex(raw, this.packetHeader.getLastPos(), packetDataLength);
         this.lastPos = this.getPacketHeader().getLastPos() + packetDataLength;
 
         System.out.println("\nPacketHeader:");

@@ -1,12 +1,12 @@
-package rishark.packets.header;
+package rishark.pcap.packet.header;
 
 import utils.Utils;
 
 public class PacketHeader {         // 16 bytes
-    private final long tsSec;       // 4 bytes 0-3
-    private final long tsUsec;      // 4 bytes 4-7
-    private final long inclLen;     // 4 bytes 8-11
-    private final long origLen;     // 4 bytes 12-15
+    private final long tsSec;       // timestamp in secondes 4 bytes 0-3
+    private final long tsUsec;      // timestamp in microseconds 4 bytes 4-7
+    private final long inclLen;     // number of octets of packet saved in file 4 bytes 8-11
+    private final long origLen;     // actual length of packet 4 bytes 12-15
 
     private final int lastPos;
 

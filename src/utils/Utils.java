@@ -43,6 +43,17 @@ public class Utils {
         return sb.toString();
     }
 
+    public static String readBytesFromIndex(String raw, int pos, int nbBytes){
+        pos *= 2;
+        StringBuilder sb = new StringBuilder();
+
+        for (int i = 0; i < nbBytes * 2; i+=2) {
+            sb.append(raw.charAt(pos + i)).append(raw.charAt(pos + i+1));
+        }
+
+        return sb.toString();
+    }
+
     public static long hexStringToLong(String s) {
         return Long.parseLong(s, 16);
     }

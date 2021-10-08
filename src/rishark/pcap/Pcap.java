@@ -1,7 +1,7 @@
-package rishark;
+package rishark.pcap;
 
-import rishark.header.GlobalHeader;
-import rishark.packets.Packet;
+import rishark.pcap.header.GlobalHeader;
+import rishark.pcap.packet.Packet;
 import utils.Utils;
 
 import java.util.ArrayList;
