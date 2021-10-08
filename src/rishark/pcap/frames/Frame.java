@@ -1,5 +1,6 @@
 package rishark.pcap.frames;
 
+import rishark.pcap.frames.physicalbit.PhysicalBit;
 import utils.Utils;
 
 public class Frame {
@@ -24,7 +25,8 @@ public class Frame {
         //thanks to header, read packet data, pos: position packetHeader
         System.out.println(this.frameData);
 
-        //LinkFrame linkFrame = new LinkFrame(this.physicalBitData);
+        // TODO
+        //PhysicalBit physicalBit = new PhysicalBit(this.frameData);
     }
 
     public PacketHeader getPacketHeader() {
