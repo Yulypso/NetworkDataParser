@@ -1,6 +1,4 @@
-package rishark.pcap.physicalbit.linkframe;
-
-import rishark.pcap.physicalbit.linkframe.header.LinkFrameHeader;
+package rishark.pcap.frames.linkframe;
 
 public class LinkFrame {
 

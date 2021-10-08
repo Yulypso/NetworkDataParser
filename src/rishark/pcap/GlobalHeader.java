@@ -1,4 +1,4 @@
-package rishark.pcap.header;
+package rishark.pcap;
 
 import utils.Utils;
 

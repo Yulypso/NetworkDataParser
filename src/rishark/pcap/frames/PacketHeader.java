@@ -1,8 +1,8 @@
-package rishark.pcap.physicalbit.header;
+package rishark.pcap.frames;
 
 import utils.Utils;
 
-public class PhysicalBitHeader {         // 16 bytes
+public class PacketHeader {         // 16 bytes
     private final long tsSec;       // timestamp in secondes 4 bytes 0-3
     private final long tsUsec;      // timestamp in microseconds 4 bytes 4-7
     private final long inclLen;     // number of octets of packet saved in file 4 bytes 8-11
@@ -10,7 +10,7 @@ public class PhysicalBitHeader {         // 16 bytes
 
     private final int lastPos;
 
-    public PhysicalBitHeader(String raw, int pos, boolean isBigEndian){
+    public PacketHeader(String raw, int pos, boolean isBigEndian){
         this.tsSec = Utils.hexStringToLong(Utils.readBytesFromIndex(raw, pos, 4, isBigEndian));
         this.tsUsec = Utils.hexStringToLong(Utils.readBytesFromIndex(raw, pos+4, 4, isBigEndian));
         this.inclLen = Utils.hexStringToLong(Utils.readBytesFromIndex(raw, pos+8, 4, isBigEndian));
