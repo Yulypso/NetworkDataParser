@@ -1,5 +1,6 @@
 package rishark;
 
+import rishark.parser.PcapParser;
 import rishark.pcap.Pcap;
 
 public class RiShark {
@@ -13,5 +14,8 @@ public class RiShark {
 
         Pcap pcap = new Pcap(args[0]); //call reader + writer
         System.out.println("Total Packets: " + pcap.getPhysicalBitList().size());
+
+        PcapParser pcapParser = new PcapParser(pcap);
+        pcapParser.parseGlobalHeader();
     }
 }

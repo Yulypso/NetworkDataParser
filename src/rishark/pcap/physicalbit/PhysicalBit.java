@@ -1,6 +1,7 @@
 package rishark.pcap.physicalbit;
 
 import rishark.pcap.physicalbit.header.PhysicalBitHeader;
+import rishark.pcap.physicalbit.linkframe.LinkFrame;
 import utils.Utils;
 
 public class PhysicalBit {
@@ -24,6 +25,8 @@ public class PhysicalBit {
         System.out.println("Length: " + packetDataLength);
         //thanks to header, read packet data, pos: position packetHeader
         System.out.println(this.physicalBitData);
+
+        //LinkFrame linkFrame = new LinkFrame(this.physicalBitData);
     }
 
     public PhysicalBitHeader getPhysicalBitHeader() {

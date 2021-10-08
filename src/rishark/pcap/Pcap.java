@@ -22,26 +22,17 @@ public class Pcap {
         this.isBigEndian = checkIsBigEndian(Utils.readBytesFromIndex(raw, 0, 4,true));
         this.globalHeader = new GlobalHeader(raw, this.isBigEndian());
 
-        System.out.println("GlobalHeader:");
-        System.out.println(Utils.toHexString(this.globalHeader.getMagicNumber()));
-        System.out.println(Utils.toHexString(this.globalHeader.getVersionMajor()));
-        System.out.println(Utils.toHexString(this.globalHeader.getVersionMinor()));
-        System.out.println(Utils.toHexString(this.globalHeader.getThisZone()));
-        System.out.println(Utils.toHexString(this.globalHeader.getSigFigs()));
-        System.out.println(Utils.toHexString(this.globalHeader.getSnapLen()));
-        System.out.println(Utils.toHexString(this.globalHeader.getNetwork()));
 
-
-        /* PacketHeaderList */
+        /* physicalBitList */
         long pcapLength = raw.length() / 2;
         System.out.println("raw length (bytes): " + pcapLength);
         int currentPos = this.globalHeader.getLength();
         this.physicalBitList = new ArrayList<>();
 
         while (currentPos != pcapLength) {
-            PhysicalBit packet = new PhysicalBit(raw, currentPos, this.isBigEndian());
-            this.physicalBitList.add(packet);
-            currentPos = packet.getLastPos();
+            PhysicalBit physicalBit = new PhysicalBit(raw, currentPos, this.isBigEndian());
+            this.physicalBitList.add(physicalBit);
+            currentPos = physicalBit.getLastPos();
             //System.out.println("curr pos: " + pos);
         }
     }
@@ -61,11 +52,6 @@ public class Pcap {
     public GlobalHeader getGlobalHeader() {
         return globalHeader;
     }
-
-    /*public List<PacketHeader> getPacketHeaderList() {
-        return packetHeaderList;
-    }
-    */
 
     public boolean isBigEndian() {
         return isBigEndian;
