@@ -16,6 +16,9 @@ public class RiShark {
         System.out.println("Total Packets: " + pcap.getPhysicalBitList().size());
 
         PcapParser pcapParser = new PcapParser(pcap);
+
+        pcapParser.numberOfFrames();
         pcapParser.parseGlobalHeader();
+        pcapParser.parseFrame(0, 1, 12);
     }
 }

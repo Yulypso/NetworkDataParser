@@ -22,6 +22,10 @@ public class Pcap {
         this.isBigEndian = checkIsBigEndian(Utils.readBytesFromIndex(raw, 0, 4,true));
         this.globalHeader = new GlobalHeader(raw, this.isBigEndian());
 
+        if (this.globalHeader.getNetwork() != 1){
+            System.out.println("Data link type is not Ethernet, Untreated.");
+            System.exit(-1);
+        }
 
         /* physicalBitList */
         long pcapLength = raw.length() / 2;
