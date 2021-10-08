@@ -1,7 +1,7 @@
 package rishark.pcap;
 
 import rishark.pcap.header.GlobalHeader;
-import rishark.pcap.packet.Packet;
+import rishark.pcap.physicalbit.PhysicalBit;
 import utils.Utils;
 
 import java.util.ArrayList;
@@ -11,7 +11,7 @@ import java.util.List;
 public class Pcap {
     private final boolean isBigEndian;
     private final GlobalHeader globalHeader;
-    private final List<Packet> packetList;
+    private final List<PhysicalBit> physicalBitList;
 
 
     public Pcap(String path) {
@@ -36,11 +36,11 @@ public class Pcap {
         long pcapLength = raw.length() / 2;
         System.out.println("raw length (bytes): " + pcapLength);
         int currentPos = this.globalHeader.getLength();
-        this.packetList = new ArrayList<>();
+        this.physicalBitList = new ArrayList<>();
 
         while (currentPos != pcapLength) {
-            Packet packet = new Packet(raw, currentPos, this.isBigEndian());
-            this.packetList.add(packet);
+            PhysicalBit packet = new PhysicalBit(raw, currentPos, this.isBigEndian());
+            this.physicalBitList.add(packet);
             currentPos = packet.getLastPos();
             //System.out.println("curr pos: " + pos);
         }
@@ -71,7 +71,7 @@ public class Pcap {
         return isBigEndian;
     }
 
-    public List<Packet> getPacketList() {
-        return packetList;
+    public List<PhysicalBit> getPhysicalBitList() {
+        return physicalBitList;
     }
 }

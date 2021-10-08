@@ -12,6 +12,6 @@ public class RiShark {
         }
 
         Pcap pcap = new Pcap(args[0]); //call reader + writer
-        System.out.println("Total Packets: " + pcap.getPacketList().size());
+        System.out.println("Total Packets: " + pcap.getPhysicalBitList().size());
     }
 }
