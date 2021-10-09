@@ -9,7 +9,7 @@ public class LinkFrame {
 
     private NetworkPacket networkPacket;
     private LinkProtocol linkProtocol;
-
+                                        // 14 bytes
     private final String srcAdress;     // 6 bytes
     private final String destAdress;    // 6 bytes
     private final String etherType;     // 2 bytes

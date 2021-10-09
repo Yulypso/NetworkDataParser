@@ -73,7 +73,8 @@ public class PcapParser {
         switch (Objects.requireNonNull(e)) {
             case ARP -> {
                 new ArpParser(this.pcap.getFrameList().get(s).getLinkFrame().getLinkProtocol()).parse();
-                return (this.pcap.getFrameList().get(s).getPacketHeader().getOrigLen() == this.pcap.getFrameList().get(s).getLinkFrame().getLinkFrameSize()); // End of frame, no more layer above ARP
+                return (this.pcap.getFrameList().get(s).getPacketHeader().getOrigLen() ==
+                        this.pcap.getFrameList().get(s).getLinkFrame().getLinkFrameSize()); // End of frame, no more layer above ARP
             }
         }
         //System.out.println("Parse Network Packet: " + Arrays.toString(new int[]{this.pcap.getFrameList().get(s).getLinkFrame().getNetworkPacket().getNetworkProtocol().getClass().getDeclaredMethods().length}));

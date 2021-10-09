@@ -26,6 +26,10 @@ public class ArpParser {
         System.out.println("Sender IP Address: " + Utils.bytesToIP(((Arp) this.linkProtocol).getSenderIpAddress()));
         System.out.println("Target MAC Address: " + ((Arp) this.linkProtocol).getTargetMacAddress().replaceAll("(..)(?!$)", "$1:"));
         System.out.println("Target IP Address: " + Utils.bytesToIP(((Arp) this.linkProtocol).getTargetIpAddress()));
-
+        System.out.println((((Arp) this.linkProtocol).getPadding() != null) ?
+                "Padding: " + ((Arp) this.linkProtocol).getPadding()
+                 + " (" + ((Arp) this.linkProtocol).getPadding().length() / 2
+                 + " byte" + (((Arp) this.linkProtocol).getPadding().length() / 2 != 0 ?
+                 "s" : "") + ")" : "");
     }
 }
