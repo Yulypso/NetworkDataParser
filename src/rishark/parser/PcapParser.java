@@ -67,6 +67,8 @@ public class PcapParser {
 
     private void parseLinkFrame(int s) {
         /* Data Link layer (Data Frames) */
+        System.out.println("Protocol type: " + this.pcap.getFrameList().get(s).getPhysicalBit().getLinkFrame());
+
     }
 
     private void parseNetworkPacket(int s) {

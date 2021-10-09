@@ -19,6 +19,6 @@ public class RiShark {
 
         pcapParser.numberOfFrames();
         pcapParser.parseGlobalHeader();
-        pcapParser.parseFrame(26);
+        pcapParser.parseFrame(41);
     }
 }

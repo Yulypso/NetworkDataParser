@@ -5,6 +5,8 @@ import utils.Utils;
 
 public class PhysicalBit {
 
+    private LinkFrame linkFrame;
+
     private final String srcAdress;
     private final String destAdress;
     private final String etherType;
@@ -24,7 +26,7 @@ public class PhysicalBit {
             System.out.println("EtherType is Untreated.");
         } else {
             /* Continue decapsulation */
-            LinkFrame linkFrame = new LinkFrame(this.raw, e);
+            this.linkFrame = new LinkFrame(this.raw, e);
         }
     }
 
@@ -42,5 +44,9 @@ public class PhysicalBit {
 
     public String getRaw() {
         return raw;
+    }
+
+    public LinkFrame getLinkFrame() {
+        return linkFrame;
     }
 }
