@@ -14,9 +14,9 @@ public class LinkFrame {
         System.out.println("ethertype: " + etherType);
 
         switch (etherType) {
-            case ARP -> this.linkProtocol = new Arp();
-            case IPv4 -> this.linkProtocol = new Ipv4();
-            case IPv6 -> this.linkProtocol = new Ipv6();
+            case ARP -> this.linkProtocol = new Arp(raw);
+            case IPv4 -> this.linkProtocol = new Ipv4(raw);
+            case IPv6 -> this.linkProtocol = new Ipv6(raw);
         }
     }
 

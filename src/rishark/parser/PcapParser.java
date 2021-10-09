@@ -4,6 +4,7 @@ import rishark.pcap.Pcap;
 import rishark.pcap.frame.physicalbit.EtherType;
 import utils.Utils;
 
+import java.util.Arrays;
 import java.util.Calendar;
 
 public class PcapParser {
@@ -39,7 +40,7 @@ public class PcapParser {
             System.out.println("--- [Physical layer Bits] ---");
             this.parsePhysicalBit(s);
             System.out.println("--- [Data Link layer Frame ] ---");
-            //this.parseLinkFrame(s);
+            this.parseLinkFrame(s);
             System.out.println("--- [Network layer Packet] ---");
             //this.parseNetworkPacket(s);
             System.out.println("--- [Transport layer Segment/Datagram ] ---");
@@ -67,7 +68,7 @@ public class PcapParser {
 
     private void parseLinkFrame(int s) {
         /* Data Link layer (Data Frames) */
-        System.out.println("Protocol type: " + this.pcap.getFrameList().get(s).getPhysicalBit().getLinkFrame());
+        System.out.println("Parse Link Frame: " + Arrays.toString(new int[]{this.pcap.getFrameList().get(s).getPhysicalBit().getLinkFrame().getLinkProtocol().getClass().getDeclaredMethods().length}));
 
     }
 

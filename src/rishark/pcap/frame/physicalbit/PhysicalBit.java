@@ -7,9 +7,9 @@ public class PhysicalBit {
 
     private LinkFrame linkFrame;
 
-    private final String srcAdress;
-    private final String destAdress;
-    private final String etherType;
+    private final String srcAdress;     // 6 bytes
+    private final String destAdress;    // 6 bytes
+    private final String etherType;     // 2 bytes
 
     private final String raw;
 
