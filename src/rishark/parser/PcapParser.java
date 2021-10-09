@@ -30,21 +30,19 @@ public class PcapParser {
     }
 
     public void parseFrame(int... selected) { /* First frame is at index 0 */
-        /* Physical scope (bits) */
-
         for (int s : selected) {
             s--;
             System.out.println("\n******** [Frame n°" + (s+1) + "] ********");
             System.out.println("***** [Frame Header] *****");
             this.parseFrameHeader(s);
             System.out.println("***** [Frame Data] *****");
-            System.out.println("--- [Physical Bit scope] ---");
+            System.out.println("--- [Physical layer Bits] ---");
             this.parsePhysicalBit(s);
-            System.out.println("--- [Data Link Frame scope] ---");
+            System.out.println("--- [Data Link layer Frame ] ---");
             //this.parseLinkFrame(s);
-            System.out.println("--- [Network Packet scope] ---");
+            System.out.println("--- [Network layer Packet] ---");
             //this.parseNetworkPacket(s);
-            System.out.println("--- [Transport Segment/Datagram scope] ---");
+            System.out.println("--- [Transport layer Segment/Datagram ] ---");
             //this.parseTransportSegment(s);
         }
     }
@@ -61,21 +59,21 @@ public class PcapParser {
     }
 
     private void parsePhysicalBit(int s) {
-        /* Physical scope (bits) */
-        System.out.println("Destination MAC address: " + this.pcap.getFrameList().get(s).getPhysicalBit().getDestAdress());
-        System.out.println("Source MAC address: " + this.pcap.getFrameList().get(s).getPhysicalBit().getSrcAdress());
+        /* Physical layer (bits) */
+        System.out.println("Destination MAC address: " + this.pcap.getFrameList().get(s).getPhysicalBit().getDestAdress().replaceAll("(..)(?!$)", "$1:"));
+        System.out.println("Source MAC address: " + this.pcap.getFrameList().get(s).getPhysicalBit().getSrcAdress().replaceAll("(..)(?!$)", "$1:"));
         System.out.println("Protocol type: " + EtherType.findEtherType(this.pcap.getFrameList().get(s).getPhysicalBit().getEtherType()));
     }
 
     private void parseLinkFrame(int s) {
-        /* Data Link scope (Data Frames) */
+        /* Data Link layer (Data Frames) */
     }
 
     private void parseNetworkPacket(int s) {
-        /* Data Link scope (Network Packets) */
+        /* Data Link layer (Network Packets) */
     }
 
     private void parseTransportSegment(int s) {
-        /* Data Link scope (Transport Segments or Datagrams) */
+        /* Data Link layer (Transport Segments or Datagrams) */
     }
 }
