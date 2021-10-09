@@ -1,11 +1,14 @@
-package rishark.pcap.frame.physicalbit;
+package rishark.pcap.frame.link;
 
-import rishark.pcap.frame.physicalbit.linkframe.LinkFrame;
+import rishark.pcap.frame.link.network.NetworkPacket;
+import rishark.pcap.frame.link.protocols.Arp;
+import rishark.pcap.frame.link.protocols.LinkProtocol;
 import utils.Utils;
 
-public class PhysicalBit {
+public class LinkFrame {
 
-    private LinkFrame linkFrame;
+    private NetworkPacket networkPacket;
+    private LinkProtocol linkProtocol;
 
     private final String srcAdress;     // 6 bytes
     private final String destAdress;    // 6 bytes
@@ -13,7 +16,7 @@ public class PhysicalBit {
 
     private final String raw;
 
-    public PhysicalBit(String raw) {
+    public LinkFrame(String raw) {
         this.destAdress = Utils.readBytesFromIndex(raw, 0, 6);
         this.srcAdress = Utils.readBytesFromIndex(raw, 6, 6);
         this.etherType = Utils.readBytesFromIndex(raw, 12, 2);
@@ -26,7 +29,10 @@ public class PhysicalBit {
             System.out.println("EtherType is Untreated.");
         } else {
             /* Continue decapsulation */
-            this.linkFrame = new LinkFrame(this.raw, e);
+            switch (e) {
+                case ARP -> this.linkProtocol = new Arp(this.raw);
+                default -> this.networkPacket = new NetworkPacket(this.raw, e);
+            }
         }
     }
 
@@ -46,7 +52,15 @@ public class PhysicalBit {
         return raw;
     }
 
-    public LinkFrame getLinkFrame() {
-        return linkFrame;
+    public NetworkPacket getNetworkPacket() {
+        return networkPacket;
+    }
+
+    public LinkProtocol getLinkProtocol() {
+        return linkProtocol;
+    }
+
+    public long getLinkFrameSize() {
+        return 14 + this.linkProtocol.getSize();
     }
 }

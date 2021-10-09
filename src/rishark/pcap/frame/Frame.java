@@ -1,11 +1,11 @@
 package rishark.pcap.frame;
 
-import rishark.pcap.frame.physicalbit.PhysicalBit;
+import rishark.pcap.frame.link.LinkFrame;
 import utils.Utils;
 
 public class Frame {
     private final PacketHeader packetHeader;
-    private final PhysicalBit physicalBit;
+    private final LinkFrame linkFrame;
     private final String raw; //retrieve size + position start: Blob without any specific byte order
 
     private final int lastPos;
@@ -27,7 +27,7 @@ public class Frame {
         //thanks to header, read packet data, pos: position packetHeader
         //System.out.println(this.raw);
 
-        this.physicalBit = new PhysicalBit(this.raw);
+        this.linkFrame = new LinkFrame(this.raw);
     }
 
     public PacketHeader getPacketHeader() {
@@ -42,7 +42,7 @@ public class Frame {
         return lastPos;
     }
 
-    public PhysicalBit getPhysicalBit() {
-        return physicalBit;
+    public LinkFrame getLinkFrame() {
+        return linkFrame;
     }
 }

@@ -77,4 +77,13 @@ public class Utils {
     public static void displayHex(int i) {
         System.out.printf("%04x", i);
     }
+
+    public static String bytesToIP(String bytes){
+        String[] ss = bytes.replaceAll("(..)(?!$)", "$1%").split("%");
+        StringBuilder sb = new StringBuilder();
+        for (String s: ss) {
+            sb.append(hexStringToInt(s)).append(".");
+        }
+        return sb.substring(0, sb.length()-1);
+    }
 }

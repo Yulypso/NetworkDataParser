@@ -1,11 +1,14 @@
 package rishark.parser;
 
 import rishark.pcap.Pcap;
-import rishark.pcap.frame.physicalbit.EtherType;
+import rishark.pcap.frame.link.EtherType;
+import rishark.pcap.frame.link.network.protocols.NetworkProtocol;
+import rishark.pcap.frame.link.protocols.Arp;
 import utils.Utils;
 
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Objects;
 
 public class PcapParser {
 
@@ -31,16 +34,17 @@ public class PcapParser {
     }
 
     public void parseFrame(int... selected) { /* First frame is at index 0 */
+
         for (int s : selected) {
             s--;
             System.out.println("\n******** [Frame n°" + (s+1) + "] ********");
             System.out.println("***** [Frame Header] *****");
+            System.out.println("--- [Physical layer Bits] ---");
             this.parseFrameHeader(s);
             System.out.println("***** [Frame Data] *****");
-            System.out.println("--- [Physical layer Bits] ---");
-            this.parsePhysicalBit(s);
             System.out.println("--- [Data Link layer Frame ] ---");
-            this.parseLinkFrame(s);
+            if (this.parseLinkFrame(s))
+                continue;
             System.out.println("--- [Network layer Packet] ---");
             //this.parseNetworkPacket(s);
             System.out.println("--- [Transport layer Segment/Datagram ] ---");
@@ -49,7 +53,7 @@ public class PcapParser {
     }
 
     private void parseFrameHeader(int s) {
-        /* Equivalent to Packet Header in Wireshark documentation */
+        /* Physical layer (bits) (equivalent to packet header in Wireshark) */
         Calendar c = Calendar.getInstance();
         String reformat = "" + this.pcap.getFrameList().get(s).getPacketHeader().getTsSec() + "000";
         c.setTimeInMillis(Long.parseLong(reformat, 10));
@@ -59,24 +63,31 @@ public class PcapParser {
         System.out.println("Actual length of packet: " + this.pcap.getFrameList().get(s).getPacketHeader().getOrigLen());
     }
 
-    private void parsePhysicalBit(int s) {
-        /* Physical layer (bits) */
-        System.out.println("Destination MAC address: " + this.pcap.getFrameList().get(s).getPhysicalBit().getDestAdress().replaceAll("(..)(?!$)", "$1:"));
-        System.out.println("Source MAC address: " + this.pcap.getFrameList().get(s).getPhysicalBit().getSrcAdress().replaceAll("(..)(?!$)", "$1:"));
-        System.out.println("Protocol type: " + EtherType.findEtherType(this.pcap.getFrameList().get(s).getPhysicalBit().getEtherType()));
-    }
-
-    private void parseLinkFrame(int s) {
+    private boolean parseLinkFrame(int s) {
         /* Data Link layer (Data Frames) */
-        System.out.println("Parse Link Frame: " + Arrays.toString(new int[]{this.pcap.getFrameList().get(s).getPhysicalBit().getLinkFrame().getLinkProtocol().getClass().getDeclaredMethods().length}));
+        System.out.println("Destination MAC address: " + this.pcap.getFrameList().get(s).getLinkFrame().getDestAdress().replaceAll("(..)(?!$)", "$1:"));
+        System.out.println("Source MAC address: " + this.pcap.getFrameList().get(s).getLinkFrame().getSrcAdress().replaceAll("(..)(?!$)", "$1:"));
+        EtherType e = EtherType.findEtherType(this.pcap.getFrameList().get(s).getLinkFrame().getEtherType());
+        System.out.println("Ether type: " + e);
 
+        switch (Objects.requireNonNull(e)) {
+            case ARP -> {
+                new ArpParser(this.pcap.getFrameList().get(s).getLinkFrame().getLinkProtocol()).parse();
+                return (this.pcap.getFrameList().get(s).getPacketHeader().getOrigLen() == this.pcap.getFrameList().get(s).getLinkFrame().getLinkFrameSize()); // End of frame, no more layer above ARP
+            }
+        }
+        //System.out.println("Parse Network Packet: " + Arrays.toString(new int[]{this.pcap.getFrameList().get(s).getLinkFrame().getNetworkPacket().getNetworkProtocol().getClass().getDeclaredMethods().length}));
+        return false;
     }
 
     private void parseNetworkPacket(int s) {
-        /* Data Link layer (Network Packets) */
+        /* Network layer (Data Frames) */
+        System.out.println("Parse Network Packet: " + Arrays.toString(new int[]{this.pcap.getFrameList().get(s).getLinkFrame().getNetworkPacket().getNetworkProtocol().getClass().getDeclaredMethods().length}));
+        System.out.println("Parse Network class: " + this.pcap.getFrameList().get(s).getLinkFrame().getNetworkPacket().getNetworkProtocol().getClass().equals(NetworkProtocol.class));
+
     }
 
     private void parseTransportSegment(int s) {
-        /* Data Link layer (Transport Segments or Datagrams) */
+        /* Transport layer (Transport Segments or Datagrams) */
     }
 }
