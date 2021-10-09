@@ -1,6 +1,7 @@
 package rishark.parser;
 
 import rishark.pcap.Pcap;
+import rishark.pcap.frame.physicalbit.EtherType;
 import utils.Utils;
 
 import java.util.Calendar;
@@ -32,15 +33,18 @@ public class PcapParser {
         /* Physical scope (bits) */
 
         for (int s : selected) {
-            System.out.println("\n******** [Frame n°" + s + "] ********");
+            s--;
+            System.out.println("\n******** [Frame n°" + (s+1) + "] ********");
             System.out.println("***** [Frame Header] *****");
             this.parseFrameHeader(s);
             System.out.println("***** [Frame Data] *****");
-            System.out.println("--- [Data Link Frame] ---");
+            System.out.println("--- [Physical Bit scope] ---");
+            this.parsePhysicalBit(s);
+            System.out.println("--- [Data Link Frame scope] ---");
             //this.parseLinkFrame(s);
-            System.out.println("--- [Network Packet] ---");
+            System.out.println("--- [Network Packet scope] ---");
             //this.parseNetworkPacket(s);
-            System.out.println("--- [Transport Segment/Datagram] ---");
+            System.out.println("--- [Transport Segment/Datagram scope] ---");
             //this.parseTransportSegment(s);
         }
     }
@@ -56,15 +60,22 @@ public class PcapParser {
         System.out.println("Actual length of packet: " + this.pcap.getFrameList().get(s).getPacketHeader().getOrigLen());
     }
 
+    private void parsePhysicalBit(int s) {
+        /* Physical scope (bits) */
+        System.out.println("Destination MAC address: " + this.pcap.getFrameList().get(s).getPhysicalBit().getDestAdress());
+        System.out.println("Source MAC address: " + this.pcap.getFrameList().get(s).getPhysicalBit().getSrcAdress());
+        System.out.println("Protocol type: " + EtherType.findEtherType(this.pcap.getFrameList().get(s).getPhysicalBit().getEtherType()));
+    }
+
     private void parseLinkFrame(int s) {
         /* Data Link scope (Data Frames) */
     }
 
     private void parseNetworkPacket(int s) {
-        /* Data Link scope (Data Frames) */
+        /* Data Link scope (Network Packets) */
     }
 
     private void parseTransportSegment(int s) {
-        /* Data Link scope (Data Frames) */
+        /* Data Link scope (Transport Segments or Datagrams) */
     }
 }

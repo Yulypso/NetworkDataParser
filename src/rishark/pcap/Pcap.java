@@ -1,6 +1,6 @@
 package rishark.pcap;
 
-import rishark.pcap.frames.Frame;
+import rishark.pcap.frame.Frame;
 import utils.Utils;
 
 import java.util.ArrayList;
@@ -33,9 +33,9 @@ public class Pcap {
         this.frameList = new ArrayList<>();
 
         while (currentPos != pcapLength) {
-            Frame physicalBit = new Frame(raw, currentPos, this.isBigEndian());
-            this.frameList.add(physicalBit);
-            currentPos = physicalBit.getLastPos();
+            Frame frame = new Frame(raw, currentPos, this.isBigEndian());
+            this.frameList.add(frame);
+            currentPos = frame.getLastPos();
             //System.out.println("curr pos: " + pos);
         }
     }

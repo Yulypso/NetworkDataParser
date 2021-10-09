@@ -1,4 +1,4 @@
-package rishark.pcap.frames;
+package rishark.pcap.frame;
 
 import utils.Utils;
 
