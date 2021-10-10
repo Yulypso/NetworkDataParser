@@ -71,6 +71,7 @@ public class Arp implements LinkProtocol {
         return (this.padding != null ? Utils.readBytesFromIndex(padding, 0, this.padding.length() / 2) : null);
     }
 
+    @Override
     public long getSize() {
         return (getPadding() == null ? 28 : 28 + getPadding().length() / 2);
     }

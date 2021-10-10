@@ -1,10 +1,10 @@
-package rishark.pcap.frame.link.network.protocols.ipv4;
+package rishark.pcap.frame.link.network.protocols;
 
-public enum Protocol {
+public enum IpProtocol {
 
     IPv6_Hop_by_Hop_Option(0),
     ICMP(1),
-    IGMP_RGMP(2),
+    IGMP(2),
     GGP(3),
     IPv4(4),
     ST(5),
@@ -60,7 +60,7 @@ public enum Protocol {
     Minimal_Encapsulation_Protocol(55),
     TLSP(56),
     SKIP(57),
-    ICMPv6_MLD(58),
+    ICMPv6(58),
     IPv6_No_Next_Header(59),
     Destination_Options_for_IPv6(60),
     Any_host_internal_protocol(61),
@@ -138,20 +138,26 @@ public enum Protocol {
     Fibre_Channel(133),
     RSVP_E2E_IGNORE(134),
     Mobility_Header1(135),
-    Mobility_Header2(136),
+    UDPLite(136),
     MPLS_in_IP(137),
+    manet(138),
+    HIP(139),
+    Shim6(140),
+    WESP(141),
+    ROHC(142),
+    Ethernet(143),
     Testing1(253),
     Testing2(254),
     Reserved(255);
 
     private final int protocol;
 
-    Protocol(int protocol) {
+    IpProtocol(int protocol) {
         this.protocol = protocol;
     }
 
-    public static Protocol findProtocol(int i){
-        for(Protocol p : Protocol.values()) {
+    public static IpProtocol findProtocol(int i){
+        for(IpProtocol p : IpProtocol.values()) {
             if(p.getProtocol() == i) {
                 return p;
             }

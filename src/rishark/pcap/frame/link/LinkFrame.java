@@ -7,8 +7,10 @@ import utils.Utils;
 
 public class LinkFrame {
 
+    private LinkProtocol linkProtocol; // ARP
     private NetworkPacket networkPacket;
-    private LinkProtocol linkProtocol;
+
+    /* Base */
                                         // 14 bytes
     private final String srcAdress;     // 6 bytes
     private final String destAdress;    // 6 bytes
@@ -26,7 +28,7 @@ public class LinkFrame {
         Protocol e;
         if ((e = Protocol.findEtherType(this.etherType)) == null) {
             /* Only IPv4, IPv6 and ARP are treated */
-            System.out.println("EtherType is Untreated.");
+            System.out.println("EtherType untreated.");
         } else {
             /* Continue decapsulation */
             switch (e) {

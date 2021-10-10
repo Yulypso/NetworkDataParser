@@ -2,6 +2,7 @@ package rishark.parser;
 
 import rishark.pcap.Pcap;
 import rishark.pcap.frame.link.Protocol;
+import rishark.pcap.frame.link.network.protocols.IpProtocol;
 import utils.Utils;
 
 import java.util.Calendar;
@@ -97,9 +98,13 @@ public class PcapParser {
         /* Network layer (Data Frames) */
         Protocol e = Protocol.findEtherType(this.pcap.getFrameList().get(s).getLinkFrame().getEtherType());
         switch (Objects.requireNonNull(e)) {
-            case IPv4 -> {
-                new IPv4Parser(this.pcap.getFrameList().get(s).getLinkFrame().getNetworkPacket().getNetworkProtocol()).parse();
-            }
+            case IPv4 -> new IPv4Parser(this.pcap.getFrameList().get(s).getLinkFrame().getNetworkPacket().getNetworkProtocolBase()).parse();
+            case IPv6 -> {}
+        }
+
+        IpProtocol i = IpProtocol.findProtocol(this.pcap.getFrameList().get(s).getLinkFrame().getNetworkPacket().getIpProtocol());
+        switch (Objects.requireNonNull(i)) {
+            case ICMP -> new ICMPParser(this.pcap.getFrameList().get(s).getLinkFrame().getNetworkPacket().getNetworkProtocol()).parse();
         }
     }
 

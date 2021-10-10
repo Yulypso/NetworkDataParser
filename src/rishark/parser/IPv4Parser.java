@@ -3,7 +3,7 @@ package rishark.parser;
 import rishark.pcap.frame.link.network.protocols.NetworkProtocol;
 import rishark.pcap.frame.link.network.protocols.ipv4.IpVersion;
 import rishark.pcap.frame.link.network.protocols.ipv4.Ipv4;
-import rishark.pcap.frame.link.network.protocols.ipv4.Protocol;
+import rishark.pcap.frame.link.network.protocols.IpProtocol;
 import utils.Utils;
 
 import java.util.Objects;
@@ -27,7 +27,7 @@ public class IPv4Parser {
         System.out.println("Flags: " + this.parseFlag(((Ipv4) this.networkProtocol).getFlag()));
         System.out.println("Fragment offset: " + ((Ipv4) this.networkProtocol).getFragmentOffset());
         System.out.println("Time to Live (TTL): " + ((Ipv4) this.networkProtocol).getTtl());
-        System.out.println("Protocol: " + Objects.requireNonNull(Protocol.findProtocol(((Ipv4) this.networkProtocol).getProtocol())).toString().replaceAll("_"," "));
+        System.out.println("Protocol: " + Objects.requireNonNull(IpProtocol.findProtocol(this.networkProtocol.getIpProtocol())).toString().replaceAll("_"," "));
         System.out.println("Header Checksum: 0x" + ((Ipv4) this.networkProtocol).getChecksum());
         System.out.println("Source Address: " + Utils.bytesToIP(((Ipv4) this.networkProtocol).getSrcAddress()));
         System.out.println("Destination Address: " + Utils.bytesToIP(((Ipv4) this.networkProtocol).getDestAddress()));
