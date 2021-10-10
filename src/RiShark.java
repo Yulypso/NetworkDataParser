@@ -1,5 +1,3 @@
-package rishark;
-
 import rishark.parser.PcapParser;
 import rishark.pcap.Pcap;
 
