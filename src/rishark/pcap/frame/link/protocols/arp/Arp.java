@@ -1,5 +1,6 @@
-package rishark.pcap.frame.link.protocols;
+package rishark.pcap.frame.link.protocols.arp;
 
+import rishark.pcap.frame.link.protocols.LinkProtocol;
 import utils.Utils;
 
 public class Arp implements LinkProtocol {
@@ -17,11 +18,11 @@ public class Arp implements LinkProtocol {
     private final String padding;
 
     public Arp(String raw) {
-        this.hardwareType = Integer.parseInt(Utils.readBytesFromIndex(raw, 0, 2));
+        this.hardwareType = Utils.hexStringToInt(Utils.readBytesFromIndex(raw, 0, 2));
         this.protocolType = Utils.readBytesFromIndex(raw, 2, 2);
-        this.hardwareSize = Integer.parseInt(Utils.readBytesFromIndex(raw, 4, 1));
-        this.protocolSize = Integer.parseInt(Utils.readBytesFromIndex(raw, 5, 1));
-        this.opCode = Integer.parseInt(Utils.readBytesFromIndex(raw, 6, 2));
+        this.hardwareSize = Utils.hexStringToInt(Utils.readBytesFromIndex(raw, 4, 1));
+        this.protocolSize = Utils.hexStringToInt(Utils.readBytesFromIndex(raw, 5, 1));
+        this.opCode = Utils.hexStringToInt(Utils.readBytesFromIndex(raw, 6, 2));
         this.senderMacAddress = Utils.readBytesFromIndex(raw, 8, 6);
         this.senderIpAddress = Utils.readBytesFromIndex(raw, 14, 4);
         this.targetMacAddress = Utils.readBytesFromIndex(raw, 18, 6);

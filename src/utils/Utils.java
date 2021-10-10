@@ -62,6 +62,14 @@ public class Utils {
         return Integer.parseInt(s,16);
     }
 
+    public static String hexStringToBinary(String s) {
+            return String.format("%" + s.length() * 4 + "s", Integer.toBinaryString(Utils.hexStringToInt(s))).replaceAll(" ", "0");
+    }
+
+    public static int binaryStringToInt(String s) {
+        return Integer.parseInt(s,2);
+    }
+
     public static String toHexString(long l) {
         return String.format("%08x", l);
     }

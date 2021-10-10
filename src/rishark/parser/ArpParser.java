@@ -1,10 +1,10 @@
 package rishark.parser;
 
 import rishark.pcap.frame.link.EtherType;
-import rishark.pcap.frame.link.protocols.Arp;
-import rishark.pcap.frame.link.protocols.HardwareType;
+import rishark.pcap.frame.link.protocols.arp.Arp;
+import rishark.pcap.frame.link.protocols.arp.HardwareType;
 import rishark.pcap.frame.link.protocols.LinkProtocol;
-import rishark.pcap.frame.link.protocols.OpCode;
+import rishark.pcap.frame.link.protocols.arp.OpCode;
 import utils.Utils;
 
 

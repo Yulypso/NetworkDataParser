@@ -1,4 +1,4 @@
-package rishark.pcap.frame.link.protocols;
+package rishark.pcap.frame.link.protocols.arp;
 
 public enum HardwareType {
 

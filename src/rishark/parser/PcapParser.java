@@ -3,7 +3,6 @@ package rishark.parser;
 import rishark.pcap.Pcap;
 import rishark.pcap.frame.link.EtherType;
 import rishark.pcap.frame.link.network.protocols.NetworkProtocol;
-import rishark.pcap.frame.link.protocols.Arp;
 import utils.Utils;
 
 import java.util.Arrays;
@@ -46,7 +45,7 @@ public class PcapParser {
             if (this.parseLinkFrame(s))
                 continue;
             System.out.println("--- [Network layer Packet] ---");
-            //this.parseNetworkPacket(s);
+            this.parseNetworkPacket(s);
             System.out.println("--- [Transport layer Segment/Datagram ] ---");
             //this.parseTransportSegment(s);
         }
@@ -83,9 +82,12 @@ public class PcapParser {
 
     private void parseNetworkPacket(int s) {
         /* Network layer (Data Frames) */
-        System.out.println("Parse Network Packet: " + Arrays.toString(new int[]{this.pcap.getFrameList().get(s).getLinkFrame().getNetworkPacket().getNetworkProtocol().getClass().getDeclaredMethods().length}));
-        System.out.println("Parse Network class: " + this.pcap.getFrameList().get(s).getLinkFrame().getNetworkPacket().getNetworkProtocol().getClass().equals(NetworkProtocol.class));
-
+        EtherType e = EtherType.findEtherType(this.pcap.getFrameList().get(s).getLinkFrame().getEtherType());
+        switch (Objects.requireNonNull(e)) {
+            case IPv4 -> {
+                new IPv4Parser(this.pcap.getFrameList().get(s).getLinkFrame().getNetworkPacket().getNetworkProtocol()).parse();
+            }
+        }
     }
 
     private void parseTransportSegment(int s) {

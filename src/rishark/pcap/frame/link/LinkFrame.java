@@ -1,7 +1,7 @@
 package rishark.pcap.frame.link;
 
 import rishark.pcap.frame.link.network.NetworkPacket;
-import rishark.pcap.frame.link.protocols.Arp;
+import rishark.pcap.frame.link.protocols.arp.Arp;
 import rishark.pcap.frame.link.protocols.LinkProtocol;
 import utils.Utils;
 
