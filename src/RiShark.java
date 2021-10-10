@@ -5,8 +5,8 @@ public class RiShark {
 
     public static void main(String[] args) {
 
-        if (args.length != 1) {
-            System.out.println("Require: <path/to/file.pcap>");
+        if (args.length < 1) {
+            System.out.println("Require: <path/to/file.pcap> [frame n°]");
             System.exit(-1);
         }
 
@@ -17,6 +17,12 @@ public class RiShark {
 
         pcapParser.numberOfFrames();
         pcapParser.parseGlobalHeader();
-        pcapParser.parseFrame(29);
+
+        try {
+            pcapParser.parseFrame(Integer.parseInt(args[1]));
+        } catch (Exception e) {
+            pcapParser.parseFrame();
+        }
+
     }
 }

@@ -23,23 +23,23 @@ public class IPv4Parser {
         System.out.println("Type of service: " + ((Ipv4) this.networkProtocol).getTypeOfService() + " (" + this.parseTypeOfService(((Ipv4) this.networkProtocol).getTypeOfService()) + ")");
         System.out.println("Total length: " + ((Ipv4) this.networkProtocol).getTotalLength());
         System.out.println("Identification: " + ((Ipv4) this.networkProtocol).getIdentification() + " (" + Utils.hexStringToInt(((Ipv4) this.networkProtocol).getIdentification()) + ")");
-        System.out.println("Flags: " + ((Ipv4) this.networkProtocol).getFlag());
+        System.out.println("Flags: " + this.parseFlag(((Ipv4) this.networkProtocol).getFlag()));
     }
 
     private String parseTypeOfService(String b) {
         int precedence = Utils.binaryStringToInt(b.substring(0,3));
         String tos = b.substring(3,8);
 
-        String r = null;
+        String r = "";
         switch (precedence) {
-            case 0 -> r = "Routine";
-            case 1 -> r = "Priority";
-            case 2 -> r = "Immediate";
-            case 3 -> r = "Flash";
-            case 4 -> r = "Flash Over";
-            case 5 -> r = "CRITIC/ECP";
-            case 6 -> r = "Internetwork Control";
-            case 7 -> r = "Network Control";
+            case 0 -> r += "Routine";
+            case 1 -> r += "Priority";
+            case 2 -> r += "Immediate";
+            case 3 -> r += "Flash";
+            case 4 -> r += "Flash Over";
+            case 5 -> r += "CRITIC/ECP";
+            case 6 -> r += "Internetwork Control";
+            case 7 -> r += "Network Control";
         }
 
         switch (tos) {
@@ -57,10 +57,10 @@ public class IPv4Parser {
         int dontFragment = Utils.binaryStringToInt(b.substring(1,2));
         int moreFragment = Utils.binaryStringToInt(b.substring(2,3));
 
-        String r = null;
-        r += "\nreserved bit: " + (reserved == 1 ? "set" : "not set");
-        r += "\nDon't fragment: " + (dontFragment == 1 ? "set" : "not set");
-        r += "\nMore fragment: " + (moreFragment == 1 ? "set" : "not set");
+        String r = "" + reserved + dontFragment + moreFragment + ". .... ";
+        r += "\n\tReserved bit: " + (reserved == 1 ? "set" : "not set");
+        r += "\n\tDon't fragment: " + (dontFragment == 1 ? "set" : "not set");
+        r += "\n\tMore fragment: " + (moreFragment == 1 ? "set" : "not set");
 
         return r;
     }

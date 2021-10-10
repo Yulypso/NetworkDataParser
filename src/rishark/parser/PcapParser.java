@@ -8,6 +8,7 @@ import utils.Utils;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Objects;
+import java.util.stream.IntStream;
 
 public class PcapParser {
 
@@ -32,9 +33,9 @@ public class PcapParser {
         System.out.println("Data link type: " + (this.pcap.getGlobalHeader().getNetwork() == 1 ? "1 [Ethernet]" : (this.pcap.getGlobalHeader().getNetwork() + " [Not Ethernet, Untreated]")));
     }
 
-    public void parseFrame(int... selected) { /* First frame is at index 0 */
+    public void parseFrame(int... selected) {
 
-        for (int s : selected) {
+        for (int s : selected) { /* Parse selected frames */
             s--;
             System.out.println("\n******** [Frame n°" + (s+1) + "] ********");
             System.out.println("***** [Frame Header] *****");
@@ -49,6 +50,10 @@ public class PcapParser {
             System.out.println("--- [Transport layer Segment/Datagram ] ---");
             //this.parseTransportSegment(s);
         }
+    }
+
+    public void parseFrame() { /* Parse all frames */
+        this.parseFrame(IntStream.range(1, this.pcap.getFrameList().size() + 1).toArray());
     }
 
     private void parseFrameHeader(int s) {
