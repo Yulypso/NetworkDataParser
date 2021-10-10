@@ -36,19 +36,25 @@ public class PcapParser {
     public void parseFrame(int... selected) {
 
         for (int s : selected) { /* Parse selected frames */
-            s--;
-            System.out.println("\n******** [Frame n°" + (s+1) + "] ********");
-            System.out.println("***** [Frame Header] *****");
-            System.out.println("--- [Physical layer Bits] ---");
-            this.parseFrameHeader(s);
-            System.out.println("***** [Frame Data] *****");
-            System.out.println("--- [Data Link layer Frame ] ---");
-            if (this.parseLinkFrame(s))
-                continue;
-            System.out.println("--- [Network layer Packet] ---");
-            this.parseNetworkPacket(s);
-            System.out.println("--- [Transport layer Segment/Datagram ] ---");
-            //this.parseTransportSegment(s);
+            try {
+                if (s < 1 || s > this.pcap.getFrameList().size())
+                    throw new Exception();
+                s--;
+                System.out.println("\n******** [Frame n°" + (s + 1) + "] ********");
+                System.out.println("***** [Frame Header] *****");
+                System.out.println("--- [Physical layer Bits] ---");
+                this.parseFrameHeader(s);
+                System.out.println("***** [Frame Data] *****");
+                System.out.println("--- [Data Link layer Frame ] ---");
+                if (this.parseLinkFrame(s))
+                    continue;
+                System.out.println("--- [Network layer Packet] ---");
+                this.parseNetworkPacket(s);
+                System.out.println("--- [Transport layer Segment/Datagram ] ---");
+                //this.parseTransportSegment(s);
+            } catch (Exception e){
+                System.err.println("Warning: Frame n°" + s + " doesn't exist. Skipping it...");
+            }
         }
     }
 
