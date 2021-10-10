@@ -1,6 +1,9 @@
 import rishark.parser.PcapParser;
 import rishark.pcap.Pcap;
 
+import java.util.Arrays;
+import java.util.stream.Stream;
+
 public class RiShark {
 
     public static void main(String[] args) {
@@ -19,7 +22,12 @@ public class RiShark {
         pcapParser.parseGlobalHeader();
 
         try {
-            pcapParser.parseFrame(Integer.parseInt(args[1]));
+            pcapParser.parseFrame(Arrays.stream(args)
+                      .toList()
+                      .subList(1, args.length)
+                      .stream()
+                      .mapToInt(Integer::parseInt)
+                      .toArray());
         } catch (Exception e) {
             pcapParser.parseFrame();
         }
