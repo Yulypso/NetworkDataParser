@@ -1,11 +1,13 @@
 package rishark.parser;
 
-import rishark.pcap.frame.link.EtherType;
+import rishark.pcap.frame.link.Protocol;
 import rishark.pcap.frame.link.protocols.arp.Arp;
 import rishark.pcap.frame.link.protocols.arp.HardwareType;
 import rishark.pcap.frame.link.protocols.LinkProtocol;
 import rishark.pcap.frame.link.protocols.arp.OpCode;
 import utils.Utils;
+
+import java.util.Objects;
 
 
 public class ArpParser {
@@ -18,10 +20,10 @@ public class ArpParser {
 
     public void parse() {
         System.out.println("Protocol type: " + HardwareType.findHardwareType(((Arp) this.linkProtocol).getHardwareType()));
-        System.out.println("Protocol type: " + EtherType.findEtherType(((Arp) this.linkProtocol).getProtocolType()));
+        System.out.println("Protocol type: " + Objects.requireNonNull(Protocol.findEtherType(((Arp) this.linkProtocol).getProtocolType())).toString().replaceAll("_"," "));
         System.out.println("Hardware size: " + ((Arp) this.linkProtocol).getHardwareSize());
         System.out.println("Protocol size: " + ((Arp) this.linkProtocol).getProtocolSize());
-        System.out.println("OpCode: " + OpCode.findOpCode(((Arp) this.linkProtocol).getOpCode()));
+        System.out.println("OpCode: " + Objects.requireNonNull(OpCode.findOpCode(((Arp) this.linkProtocol).getOpCode())).toString().replaceAll("_"," "));
         System.out.println("Sender MAC Address: " + ((Arp) this.linkProtocol).getSenderMacAddress().replaceAll("(..)(?!$)", "$1:"));
         System.out.println("Sender IP Address: " + Utils.bytesToIP(((Arp) this.linkProtocol).getSenderIpAddress()));
         System.out.println("Target MAC Address: " + ((Arp) this.linkProtocol).getTargetMacAddress().replaceAll("(..)(?!$)", "$1:"));

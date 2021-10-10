@@ -1,6 +1,6 @@
 package rishark.pcap.frame.link;
 
-public enum EtherType {
+public enum Protocol {
     ARP("0806"),
     IPv4("0800"),
     IPv6("86dd"),
@@ -14,20 +14,20 @@ public enum EtherType {
 
     private final String etherType;
 
-    EtherType(String etherType) {
+    Protocol(String etherType) {
         this.etherType = etherType;
     }
 
-    public static EtherType findEtherType(String bytes){
-        for(EtherType e : EtherType.values()) {
-            if(e.getEtherType().equals(bytes)) {
+    public static Protocol findEtherType(String bytes){
+        for(Protocol e : Protocol.values()) {
+            if(e.getProtocol().equals(bytes)) {
                 return e;
             }
         }
         return null;
     }
 
-    public String getEtherType() {
+    public String getProtocol() {
         return etherType;
     }
 }

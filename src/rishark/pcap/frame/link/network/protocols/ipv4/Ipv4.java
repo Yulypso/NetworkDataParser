@@ -4,14 +4,14 @@ import rishark.pcap.frame.link.network.protocols.NetworkProtocol;
 import utils.Utils;
 
 public class Ipv4 implements NetworkProtocol {
-                                        // 21 bytes
+                                        // 20 bytes
     private final int version;          // 0.5 byte
     private final int headerLength;     // 0.5 byte
     private final String typeOfService; // 1 byte
     private final int totalLength;      // 2 bytes
     private final String identification;   // 2 bytes
     private final String flag;             // 1 byte
-    private final int fragmentOffset;   // 2 bytes
+    private final int fragmentOffset;   // 1 bytes
     private final int ttl;              // 1 byte
     private final int protocol;         // 1 byte
     private final String checksum;      // 2 bytes
@@ -25,12 +25,12 @@ public class Ipv4 implements NetworkProtocol {
         this.totalLength = Utils.hexStringToInt(Utils.readBytesFromIndex(raw, 2, 2));
         this.identification = Utils.readBytesFromIndex(raw, 4, 2);
         this.flag = Utils.hexStringToBinary(Utils.readBytesFromIndex(raw, 6, 1));
-        this.fragmentOffset = Utils.hexStringToInt(Utils.readBytesFromIndex(raw, 7, 2));
-        this.ttl = Utils.hexStringToInt(Utils.readBytesFromIndex(raw, 9, 1));
-        this.protocol = Utils.hexStringToInt(Utils.readBytesFromIndex(raw, 10, 1));
-        this.checksum = Utils.readBytesFromIndex(raw, 11, 2);
-        this.srcAddress = Utils.readBytesFromIndex(raw, 13, 4);
-        this.destAddress = Utils.readBytesFromIndex(raw, 17, 4);
+        this.fragmentOffset = Utils.hexStringToInt(Utils.readBytesFromIndex(raw, 7, 1));
+        this.ttl = Utils.hexStringToInt(Utils.readBytesFromIndex(raw, 8, 1));
+        this.protocol = Utils.hexStringToInt(Utils.readBytesFromIndex(raw, 9, 1));
+        this.checksum = Utils.readBytesFromIndex(raw, 10, 2);
+        this.srcAddress = Utils.readBytesFromIndex(raw, 12, 4);
+        this.destAddress = Utils.readBytesFromIndex(raw, 16, 4);
     }
 
     public int getVersion() {

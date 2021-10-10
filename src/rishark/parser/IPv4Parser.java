@@ -3,6 +3,7 @@ package rishark.parser;
 import rishark.pcap.frame.link.network.protocols.NetworkProtocol;
 import rishark.pcap.frame.link.network.protocols.ipv4.IpVersion;
 import rishark.pcap.frame.link.network.protocols.ipv4.Ipv4;
+import rishark.pcap.frame.link.network.protocols.ipv4.Protocol;
 import utils.Utils;
 
 import java.util.Objects;
@@ -22,8 +23,14 @@ public class IPv4Parser {
                 + " (" + ((Ipv4) this.networkProtocol).getHeaderLength() + ")"));
         System.out.println("Type of service: " + ((Ipv4) this.networkProtocol).getTypeOfService() + " (" + this.parseTypeOfService(((Ipv4) this.networkProtocol).getTypeOfService()) + ")");
         System.out.println("Total length: " + ((Ipv4) this.networkProtocol).getTotalLength());
-        System.out.println("Identification: " + ((Ipv4) this.networkProtocol).getIdentification() + " (" + Utils.hexStringToInt(((Ipv4) this.networkProtocol).getIdentification()) + ")");
+        System.out.println("Identification: 0x" + ((Ipv4) this.networkProtocol).getIdentification() + " (" + Utils.hexStringToInt(((Ipv4) this.networkProtocol).getIdentification()) + ")");
         System.out.println("Flags: " + this.parseFlag(((Ipv4) this.networkProtocol).getFlag()));
+        System.out.println("Fragment offset: " + ((Ipv4) this.networkProtocol).getFragmentOffset());
+        System.out.println("Time to Live (TTL): " + ((Ipv4) this.networkProtocol).getTtl());
+        System.out.println("Protocol: " + Objects.requireNonNull(Protocol.findProtocol(((Ipv4) this.networkProtocol).getProtocol())).toString().replaceAll("_"," "));
+        System.out.println("Header Checksum: 0x" + ((Ipv4) this.networkProtocol).getChecksum());
+        System.out.println("Source Address: " + Utils.bytesToIP(((Ipv4) this.networkProtocol).getSrcAddress()));
+        System.out.println("Destination Address: " + Utils.bytesToIP(((Ipv4) this.networkProtocol).getDestAddress()));
     }
 
     private String parseTypeOfService(String b) {
@@ -57,10 +64,10 @@ public class IPv4Parser {
         int dontFragment = Utils.binaryStringToInt(b.substring(1,2));
         int moreFragment = Utils.binaryStringToInt(b.substring(2,3));
 
-        String r = "" + reserved + dontFragment + moreFragment + ". .... ";
-        r += "\n\tReserved bit: " + (reserved == 1 ? "set" : "not set");
-        r += "\n\tDon't fragment: " + (dontFragment == 1 ? "set" : "not set");
-        r += "\n\tMore fragment: " + (moreFragment == 1 ? "set" : "not set");
+        String r = "" + reserved + dontFragment + moreFragment + ". ";
+        r += "\n\t- Reserved bit: " + (reserved == 1 ? "set" : "not set");
+        r += "\n\t- Don't fragment: " + (dontFragment == 1 ? "set" : "not set");
+        r += "\n\t- More fragment: " + (moreFragment == 1 ? "set" : "not set");
 
         return r;
     }
