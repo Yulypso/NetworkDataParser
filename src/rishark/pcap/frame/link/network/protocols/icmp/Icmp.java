@@ -9,9 +9,11 @@ public class Icmp implements NetworkProtocol {
 
     private final int type;             // 1 byte
     private final int code;             // 1 byte
-    private final int checksum;         // 2 bytes
-    private final int identifier;       // 2 bytes
-    private final int sequenceNumber;   // 2 bytes
+    private final String checksum;         // 2 bytes
+    private final String identifierBE;       // 2 bytes
+    private final String identifierLE;       // 2 bytes
+    private final String sequenceNumberBE;   // 2 bytes
+    private final String sequenceNumberLE;   // 2 bytes
     private final long timeStamp;       // 4 bytes
     private final long padding;         // 4 bytes
     private final String data;          // 48 bytes
@@ -21,12 +23,14 @@ public class Icmp implements NetworkProtocol {
     public Icmp (String raw) {
         this.type = Utils.hexStringToInt(Utils.readBytesFromIndex(raw, 0, 1));
         this.code = Utils.hexStringToInt(Utils.readBytesFromIndex(raw, 1, 1));
-        this.checksum = Utils.hexStringToInt(Utils.readBytesFromIndex(raw, 2, 2));
-        this.identifier = Utils.hexStringToInt(Utils.readBytesFromIndex(raw, 4, 2));
-        this.sequenceNumber = Utils.hexStringToInt(Utils.readBytesFromIndex(raw, 6, 2));
+        this.checksum = Utils.readBytesFromIndex(raw, 2, 2);
+        this.identifierBE = Utils.readBytesFromIndex(raw, 4, 2, true);
+        this.identifierLE = Utils.readBytesFromIndex(raw, 4, 2, false);
+        this.sequenceNumberBE = Utils.readBytesFromIndex(raw, 6, 2, true);
+        this.sequenceNumberLE = Utils.readBytesFromIndex(raw, 6, 2, false);
         this.timeStamp = Utils.hexStringToLong(Utils.readBytesFromIndex(raw, 8, 4, false));
         this.padding = Utils.hexStringToLong(Utils.readBytesFromIndex(raw, 12, 4));
-        this.data = Utils.readBytesFromIndex(raw, 16, 44); // TODO BUG normalement 48
+        this.data = Utils.readBytesFromIndex(raw, 16, 48); // TODO BUG normalement 48
         this.raw = raw; // TODO: edit value (test)
     }
 
@@ -47,16 +51,24 @@ public class Icmp implements NetworkProtocol {
         return code;
     }
 
-    public int getChecksum() {
+    public String getChecksum() {
         return checksum;
     }
 
-    public int getIdentifier() {
-        return identifier;
+    public String getIdentifierBE() {
+        return identifierBE;
     }
 
-    public int getSequenceNumber() {
-        return sequenceNumber;
+    public String getIdentifierLE() {
+        return identifierLE;
+    }
+
+    public String getSequenceNumberBE() {
+        return sequenceNumberBE;
+    }
+
+    public String getSequenceNumberLE() {
+        return sequenceNumberLE;
     }
 
     public long getTimeStamp() {
