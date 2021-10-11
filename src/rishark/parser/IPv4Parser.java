@@ -3,7 +3,7 @@ package rishark.parser;
 import rishark.pcap.frame.link.network.protocols.NetworkProtocol;
 import rishark.pcap.frame.link.network.protocols.ipv4.IpVersion;
 import rishark.pcap.frame.link.network.protocols.ipv4.Ipv4;
-import rishark.pcap.frame.link.network.protocols.IpProtocol;
+import rishark.pcap.frame.link.network.IpProtocol;
 import utils.Utils;
 
 import java.util.Objects;

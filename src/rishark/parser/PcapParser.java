@@ -2,7 +2,7 @@ package rishark.parser;
 
 import rishark.pcap.Pcap;
 import rishark.pcap.frame.link.Protocol;
-import rishark.pcap.frame.link.network.protocols.IpProtocol;
+import rishark.pcap.frame.link.network.IpProtocol;
 import utils.Utils;
 
 import java.util.Calendar;

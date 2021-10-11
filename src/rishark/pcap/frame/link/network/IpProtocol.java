@@ -1,4 +1,4 @@
-package rishark.pcap.frame.link.network.protocols;
+package rishark.pcap.frame.link.network;
 
 public enum IpProtocol {
 

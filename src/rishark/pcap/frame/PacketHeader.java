@@ -3,7 +3,7 @@ package rishark.pcap.frame;
 import utils.Utils;
 
 public class PacketHeader {         // 16 bytes
-    private final long tsSec;       // timestamp in secondes 4 bytes 0-3
+    private final long tsSec;       // timestamp in seconds 4 bytes 0-3
     private final long tsUsec;      // timestamp in microseconds 4 bytes 4-7
     private final long inclLen;     // number of octets of packet saved in file 4 bytes 8-11
     private final long origLen;     // actual length of packet 4 bytes 12-15

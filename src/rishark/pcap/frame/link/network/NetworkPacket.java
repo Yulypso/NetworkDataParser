@@ -1,13 +1,11 @@
 package rishark.pcap.frame.link.network;
 
 import rishark.pcap.frame.link.Protocol;
-import rishark.pcap.frame.link.network.protocols.IpProtocol;
 import rishark.pcap.frame.link.network.protocols.icmp.Icmp;
 import rishark.pcap.frame.link.network.protocols.ipv4.Ipv4;
 import rishark.pcap.frame.link.network.protocols.ipv6.Ipv6;
 import rishark.pcap.frame.link.network.protocols.NetworkProtocol;
 import rishark.pcap.frame.link.network.transport.TransportSegment;
-import rishark.pcap.frame.link.network.transport.protocols.TransportProtocol;
 
 import java.util.Objects;
 
