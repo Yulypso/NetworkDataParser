@@ -3,6 +3,7 @@ package rishark.parser;
 import rishark.pcap.Pcap;
 import rishark.pcap.frame.link.Protocol;
 import rishark.pcap.frame.link.network.IpProtocol;
+import rishark.pcap.frame.link.network.protocols.ipv4.Ipv4;
 import utils.Utils;
 
 import java.util.Calendar;
@@ -38,21 +39,24 @@ public class PcapParser {
         } else {
             for (int s : selected) { /* Parse selected frames */
                 try {
-                    if (s < 1 || s > this.pcap.getFrameList().size())
+                    if (s < 1 || s > this.pcap.getFrameList().size()) {
                         throw new Exception();
-                    s--;
-                    System.out.println("\n******** [Frame n°" + (s + 1) + "] ********");
-                    System.out.println("***** [Frame Header] *****");
-                    System.out.println("--- [Physical layer Bits] ---");
-                    this.parseFrameHeader(s);
-                    System.out.println("***** [Frame Data] *****");
-                    System.out.println("--- [Data Link layer Frame ] ---");
-                    if (this.parseLinkFrame(s))
-                        continue;
-                    System.out.println("--- [Network layer Packet] ---");
-                    this.parseNetworkPacket(s);
-                    System.out.println("--- [Transport layer Segment/Datagram] ---");
-                    //this.parseTransportSegment(s);
+                    } else {
+                        s--;
+                        System.out.println("\n******** [Frame n°" + (s + 1) + "] ********");
+                        System.out.println("***** [Frame Header] *****");
+                        System.out.println("--- [Physical layer Bits] ---");
+                        this.parseFrameHeader(s);
+                        System.out.println("***** [Frame Data] *****");
+                        System.out.println("--- [Data Link layer Frame ] ---");
+                        if (this.parseLinkFrame(s))
+                            continue;
+                        System.out.println("--- [Network layer Packet] ---");
+                        if(this.parseNetworkPacket(s))
+                            continue;
+                        System.out.println("--- [Transport layer Segment/Datagram] ---");
+                        //this.parseTransportSegment(s);
+                    }
                 } catch (Exception e) {
                     System.err.println("\nWarning: Frame n°" + s + " doesn't exist. Skipping it...");
                 }
@@ -94,7 +98,7 @@ public class PcapParser {
         return false;
     }
 
-    private void parseNetworkPacket(int s) {
+    private boolean parseNetworkPacket(int s) {
         /* Network layer (Data Frames) */
         Protocol e = Protocol.findEtherType(this.pcap.getFrameList().get(s).getLinkFrame().getEtherType());
         switch (Objects.requireNonNull(e)) {
@@ -104,8 +108,14 @@ public class PcapParser {
 
         IpProtocol i = IpProtocol.findProtocol(this.pcap.getFrameList().get(s).getLinkFrame().getNetworkPacket().getIpProtocol());
         switch (Objects.requireNonNull(i)) {
-            case ICMP -> new ICMPParser(this.pcap.getFrameList().get(s).getLinkFrame().getNetworkPacket().getNetworkProtocol()).parse();
+            case ICMP -> {
+                new ICMPParser(this.pcap.getFrameList().get(s).getLinkFrame().getNetworkPacket().getNetworkProtocol()).parse();
+                return (this.pcap.getFrameList().get(s).getPacketHeader().getOrigLen() ==
+                        (this.pcap.getFrameList().get(s).getLinkFrame().getLinkFrameSize() +
+                         this.pcap.getFrameList().get(s).getLinkFrame().getNetworkPacket().getNetworkPacketSize())); // End of packet, no more layer above ICMP
+            }
         }
+        return false;
     }
 
     private void parseTransportSegment(int s) {

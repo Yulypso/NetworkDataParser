@@ -1,4 +1,4 @@
-package rishark.pcap.frame.link.network.protocols.icmp;
+package rishark.pcap.frame.link.network.protocols.ipv4.icmp;
 
 public enum Type {
 

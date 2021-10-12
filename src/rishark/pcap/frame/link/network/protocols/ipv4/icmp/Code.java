@@ -1,6 +1,4 @@
-package rishark.pcap.frame.link.network.protocols.icmp;
-
-import java.util.Arrays;
+package rishark.pcap.frame.link.network.protocols.ipv4.icmp;
 
 public enum Code {
 

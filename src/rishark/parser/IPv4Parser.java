@@ -18,7 +18,7 @@ public class IPv4Parser {
 
     public void parse() {
         System.out.println("Version: " + Objects.requireNonNull(IpVersion.findIpVersion(((Ipv4) this.networkProtocol).getVersion())).toString().replaceAll("_"," "));
-        System.out.println("Header length " + ((Ipv4) this.networkProtocol).getHeaderLength() * 4 + " byte"
+        System.out.println("Header length: " + ((Ipv4) this.networkProtocol).getHeaderLength() + " byte"
                 + (((Ipv4) this.networkProtocol).getHeaderLength() != 0 ? "s" : ""
                 + " (" + ((Ipv4) this.networkProtocol).getHeaderLength() + ")"));
         System.out.println("Type of service: " + ((Ipv4) this.networkProtocol).getTypeOfService() + " (" + this.parseTypeOfService(((Ipv4) this.networkProtocol).getTypeOfService()) + ")");

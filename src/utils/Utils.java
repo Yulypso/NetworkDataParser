@@ -46,11 +46,25 @@ public class Utils {
     public static String readBytesFromIndex(String raw, int pos, int nbBytes){
         pos *= 2;
         StringBuilder sb = new StringBuilder();
+        char a;
+        char b;
 
         for (int i = 0; i < nbBytes * 2; i+=2) {
-            sb.append(raw.charAt(pos + i)).append(raw.charAt(pos + i+1));
+            a = (raw.charAt(pos + i));
+            b = (raw.charAt(pos + i+1));
+            sb.append(a).append(b);
         }
 
+        return sb.toString();
+    }
+
+    public static String hexStringToString(String s) {
+        StringBuilder sb = new StringBuilder();
+
+        for (int i = 0; i < s.length(); i += 2) {
+            String str = s.substring(i, i + 2);
+            sb.append((char) hexStringToInt(str));
+        }
         return sb.toString();
     }
 

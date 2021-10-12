@@ -1,4 +1,4 @@
-package rishark.pcap.frame.link.network.protocols.icmp;
+package rishark.pcap.frame.link.network.protocols.ipv4.icmp;
 
 import rishark.pcap.frame.link.network.IpProtocol;
 import rishark.pcap.frame.link.network.protocols.NetworkProtocol;
@@ -14,8 +14,7 @@ public class Icmp implements NetworkProtocol {
     private final String identifierLE;       // 2 bytes
     private final String sequenceNumberBE;   // 2 bytes
     private final String sequenceNumberLE;   // 2 bytes
-    private final long timeStamp;       // 4 bytes
-    private final long padding;         // 4 bytes
+    private final long timeStamp;       // 4 byte
     private final String data;          // 48 bytes
 
     private final String raw;
@@ -28,9 +27,9 @@ public class Icmp implements NetworkProtocol {
         this.identifierLE = Utils.readBytesFromIndex(raw, 4, 2, false);
         this.sequenceNumberBE = Utils.readBytesFromIndex(raw, 6, 2, true);
         this.sequenceNumberLE = Utils.readBytesFromIndex(raw, 6, 2, false);
-        this.timeStamp = Utils.hexStringToLong(Utils.readBytesFromIndex(raw, 8, 4, false));
-        this.padding = Utils.hexStringToLong(Utils.readBytesFromIndex(raw, 12, 4));
+        this.timeStamp = Utils.hexStringToLong(Utils.readBytesFromIndex(raw, 8, 8, false));
         this.data = Utils.readBytesFromIndex(raw, 16, 48); // TODO BUG normalement 48
+
         this.raw = raw; // TODO: edit value (test)
     }
 
@@ -77,5 +76,9 @@ public class Icmp implements NetworkProtocol {
 
     public String getData() {
         return data;
+    }
+
+    public long getSize() {
+        return 64;
     }
 }

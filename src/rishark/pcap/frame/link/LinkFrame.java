@@ -63,6 +63,6 @@ public class LinkFrame {
     }
 
     public long getLinkFrameSize() {
-        return 14 + this.linkProtocol.getSize();
+        return (linkProtocol != null) ? 14 + this.linkProtocol.getSize() : 14;
     }
 }

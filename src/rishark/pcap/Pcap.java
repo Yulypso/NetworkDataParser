@@ -17,7 +17,6 @@ public class Pcap {
 
         /* GlobalHeader */
         String raw = Utils.readPcap(path);
-        System.out.println(raw);
         this.isBigEndian = checkIsBigEndian(Utils.readBytesFromIndex(raw, 0, 4,true));
         this.globalHeader = new GlobalHeader(raw, this.isBigEndian());
 
@@ -28,7 +27,6 @@ public class Pcap {
 
         /* physicalBitList */
         long pcapLength = raw.length() / 2;
-        System.out.println("raw length (bytes): " + pcapLength);
         int currentPos = this.globalHeader.getLength();
         this.frameList = new ArrayList<>();
 
@@ -36,7 +34,6 @@ public class Pcap {
             Frame frame = new Frame(raw, currentPos, this.isBigEndian());
             this.frameList.add(frame);
             currentPos = frame.getLastPos();
-            //System.out.println("curr pos: " + pos);
         }
     }
 
@@ -48,7 +45,6 @@ public class Pcap {
         } else if (hexMn.equalsIgnoreCase("d4c3b2a1")) {
             isBigEndian = false;
         }
-        System.out.println("\nis big endian? : " + this.isBigEndian());
         return isBigEndian;
     }
 
