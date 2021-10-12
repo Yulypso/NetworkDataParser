@@ -1,6 +1,6 @@
 package rishark.parser;
 
-import rishark.pcap.frame.link.Protocol;
+import rishark.pcap.frame.link.EtherType;
 import rishark.pcap.frame.link.protocols.arp.Arp;
 import rishark.pcap.frame.link.protocols.arp.HardwareType;
 import rishark.pcap.frame.link.protocols.LinkProtocol;
@@ -20,7 +20,7 @@ public class ArpParser {
 
     public void parse() {
         System.out.println("Protocol type: " + HardwareType.findHardwareType(((Arp) this.linkProtocol).getHardwareType()));
-        System.out.println("Protocol type: " + Objects.requireNonNull(Protocol.findEtherType(((Arp) this.linkProtocol).getProtocolType())).toString().replaceAll("_"," "));
+        System.out.println("Protocol type: " + Objects.requireNonNull(EtherType.findEtherType(((Arp) this.linkProtocol).getProtocolType())).toString().replaceAll("_"," "));
         System.out.println("Hardware size: " + ((Arp) this.linkProtocol).getHardwareSize());
         System.out.println("Protocol size: " + ((Arp) this.linkProtocol).getProtocolSize());
         System.out.println("OpCode: " + Objects.requireNonNull(OpCode.findOpCode(((Arp) this.linkProtocol).getOpCode())).toString().replaceAll("_"," "));

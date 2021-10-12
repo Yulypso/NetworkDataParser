@@ -6,6 +6,7 @@ import rishark.pcap.frame.link.network.protocols.ipv4.icmp.Icmp;
 import rishark.pcap.frame.link.network.protocols.ipv4.icmp.Type;
 import utils.Utils;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Objects;
 
 public class ICMPParser {

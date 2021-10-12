@@ -1,9 +1,9 @@
 package rishark.parser;
 
 import rishark.pcap.Pcap;
-import rishark.pcap.frame.link.Protocol;
-import rishark.pcap.frame.link.network.IpProtocol;
-import rishark.pcap.frame.link.network.protocols.ipv4.Ipv4;
+import rishark.pcap.frame.link.EtherType;
+import rishark.pcap.frame.link.network.Protocol;
+import rishark.pcap.frame.link.network.protocols.ipv4.transport.protocols.TransportProtocol;
 import utils.Utils;
 
 import java.util.Calendar;
@@ -55,7 +55,7 @@ public class PcapParser {
                         if(this.parseNetworkPacket(s))
                             continue;
                         System.out.println("--- [Transport layer Segment/Datagram] ---");
-                        //this.parseTransportSegment(s);
+                        this.parseTransportSegment(s);
                     }
                 } catch (Exception e) {
                     System.err.println("\nWarning: Frame n°" + s + " doesn't exist. Skipping it...");
@@ -84,7 +84,7 @@ public class PcapParser {
         /* Data Link layer (Data Frames) */
         System.out.println("Destination MAC address: " + this.pcap.getFrameList().get(s).getLinkFrame().getDestAdress().replaceAll("(..)(?!$)", "$1:"));
         System.out.println("Source MAC address: " + this.pcap.getFrameList().get(s).getLinkFrame().getSrcAdress().replaceAll("(..)(?!$)", "$1:"));
-        Protocol e = Protocol.findEtherType(this.pcap.getFrameList().get(s).getLinkFrame().getEtherType());
+        EtherType e = EtherType.findEtherType(this.pcap.getFrameList().get(s).getLinkFrame().getEtherType());
         System.out.println("Ether type: " + e);
 
         switch (Objects.requireNonNull(e)) {
@@ -100,14 +100,14 @@ public class PcapParser {
 
     private boolean parseNetworkPacket(int s) {
         /* Network layer (Data Frames) */
-        Protocol e = Protocol.findEtherType(this.pcap.getFrameList().get(s).getLinkFrame().getEtherType());
+        EtherType e = EtherType.findEtherType(this.pcap.getFrameList().get(s).getLinkFrame().getEtherType());
         switch (Objects.requireNonNull(e)) {
             case IPv4 -> new IPv4Parser(this.pcap.getFrameList().get(s).getLinkFrame().getNetworkPacket().getNetworkProtocolBase()).parse();
             case IPv6 -> {}
         }
 
-        IpProtocol i = IpProtocol.findProtocol(this.pcap.getFrameList().get(s).getLinkFrame().getNetworkPacket().getIpProtocol());
-        switch (Objects.requireNonNull(i)) {
+        Protocol p = Protocol.findProtocol(this.pcap.getFrameList().get(s).getLinkFrame().getNetworkPacket().getIpProtocol());
+        switch (Objects.requireNonNull(p)) {
             case ICMP -> {
                 new ICMPParser(this.pcap.getFrameList().get(s).getLinkFrame().getNetworkPacket().getNetworkProtocol()).parse();
                 return (this.pcap.getFrameList().get(s).getPacketHeader().getOrigLen() ==
@@ -120,5 +120,11 @@ public class PcapParser {
 
     private void parseTransportSegment(int s) {
         /* Transport layer (Transport Segments or Datagrams) */
+        Protocol p = Protocol.findProtocol(this.pcap.getFrameList().get(s).getLinkFrame().getNetworkPacket().getIpProtocol());
+        switch (Objects.requireNonNull(p)) {
+            case TCP -> {
+                new TCPParser(this.pcap.getFrameList().get(s).getLinkFrame().getNetworkPacket().getTransportSegment().getTransportProtocolBase()).parse();
+            }
+        }
     }
 }

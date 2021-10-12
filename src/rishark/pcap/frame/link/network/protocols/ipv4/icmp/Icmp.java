@@ -1,6 +1,6 @@
 package rishark.pcap.frame.link.network.protocols.ipv4.icmp;
 
-import rishark.pcap.frame.link.network.IpProtocol;
+import rishark.pcap.frame.link.network.Protocol;
 import rishark.pcap.frame.link.network.protocols.NetworkProtocol;
 import utils.Utils;
 
@@ -35,9 +35,10 @@ public class Icmp implements NetworkProtocol {
 
     @Override // TODO: edit value
     public int getIpProtocol() {
-        return IpProtocol.ICMP.getProtocol();
+        return Protocol.ICMP.getProtocol();
     }
 
+    @Override
     public String getRaw() {
         return raw;
     }
@@ -78,6 +79,7 @@ public class Icmp implements NetworkProtocol {
         return data;
     }
 
+    @Override
     public long getSize() {
         return 64;
     }

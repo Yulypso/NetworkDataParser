@@ -1,6 +1,6 @@
 package rishark.pcap.frame.link.network;
 
-public enum IpProtocol {
+public enum Protocol {
 
     IPv6_Hop_by_Hop_Option(0),
     ICMP(1),
@@ -152,12 +152,12 @@ public enum IpProtocol {
 
     private final int protocol;
 
-    IpProtocol(int protocol) {
+    Protocol(int protocol) {
         this.protocol = protocol;
     }
 
-    public static IpProtocol findProtocol(int i){
-        for(IpProtocol p : IpProtocol.values()) {
+    public static Protocol findProtocol(int i){
+        for(Protocol p : Protocol.values()) {
             if(p.getProtocol() == i) {
                 return p;
             }
