@@ -16,6 +16,7 @@ public class TransportSegment {
                 this.transportProtocolBase = new Tcp(raw);
                 this.raw = raw; //TODO: raw after TCP
             }
+            case UDP -> {}
         }
     }
 

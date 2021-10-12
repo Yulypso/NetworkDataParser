@@ -65,10 +65,9 @@ public class IPv4Parser {
         int moreFragment = Utils.binaryStringToInt(b.substring(2,3));
 
         String r = "" + reserved + dontFragment + moreFragment + ". ";
-        r += "\n\t- Reserved bit: " + (reserved == 1 ? "set" : "not set");
-        r += "\n\t- Don't fragment: " + (dontFragment == 1 ? "set" : "not set");
-        r += "\n\t- More fragment: " + (moreFragment == 1 ? "set" : "not set");
-
+        r += "\n\t- Reserved bit: " + (reserved == 1 ? "Set (1)" : "Not set (0)");
+        r += "\n\t- Don't fragment: " + (dontFragment == 1 ? "Set (1)" : "Not set (0)");
+        r += "\n\t- More fragment: " + (moreFragment == 1 ? "Set (1)" : "Not set (0)");
         return r;
     }
 }
