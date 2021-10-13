@@ -3,7 +3,7 @@ package rishark.parser;
 import rishark.pcap.Pcap;
 import rishark.pcap.frame.link.EtherType;
 import rishark.pcap.frame.link.network.Protocol;
-import rishark.pcap.frame.link.network.protocols.ipv4.transport.protocols.TransportProtocol;
+import rishark.pcap.frame.link.network.protocols.ipv4.transport.application.protocols.ApplicationProtocol;
 import utils.Utils;
 
 import java.util.Calendar;
@@ -58,6 +58,8 @@ public class PcapParser {
                                 continue;
                             System.out.println("--- [Transport layer Segment/Datagram] ---");
                             this.parseTransportSegment(s);
+                            System.out.println("--- [Application layer Rishar] ---");
+                            this.parseApplicationRishar(s);
                         } catch (Exception e) {
                             System.err.println("\nError: Frame n°" + (s+1) + " Failed to read. Skipping it...");
                         }
@@ -94,7 +96,7 @@ public class PcapParser {
 
         switch (Objects.requireNonNull(e)) {
             case ARP -> {
-                new ArpParser(this.pcap.getFrameList().get(s).getLinkFrame().getLinkProtocol()).parse();
+                new ARPParser(this.pcap.getFrameList().get(s).getLinkFrame().getLinkProtocol()).parse();
                 return (this.pcap.getFrameList().get(s).getPacketHeader().getOrigLen() ==
                         this.pcap.getFrameList().get(s).getLinkFrame().getLinkFrameSize()); // End of frame, no more layer above ARP
             }
@@ -130,5 +132,9 @@ public class PcapParser {
             case TCP -> new TCPParser(this.pcap.getFrameList().get(s).getLinkFrame().getNetworkPacket().getTransportSegment().getTransportProtocolBase()).parse();
             case UDP -> new UDPParser(this.pcap.getFrameList().get(s).getLinkFrame().getNetworkPacket().getTransportSegment().getTransportProtocolBase()).parse();
         }
+    }
+
+    private void parseApplicationRishar(int s) {
+        new FTPParser(this.pcap.getFrameList().get(s).getLinkFrame().getNetworkPacket().getTransportSegment().getApplicationRishar().getApplicationProtocol()).parse();
     }
 }

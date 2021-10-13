@@ -10,11 +10,11 @@ import utils.Utils;
 import java.util.Objects;
 
 
-public class ArpParser {
+public class ARPParser {
 
     private final LinkProtocol linkProtocol;
 
-    public ArpParser(LinkProtocol arp) {
+    public ARPParser(LinkProtocol arp) {
         this.linkProtocol = arp;
     }
 

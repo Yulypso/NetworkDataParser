@@ -6,7 +6,7 @@ public class Udp implements TransportProtocol {
                                         // 8 bytes
     private final int sourcePort;       // 2 bytes
     private final int destPort;         // 2 bytes
-    private final int length;          // 2 bytes
+    private final int length;           // 2 bytes
     private final String checksum;      // 2 bytes
     private final String raw;
 
