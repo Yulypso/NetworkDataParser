@@ -17,6 +17,7 @@ public class Ipv4 implements NetworkProtocol {
     private final String checksum;      // 2 bytes
     private final String srcAddress;    // 4 bytes
     private final String destAddress;   // 4 bytes
+    private final String options;       // variable length
 
     private final String raw;
 
@@ -33,8 +34,8 @@ public class Ipv4 implements NetworkProtocol {
         this.checksum = Utils.readBytesFromIndex(raw, 10, 2);
         this.srcAddress = Utils.readBytesFromIndex(raw, 12, 4);
         this.destAddress = Utils.readBytesFromIndex(raw, 16, 4);
-
-        this.raw = Utils.readBytesFromIndex(raw, 20, (raw.length()/2) - 20);
+        this.options = Utils.readBytesFromIndex(raw, 20, this.headerLength - 20);
+        this.raw = Utils.readBytesFromIndex(raw, this.headerLength, (raw.length()/2) - this.headerLength);
     }
 
     public int getVersion() {
@@ -91,5 +92,9 @@ public class Ipv4 implements NetworkProtocol {
 
     public long getSize() {
         return this.getHeaderLength();
+    }
+
+    public String getOptions() {
+        return options;
     }
 }
