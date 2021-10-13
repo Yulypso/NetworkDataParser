@@ -42,13 +42,13 @@ public class PcapParser {
                     if (s < 1 || s > this.pcap.getFrameList().size()) {
                         throw new Exception();
                     } else {
-                        s--;
+                        s--; // test
                         System.out.println("\n******** [Frame n°" + (s + 1) + "] ********");
                         System.out.println("***** [Frame Header] *****");
                         System.out.println("--- [Physical layer Bits] ---");
                         this.parseFrameHeader(s);
                         System.out.println("***** [Frame Data] *****");
-                        System.out.println("--- [Data Link layer Frame ] ---");
+                        System.out.println("--- [Data Link layer Frame] ---");
                         if (this.parseLinkFrame(s))
                             continue;
                         System.out.println("--- [Network layer Packet] ---");
