@@ -42,20 +42,25 @@ public class PcapParser {
                     if (s < 1 || s > this.pcap.getFrameList().size()) {
                         throw new Exception();
                     } else {
-                        s--; // test
-                        System.out.println("\n******** [Frame n°" + (s + 1) + "] ********");
-                        System.out.println("***** [Frame Header] *****");
-                        System.out.println("--- [Physical layer Bits] ---");
-                        this.parseFrameHeader(s);
-                        System.out.println("***** [Frame Data] *****");
-                        System.out.println("--- [Data Link layer Frame] ---");
-                        if (this.parseLinkFrame(s))
-                            continue;
-                        System.out.println("--- [Network layer Packet] ---");
-                        if(this.parseNetworkPacket(s))
-                            continue;
-                        System.out.println("--- [Transport layer Segment/Datagram] ---");
-                        this.parseTransportSegment(s);
+
+                        try{
+                            s--; // test
+                            System.out.println("\n******** [Frame n°" + (s + 1) + "] ********");
+                            System.out.println("***** [Frame Header] *****");
+                            System.out.println("--- [Physical layer Bits] ---");
+                            this.parseFrameHeader(s);
+                            System.out.println("***** [Frame Data] *****");
+                            System.out.println("--- [Data Link layer Frame] ---");
+                            if (this.parseLinkFrame(s))
+                                continue;
+                            System.out.println("--- [Network layer Packet] ---");
+                            if(this.parseNetworkPacket(s))
+                                continue;
+                            System.out.println("--- [Transport layer Segment/Datagram] ---");
+                            this.parseTransportSegment(s);
+                        } catch (Exception e) {
+                            System.err.println("\nError: Frame n°" + (s+1) + " Failed to read. Skipping it...");
+                        }
                     }
                 } catch (Exception e) {
                     System.err.println("\nWarning: Frame n°" + s + " doesn't exist. Skipping it...");
