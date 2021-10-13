@@ -17,6 +17,7 @@ public class Tcp implements TransportProtocol{
     private final int window;                   // 2 bytes
     private final String checksum;              // 2 bytes
     private final int urgentPointer;            // 2 bytes
+    private final String options;               // variable length
 
     private final String raw;
 
@@ -31,8 +32,8 @@ public class Tcp implements TransportProtocol{
         this.window = Utils.hexStringToInt(Utils.readBytesFromIndex(raw, 14, 2));
         this.checksum = Utils.readBytesFromIndex(raw, 16, 2);
         this.urgentPointer = Utils.hexStringToInt(Utils.readBytesFromIndex(raw, 18, 2));
-
-        this.raw = Utils.readBytesFromIndex(raw, 20, (raw.length()/2) - 20);
+        this.options = Utils.readBytesFromIndex(raw, 20, this.headerLength - 20);
+        this.raw = Utils.readBytesFromIndex(raw, this.headerLength, (raw.length()/2) - this.headerLength);
     }
 
     @Override
@@ -78,5 +79,9 @@ public class Tcp implements TransportProtocol{
 
     public int getUrgentPointer() {
         return urgentPointer;
+    }
+
+    public String getOptions() {
+        return options;
     }
 }

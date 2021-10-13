@@ -23,8 +23,10 @@ public class TCPParser {
         System.out.println("Window: " + ((Tcp) this.transportProtocol).getWindow() + " bytes");
         System.out.println("Checksum: 0x" + ((Tcp) this.transportProtocol).getChecksum());
         System.out.println("Urgent pointer: " + ((Tcp) this.transportProtocol).getUrgentPointer());
-
-        System.out.println("TCP segment data: \n" + Utils.hexStringToString(this.transportProtocol.getRaw()));
+        if (((Tcp) this.transportProtocol).getOptions().length() > 0)
+            System.out.println("Options: " + ((Tcp) this.transportProtocol).getOptions());
+        if (this.transportProtocol.getRaw().length() > 0)
+            System.out.println("TCP segment data: \n" + this.transportProtocol.getRaw());
     }
 
     private String parseReservedFlag(String b) {
