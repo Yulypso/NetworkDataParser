@@ -3,7 +3,6 @@ package rishark.pcap.frame.link.network.protocols.ipv4.transport.protocols;
 import utils.Utils;
 
 // TCP flow: use sourcePort and destPort to get the first sequenceNumber + use sequenceNumber and AckNumber
-// TODO: TCP OPTIONS with header
 
 public class Tcp implements TransportProtocol{
                                                 // 20 bytes

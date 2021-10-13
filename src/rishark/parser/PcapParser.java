@@ -127,9 +127,8 @@ public class PcapParser {
         /* Transport layer (Transport Segments or Datagrams) */
         Protocol p = Protocol.findProtocol(this.pcap.getFrameList().get(s).getLinkFrame().getNetworkPacket().getIpProtocol());
         switch (Objects.requireNonNull(p)) {
-            case TCP -> {
-                new TCPParser(this.pcap.getFrameList().get(s).getLinkFrame().getNetworkPacket().getTransportSegment().getTransportProtocolBase()).parse();
-            }
+            case TCP -> new TCPParser(this.pcap.getFrameList().get(s).getLinkFrame().getNetworkPacket().getTransportSegment().getTransportProtocolBase()).parse();
+            case UDP -> new UDPParser(this.pcap.getFrameList().get(s).getLinkFrame().getNetworkPacket().getTransportSegment().getTransportProtocolBase()).parse();
         }
     }
 }

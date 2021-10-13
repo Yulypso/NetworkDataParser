@@ -3,6 +3,7 @@ package rishark.pcap.frame.link.network.protocols.ipv4.transport;
 import rishark.pcap.frame.link.network.Protocol;
 import rishark.pcap.frame.link.network.protocols.ipv4.transport.protocols.Tcp;
 import rishark.pcap.frame.link.network.protocols.ipv4.transport.protocols.TransportProtocol;
+import rishark.pcap.frame.link.network.protocols.ipv4.transport.protocols.Udp;
 
 public class TransportSegment {
 
@@ -14,9 +15,12 @@ public class TransportSegment {
         switch (ipProtocol) {
             case TCP -> {
                 this.transportProtocolBase = new Tcp(raw);
-                this.raw = raw; //TODO: raw after TCP
+                this.raw = this.transportProtocolBase.getRaw();
             }
-            case UDP -> {}
+            case UDP -> {
+                this.transportProtocolBase = new Udp(raw);
+                this.raw = this.transportProtocolBase.getRaw();
+            }
         }
     }
 
