@@ -21,10 +21,10 @@ public class RiShark {
         pcapParser.parseGlobalHeader();
 
         pcapParser.parseFrame(Arrays.stream(args)
-                  .toList()
-                  .subList(1, args.length)
-                  .stream()
-                  .mapToInt(Integer::parseInt)
-                  .toArray());
+                                    .toList()
+                                    .subList(1, args.length)
+                                    .stream()
+                                    .mapToInt(Integer::parseInt)
+                                    .toArray());
     }
 }

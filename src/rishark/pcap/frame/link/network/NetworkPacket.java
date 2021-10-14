@@ -32,7 +32,6 @@ public class NetworkPacket {
                     System.out.println("IP Protocol untreated.");
                 } else {
                     switch (i) {
-                        case IPv6_Hop_by_Hop_Option -> {}
                         case ICMP -> this.networkProtocol = new Icmp(this.raw);
                         default -> this.transportSegment = new TransportSegment(this.raw, i);
                     }

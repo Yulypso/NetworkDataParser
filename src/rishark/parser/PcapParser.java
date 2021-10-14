@@ -63,20 +63,15 @@ public class PcapParser {
                             System.out.println("--- [Application layer Rishar] ---");
                             this.parseApplicationRishar(s);
                         } catch (Exception e) {
-                            System.err.println("\nError: Frame n°" + (s+1) + " Failed to read. Skipping it...");
+                            System.err.println("\nWarning: Frame n°" + (s+1) + " protocol not implemented. Skipping it...");
                         }
                     }
                 } catch (Exception e) {
-                    System.err.println("\nWarning: Frame n°" + s + " doesn't exist. Skipping it...");
+                    System.err.println("\nError: Frame n°" + s + " doesn't exist. Skipping it...");
                 }
             }
         }
     }
-
-    /*public void parseFrame() {
-        System.out.println(Arrays.toString(IntStream.range(1, this.pcap.getFrameList().size() + 1).toArray()));
-        this.parseFrame(IntStream.range(1, this.pcap.getFrameList().size() + 1).toArray());
-    }*/
 
     private void parseFrameHeader(int s) {
         /* Physical layer (bits) (equivalent to packet header in Wireshark) */
@@ -138,8 +133,8 @@ public class PcapParser {
                 new UDPParser(this.pcap.getFrameList().get(s).getLinkFrame().getNetworkPacket().getTransportSegment().getTransportProtocolBase()).parse();
                 return (this.pcap.getFrameList().get(s).getLinkFrame().getNetworkPacket().getTransportSegment().getTransportProtocolBase().getRaw().length() == 0);
             }
+            default -> {return false;}
         }
-        return false;
     }
 
     private void parseApplicationRishar(int s) {
