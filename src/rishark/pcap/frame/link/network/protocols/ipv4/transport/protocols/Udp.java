@@ -38,4 +38,9 @@ public class Udp implements TransportProtocol {
     public String getChecksum() {
         return checksum;
     }
+
+    @Override
+    public int getAppPort() {
+        return (Math.min(this.getSourcePort(), this.getDestPort()));
+    }
 }

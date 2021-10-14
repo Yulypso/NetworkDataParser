@@ -1,6 +1,7 @@
 package rishark.parser;
 
 import rishark.pcap.frame.link.network.protocols.ipv4.transport.application.protocols.ApplicationProtocol;
+import utils.Utils;
 
 public class FTPParser {
 
@@ -11,7 +12,6 @@ public class FTPParser {
     }
 
     public void parse() {
-        System.out.println("Application raw: " + this.applicationProtocol.getRaw());
-
+        System.out.println("Application raw: " + Utils.hexStringToString(this.applicationProtocol.getRaw()));
     }
 }

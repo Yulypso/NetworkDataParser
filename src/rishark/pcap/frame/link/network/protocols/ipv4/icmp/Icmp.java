@@ -28,9 +28,9 @@ public class Icmp implements NetworkProtocol {
         this.sequenceNumberBE = Utils.readBytesFromIndex(raw, 6, 2, true);
         this.sequenceNumberLE = Utils.readBytesFromIndex(raw, 6, 2, false);
         this.timeStamp = Utils.hexStringToLong(Utils.readBytesFromIndex(raw, 8, 8, false));
-        this.data = Utils.readBytesFromIndex(raw, 16, 48); // TODO BUG normalement 48
+        this.data = Utils.readBytesFromIndex(raw, 16, 48);
 
-        this.raw = raw; // TODO: edit value (test)
+        this.raw = "";
     }
 
     @Override // TODO: edit value

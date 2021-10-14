@@ -3,6 +3,7 @@ package rishark.parser;
 import rishark.pcap.Pcap;
 import rishark.pcap.frame.link.EtherType;
 import rishark.pcap.frame.link.network.Protocol;
+import rishark.pcap.frame.link.network.protocols.ipv4.transport.application.AppProtocol;
 import rishark.pcap.frame.link.network.protocols.ipv4.transport.application.protocols.ApplicationProtocol;
 import utils.Utils;
 
@@ -57,7 +58,8 @@ public class PcapParser {
                             if(this.parseNetworkPacket(s))
                                 continue;
                             System.out.println("--- [Transport layer Segment/Datagram] ---");
-                            this.parseTransportSegment(s);
+                            if(this.parseTransportSegment(s))
+                                continue;
                             System.out.println("--- [Application layer Rishar] ---");
                             this.parseApplicationRishar(s);
                         } catch (Exception e) {
@@ -100,9 +102,8 @@ public class PcapParser {
                 return (this.pcap.getFrameList().get(s).getPacketHeader().getOrigLen() ==
                         this.pcap.getFrameList().get(s).getLinkFrame().getLinkFrameSize()); // End of frame, no more layer above ARP
             }
+            default -> {return false;}
         }
-        //System.out.println("Parse Network Packet: " + Arrays.toString(new int[]{this.pcap.getFrameList().get(s).getLinkFrame().getNetworkPacket().getNetworkProtocol().getClass().getDeclaredMethods().length}));
-        return false;
     }
 
     private boolean parseNetworkPacket(int s) {
@@ -110,31 +111,46 @@ public class PcapParser {
         EtherType e = EtherType.findEtherType(this.pcap.getFrameList().get(s).getLinkFrame().getEtherType());
         switch (Objects.requireNonNull(e)) {
             case IPv4 -> new IPv4Parser(this.pcap.getFrameList().get(s).getLinkFrame().getNetworkPacket().getNetworkProtocolBase()).parse();
-            case IPv6 -> {}
+            case IPv6 -> {return true;}
+            default -> {return true;}
         }
 
         Protocol p = Protocol.findProtocol(this.pcap.getFrameList().get(s).getLinkFrame().getNetworkPacket().getIpProtocol());
         switch (Objects.requireNonNull(p)) {
             case ICMP -> {
                 new ICMPParser(this.pcap.getFrameList().get(s).getLinkFrame().getNetworkPacket().getNetworkProtocol()).parse();
-                return (this.pcap.getFrameList().get(s).getPacketHeader().getOrigLen() ==
-                        (this.pcap.getFrameList().get(s).getLinkFrame().getLinkFrameSize() +
-                         this.pcap.getFrameList().get(s).getLinkFrame().getNetworkPacket().getNetworkPacketSize())); // End of packet, no more layer above ICMP
+                return (this.pcap.getFrameList().get(s).getLinkFrame().getNetworkPacket().getNetworkProtocol().getRaw().length() == 0); // End of packet, no more layer above ICMP
+            }
+            case IGMP -> {return true;}
+            default -> {return false;}
+        }
+    }
+
+    private boolean parseTransportSegment(int s) {
+        /* Transport layer (Transport Segments or Datagrams) */
+        Protocol p = Protocol.findProtocol(this.pcap.getFrameList().get(s).getLinkFrame().getNetworkPacket().getIpProtocol());
+        switch (Objects.requireNonNull(p)) {
+            case TCP -> {
+                new TCPParser(this.pcap.getFrameList().get(s).getLinkFrame().getNetworkPacket().getTransportSegment().getTransportProtocolBase()).parse();
+                return (this.pcap.getFrameList().get(s).getLinkFrame().getNetworkPacket().getTransportSegment().getTransportProtocolBase().getRaw().length() == 0);
+            }
+            case UDP -> {
+                new UDPParser(this.pcap.getFrameList().get(s).getLinkFrame().getNetworkPacket().getTransportSegment().getTransportProtocolBase()).parse();
+                return (this.pcap.getFrameList().get(s).getLinkFrame().getNetworkPacket().getTransportSegment().getTransportProtocolBase().getRaw().length() == 0);
             }
         }
         return false;
     }
 
-    private void parseTransportSegment(int s) {
-        /* Transport layer (Transport Segments or Datagrams) */
-        Protocol p = Protocol.findProtocol(this.pcap.getFrameList().get(s).getLinkFrame().getNetworkPacket().getIpProtocol());
-        switch (Objects.requireNonNull(p)) {
-            case TCP -> new TCPParser(this.pcap.getFrameList().get(s).getLinkFrame().getNetworkPacket().getTransportSegment().getTransportProtocolBase()).parse();
-            case UDP -> new UDPParser(this.pcap.getFrameList().get(s).getLinkFrame().getNetworkPacket().getTransportSegment().getTransportProtocolBase()).parse();
-        }
-    }
-
     private void parseApplicationRishar(int s) {
-        new FTPParser(this.pcap.getFrameList().get(s).getLinkFrame().getNetworkPacket().getTransportSegment().getApplicationRishar().getApplicationProtocol()).parse();
+        /* Application layer */
+        AppProtocol ap = this.pcap.getFrameList().get(s).getLinkFrame().getNetworkPacket().getTransportSegment().getAppProtocol();
+        if (ap != null) {
+            switch (ap) {
+                case FTP -> new FTPParser(this.pcap.getFrameList().get(s).getLinkFrame().getNetworkPacket().getTransportSegment().getApplicationRishar().getApplicationProtocol()).parse();
+            }
+        } else {
+            System.out.println("Unknown protocol raw: " + this.pcap.getFrameList().get(s).getLinkFrame().getNetworkPacket().getTransportSegment().getTransportProtocolBase().getRaw());
+        }
     }
 }

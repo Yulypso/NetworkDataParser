@@ -83,4 +83,9 @@ public class Tcp implements TransportProtocol{
     public String getOptions() {
         return options;
     }
+
+    @Override
+    public int getAppPort() {
+        return (Math.min(this.getSourcePort(), this.getDestPort()));
+    }
 }
