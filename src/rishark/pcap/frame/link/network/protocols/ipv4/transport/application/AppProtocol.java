@@ -2,7 +2,8 @@ package rishark.pcap.frame.link.network.protocols.ipv4.transport.application;
 
 public enum AppProtocol {
 
-    FTP("ftp");
+    FTP("ftp"),
+    DNS("dns");
 
     private final String appProtocol;
 

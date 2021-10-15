@@ -35,12 +35,19 @@ public class TransportSegment {
                 {
                     determineProtocol();
                     if(this.appProtocol != null)
-                        this.applicationRishar = new ApplicationRishar(this.getRaw(), this.appProtocol);
+                        this.applicationRishar = new ApplicationRishar(this.getRaw(), this.appProtocol, Protocol.TCP);
                 }
             }
             case UDP -> {
                 this.transportProtocolBase = new Udp(raw);
                 this.raw = this.transportProtocolBase.getRaw();
+
+                if (this.getRaw().length() > 0)
+                {
+                    determineProtocol();
+                    if(this.appProtocol != null)
+                        this.applicationRishar = new ApplicationRishar(this.getRaw(), this.appProtocol, Protocol.UDP);
+                }
             }
         }
     }
@@ -54,6 +61,10 @@ public class TransportSegment {
                         FTPCode.findFtpCode(Utils.hexStringToString(Utils.readBytesFromIndex(this.getRaw(),0,4)).trim()) != null) {
                     this.appProtocol = AppProtocol.findProtocol("ftp");
                 }
+                break;
+            }
+            case 53: {
+                this.appProtocol = AppProtocol.findProtocol("dns");
                 break;
             }
             default: {

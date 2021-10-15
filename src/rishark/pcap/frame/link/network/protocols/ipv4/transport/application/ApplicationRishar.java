@@ -1,6 +1,8 @@
 package rishark.pcap.frame.link.network.protocols.ipv4.transport.application;
 
+import rishark.pcap.frame.link.network.Protocol;
 import rishark.pcap.frame.link.network.protocols.ipv4.transport.application.protocols.ApplicationProtocol;
+import rishark.pcap.frame.link.network.protocols.ipv4.transport.application.protocols.dns.Dns;
 import rishark.pcap.frame.link.network.protocols.ipv4.transport.application.protocols.ftp.Ftp;
 
 public class ApplicationRishar {
@@ -9,13 +11,16 @@ public class ApplicationRishar {
 
     private final String raw;
     private final AppProtocol appProtocol;
+    private final Protocol overProtocol;
 
-    public ApplicationRishar(String raw, AppProtocol protocol) {
+    public ApplicationRishar(String raw, AppProtocol protocol, Protocol overProtocol) {
         this.raw = raw;
         this.appProtocol = protocol;
+        this.overProtocol = overProtocol;
 
         switch (this.getAppProtocol()) {
-            case FTP -> this.applicationProtocol = new Ftp(raw);
+            case FTP -> this.applicationProtocol = new Ftp(this.raw);
+            case DNS -> this.applicationProtocol = new Dns(this.raw, this.overProtocol);
         }
     }
 
@@ -29,5 +34,9 @@ public class ApplicationRishar {
 
     public ApplicationProtocol getApplicationProtocol() {
         return applicationProtocol;
+    }
+
+    public Protocol getOverProtocol() {
+        return overProtocol;
     }
 }

@@ -12,6 +12,6 @@ public class FTPParser {
     }
 
     public void parse() {
-        System.out.println("Application raw: " + Utils.hexStringToString(this.applicationProtocol.getRaw()));
+        System.out.println("Application FTP raw: " + Utils.hexStringToString(this.applicationProtocol.getRaw()));
     }
 }
