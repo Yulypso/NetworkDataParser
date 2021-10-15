@@ -26,11 +26,7 @@ public class LinkFrame {
         this.raw = Utils.readBytesFromIndex(raw, 14, (raw.length()/2) - 14);
 
         EtherType e;
-        if ((e = EtherType.findEtherType(this.etherType)) == null) {
-            /* Only IPv4, IPv6 and ARP are treated */
-            System.out.println("EtherType untreated.");
-        } else {
-            /* Continue decapsulation */
+        if ((e = EtherType.findEtherType(this.etherType)) != null) {
             switch (e) {
                 case ARP -> this.linkProtocol = new Arp(this.raw);
                 default -> this.networkPacket = new NetworkPacket(this.raw, e);

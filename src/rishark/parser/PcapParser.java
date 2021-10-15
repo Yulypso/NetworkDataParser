@@ -88,16 +88,21 @@ public class PcapParser {
         /* Data Link layer (Data Frames) */
         System.out.println("Destination MAC address: " + this.pcap.getFrameList().get(s).getLinkFrame().getDestAdress().replaceAll("(..)(?!$)", "$1:"));
         System.out.println("Source MAC address: " + this.pcap.getFrameList().get(s).getLinkFrame().getSrcAdress().replaceAll("(..)(?!$)", "$1:"));
-        EtherType e = EtherType.findEtherType(this.pcap.getFrameList().get(s).getLinkFrame().getEtherType());
-        System.out.println("Ether type: " + e);
+        EtherType e;
+        if ((e = EtherType.findEtherType(this.pcap.getFrameList().get(s).getLinkFrame().getEtherType())) != null) {
+            System.out.println("Ether type: " + e);
 
-        switch (Objects.requireNonNull(e)) {
-            case ARP -> {
-                new ARPParser(this.pcap.getFrameList().get(s).getLinkFrame().getLinkProtocol()).parse();
-                return (this.pcap.getFrameList().get(s).getPacketHeader().getOrigLen() ==
-                        this.pcap.getFrameList().get(s).getLinkFrame().getLinkFrameSize()); // End of frame, no more layer above ARP
+            switch (Objects.requireNonNull(e)) {
+                case ARP -> {
+                    new ARPParser(this.pcap.getFrameList().get(s).getLinkFrame().getLinkProtocol()).parse();
+                    return (this.pcap.getFrameList().get(s).getPacketHeader().getOrigLen() ==
+                            this.pcap.getFrameList().get(s).getLinkFrame().getLinkFrameSize()); // End of frame, no more layer above ARP
+                }
+                default -> {return false;}
             }
-            default -> {return false;}
+        } else {
+            System.out.println("Ether type: Unknown");
+            return true;
         }
     }
 
