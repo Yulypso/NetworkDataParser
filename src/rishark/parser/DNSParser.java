@@ -33,7 +33,13 @@ public class DNSParser {
         System.out.println("Number of answers: " + ((Dns) this.applicationProtocol).getNbAnswers());
         System.out.println("Number of Authoritative nameservers: " + ((Dns) this.applicationProtocol).getNbAuthority());
         System.out.println("Number of Additional records: " + ((Dns) this.applicationProtocol).getNbAdditional());
+        System.out.println("Queries: ");
 
+        for (int i = 0; i < ((Dns) this.applicationProtocol).getNbQuestions() ; i++) {
+            System.out.println("\t- " + ((Dns) this.applicationProtocol).getQueryList().get(i).getQueryName() +
+                    ", Type: " + ((Dns) this.applicationProtocol).getQueryList().get(i).getQueryType() +
+                    ", Class: " + ((Dns) this.applicationProtocol).getQueryList().get(i).getQueryClass());
+        }
         System.out.println("Application DNS raw: " + Utils.hexStringToString(this.applicationProtocol.getRaw()));
 
     }

@@ -1,8 +1,12 @@
 package rishark.pcap.frame.link.network.protocols.ipv4.transport.application.protocols.dns;
 
+import rishark.pcap.frame.Frame;
 import rishark.pcap.frame.link.network.Protocol;
 import rishark.pcap.frame.link.network.protocols.ipv4.transport.application.protocols.ApplicationProtocol;
 import utils.Utils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Dns implements ApplicationProtocol {
 
@@ -23,18 +27,33 @@ public class Dns implements ApplicationProtocol {
     private final int nbAuthority;
     private final int nbAdditional;
 
+    private final List<Query> queryList;
+    private final List<Answer> answerList;
+    private final List<AuthoritativeNameserver> authoritativeNameserverList;
+    private final List<AdditionalRecord> additionalRecordList;
+
     private final String raw;
     private final Protocol overProtocol;
 
     public Dns(String raw, Protocol overProtocol) {
         this.overProtocol = overProtocol;
-        if(overProtocol == Protocol.TCP)
-            this.length = Utils.hexStringToInt(Utils.readBytesFromIndex(raw, 0, 2));
-        else
-            this.length = 0; // TODO : calculer dynamiquement pour UDP ?
+        this.queryList = new ArrayList<>();
+        this.answerList = new ArrayList<>();
+        this.authoritativeNameserverList = new ArrayList<>();
+        this.additionalRecordList = new ArrayList<>();
 
-        this.transactionId = Utils.readBytesFromIndex(raw, 2, 2);
-        String flag = Utils.hexStringToBinary(Utils.readBytesFromIndex(raw, 4, 2));
+        int isUDP;
+        if(overProtocol == Protocol.TCP) {
+            this.length = Utils.hexStringToInt(Utils.readBytesFromIndex(raw, 0, 2));
+            isUDP = 0;
+        }
+        else {
+            this.length = 0; // TODO : calculer dynamiquement pour UDP ?
+            isUDP = 2;
+        }
+
+        this.transactionId = Utils.readBytesFromIndex(raw, 2 - isUDP, 2);
+        String flag = Utils.hexStringToBinary(Utils.readBytesFromIndex(raw, 4 - isUDP, 2));
         this.flagResponse = "" + flag.charAt(0);
         this.flagOpCode = "" + flag.charAt(1) + flag.charAt(2) + flag.charAt(3) + flag.charAt(4);
         this.flagAuthoritative = "" + flag.charAt(5);
@@ -45,14 +64,18 @@ public class Dns implements ApplicationProtocol {
         this.flagAnswerAuthenticated = "" + flag.charAt(10);
         this.flagNonAuthenticatedData = "" + flag.charAt(11);
         this.flagReplyCode = "" + flag.charAt(12) + flag.charAt(13) + flag.charAt(14) + flag.charAt(15);
-        this.nbQuestions = Utils.hexStringToInt(Utils.readBytesFromIndex(raw, 6, 2));
-        this.nbAnswers = Utils.hexStringToInt(Utils.readBytesFromIndex(raw, 8, 2));
-        this.nbAuthority = Utils.hexStringToInt(Utils.readBytesFromIndex(raw, 10, 2));
-        this.nbAdditional = Utils.hexStringToInt(Utils.readBytesFromIndex(raw, 12, 2));
+        this.nbQuestions = Utils.hexStringToInt(Utils.readBytesFromIndex(raw, 6 - isUDP, 2));
+        this.nbAnswers = Utils.hexStringToInt(Utils.readBytesFromIndex(raw, 8 - isUDP, 2));
+        this.nbAuthority = Utils.hexStringToInt(Utils.readBytesFromIndex(raw, 10 - isUDP, 2));
+        this.nbAdditional = Utils.hexStringToInt(Utils.readBytesFromIndex(raw, 12 - isUDP, 2));
 
-
-
-        this.raw =  Utils.readBytesFromIndex(raw, 14, (raw.length()/2) - 14); // starts from nb additional
+        String currentRaw = Utils.readBytesFromIndex(raw, 14 - isUDP, (raw.length()/2) - (14 - isUDP));
+        for (int i = 0; i < nbQuestions; ++i) {
+            Query query = new Query(currentRaw);
+            this.queryList.add(query);
+            currentRaw = query.getRaw();
+        }
+        this.raw =  currentRaw; // starts from nb additional
     }
 
     public String getRaw() {
@@ -126,5 +149,21 @@ public class Dns implements ApplicationProtocol {
 
     public int getNbAdditional() {
         return nbAdditional;
+    }
+
+    public List<Query> getQueryList() {
+        return queryList;
+    }
+
+    public List<Answer> getAnswerList() {
+        return answerList;
+    }
+
+    public List<AuthoritativeNameserver> getAuthoritativeNameserverList() {
+        return authoritativeNameserverList;
+    }
+
+    public List<AdditionalRecord> getAdditionalRecordList() {
+        return additionalRecordList;
     }
 }
