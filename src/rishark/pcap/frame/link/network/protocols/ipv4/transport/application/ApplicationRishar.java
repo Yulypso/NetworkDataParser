@@ -19,7 +19,7 @@ public class ApplicationRishar {
         this.overProtocol = overProtocol;
 
         switch (this.getAppProtocol()) {
-            case FTP -> this.applicationProtocol = new Ftp(this.raw);
+            case FTP -> this.applicationProtocol = new Ftp(this.raw, this.overProtocol);
             case DNS -> this.applicationProtocol = new Dns(this.raw, this.overProtocol);
         }
     }
