@@ -71,19 +71,26 @@ public class Dns implements ApplicationProtocol {
 
         String currentRaw = Utils.readBytesFromIndex(raw, 14 - isUDP, (raw.length()/2) - (14 - isUDP));
 
-        for (int i = 0; i < nbQuestions; ++i) {
+        for (int i = 0; i < nbQuestions; i++) {
             Query query = new Query(currentRaw, raw);
             this.queryList.add(query);
             currentRaw = query.getRaw();
         }
-        for (int i = 0; i < nbAnswers; ++i) {
+        for (int i = 0; i < nbAnswers; i++) {
             Answer answer = new Answer(currentRaw, this.queryList.get(0).getQueryName());
             this.answerList.add(answer);
             currentRaw = answer.getRaw();
         }
+        for (int i = 0; i < nbAuthority; i++) {
+            System.out.println("nb: " + i);
+            AuthoritativeNameserver authoritativeNameserver = new AuthoritativeNameserver(currentRaw, this.queryList.get(0).getQueryName());
+            this.authoritativeNameserverList.add(authoritativeNameserver);
+            currentRaw = authoritativeNameserver.getRaw();
+        }
         this.raw = currentRaw; // starts from nb additional
     }
 
+    @Override
     public String getRaw() {
         return raw;
     }
