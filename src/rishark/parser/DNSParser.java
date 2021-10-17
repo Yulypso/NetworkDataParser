@@ -2,9 +2,11 @@ package rishark.parser;
 
 import rishark.pcap.frame.link.network.Protocol;
 import rishark.pcap.frame.link.network.protocols.ipv4.transport.application.protocols.ApplicationProtocol;
+import rishark.pcap.frame.link.network.protocols.ipv4.transport.application.protocols.dns.DNSClass;
+import rishark.pcap.frame.link.network.protocols.ipv4.transport.application.protocols.dns.DNSType;
 import rishark.pcap.frame.link.network.protocols.ipv4.transport.application.protocols.dns.Dns;
 
-import utils.Utils;
+import java.util.Objects;
 
 public class DNSParser {
 
@@ -38,16 +40,16 @@ public class DNSParser {
             System.out.println("Queries: ");
         for (int i = 0; i < ((Dns) this.applicationProtocol).getNbQuestions() ; i++) {
             System.out.println("\t- " + ((Dns) this.applicationProtocol).getQueryList().get(i).getQueryName() +
-                    ", Type: " + ((Dns) this.applicationProtocol).getQueryList().get(i).getQueryType() +
-                    ", Class: " + ((Dns) this.applicationProtocol).getQueryList().get(i).getQueryClass());
+                    ", Type: " + DNSType.findDnsType(((Dns) this.applicationProtocol).getQueryList().get(i).getQueryType()) +
+                    ", Class: " + DNSClass.findDnsClass(((Dns) this.applicationProtocol).getQueryList().get(i).getQueryClass()));
         }
 
         if (((Dns) this.applicationProtocol).getNbAnswers() > 0)
             System.out.println("Answers: ");
         for (int i = 0; i < ((Dns) this.applicationProtocol).getNbAnswers() ; i++) {
             System.out.println("\t- " + ((Dns) this.applicationProtocol).getAnswerList().get(i).getAnswerName() +
-                    ", Type: " + ((Dns) this.applicationProtocol).getAnswerList().get(i).getAnswerType() +
-                    ", Class: " + ((Dns) this.applicationProtocol).getAnswerList().get(i).getAnswerClass());
+                    ", Type: " + DNSType.findDnsType(((Dns) this.applicationProtocol).getAnswerList().get(i).getAnswerType()) +
+                    ", Class: " + DNSClass.findDnsClass(((Dns) this.applicationProtocol).getAnswerList().get(i).getAnswerClass()));
             System.out.println("\t  Time to live: " + ((Dns) this.applicationProtocol).getAnswerList().get(i).getTimeToLive());
             System.out.println("\t  Data length: " + ((Dns) this.applicationProtocol).getAnswerList().get(i).getDataLength());
             System.out.println("\t  Data: " + ((Dns) this.applicationProtocol).getAnswerList().get(i).getData());
@@ -57,14 +59,14 @@ public class DNSParser {
             System.out.println("Authoritative Nameserver: ");
         for (int i = 0; i < ((Dns) this.applicationProtocol).getNbAuthority() ; i++) {
             System.out.println("\t- " + ((Dns) this.applicationProtocol).getAuthoritativeNameserverList().get(i).getAuthoritativeNameserverName() +
-                    ", Type: " + ((Dns) this.applicationProtocol).getAuthoritativeNameserverList().get(i).getAuthoritativeNameserverType() +
-                    ", Class: " + ((Dns) this.applicationProtocol).getAuthoritativeNameserverList().get(i).getAuthoritativeNameserverClass());
+                    ", Type: " + DNSType.findDnsType(((Dns) this.applicationProtocol).getAuthoritativeNameserverList().get(i).getAuthoritativeNameserverType()) +
+                    ", Class: " + DNSClass.findDnsClass(((Dns) this.applicationProtocol).getAuthoritativeNameserverList().get(i).getAuthoritativeNameserverClass()));
             System.out.println("\t  Time to live: " + ((Dns) this.applicationProtocol).getAuthoritativeNameserverList().get(i).getTimeToLive());
             System.out.println("\t  Data length: " + ((Dns) this.applicationProtocol).getAuthoritativeNameserverList().get(i).getDataLength());
 
-            switch (((Dns) this.applicationProtocol).getAuthoritativeNameserverList().get(i).getAuthoritativeNameserverType()) {
-                case 2 -> System.out.println("\t  Primary name server: " + ((Dns) this.applicationProtocol).getAuthoritativeNameserverList().get(i).getPrimaryNameServer());
-                case 6 -> {
+            switch (Objects.requireNonNull(DNSType.findDnsType(((Dns) this.applicationProtocol).getAuthoritativeNameserverList().get(i).getAuthoritativeNameserverType()))) {
+                case NS -> System.out.println("\t  Primary name server: " + ((Dns) this.applicationProtocol).getAuthoritativeNameserverList().get(i).getPrimaryNameServer());
+                case SOA -> {
                     System.out.println("\t  Primary name server: " + ((Dns) this.applicationProtocol).getAuthoritativeNameserverList().get(i).getPrimaryNameServer());
                     System.out.println("\t  Responsible authority's mailbox: " + ((Dns) this.applicationProtocol).getAuthoritativeNameserverList().get(i).getResponsibleAuthorityMailbox());
                     System.out.println("\t  Serial number: " + ((Dns) this.applicationProtocol).getAuthoritativeNameserverList().get(i).getSerialNumber());
@@ -74,6 +76,28 @@ public class DNSParser {
                     System.out.println("\t  Minimum TTL: " + ((Dns) this.applicationProtocol).getAuthoritativeNameserverList().get(i).getMinimumTTL());
                 }
             }
+        }
+
+        if (((Dns) this.applicationProtocol).getNbAdditional() > 0)
+            System.out.println("Additional Records: ");
+        for (int i = 0; i < ((Dns) this.applicationProtocol).getNbAdditional() ; i++) {
+            System.out.println("\t- " + ((Dns) this.applicationProtocol).getAdditionalRecordList().get(i).getAdditionalRecocordName() +
+                    ", Type: " + DNSType.findDnsType(((Dns) this.applicationProtocol).getAdditionalRecordList().get(i).getAdditionalRecordType()));
+            switch (Objects.requireNonNull(DNSType.findDnsType(((Dns) this.applicationProtocol).getAdditionalRecordList().get(i).getAdditionalRecordType()))) {
+                case A -> {
+                    System.out.println("\t  Class: " + DNSClass.findDnsClass(((Dns) this.applicationProtocol).getAdditionalRecordList().get(i).getAdditonalRecordClass()));
+                    System.out.println("\t  Time to live: " + ((Dns) this.applicationProtocol).getAdditionalRecordList().get(i).getTtl());
+                }
+                case OPT -> {
+                    System.out.println("\t  UDP Payload size: " + ((Dns) this.applicationProtocol).getAdditionalRecordList().get(i).getPayloadSize());
+                    System.out.println("\t  Higher bits in extended RCODE: " + ((Dns) this.applicationProtocol).getAdditionalRecordList().get(i).getHigherBitExtendedRCODE());
+                    System.out.println("\t  EDNS0 version: " + ((Dns) this.applicationProtocol).getAdditionalRecordList().get(i).getEDNS0Version());
+                    System.out.println("\t  z: " + ((Dns) this.applicationProtocol).getAdditionalRecordList().get(i).getZ());
+                }
+            }
+            System.out.println("\t  Data length: " + ((Dns) this.applicationProtocol).getAdditionalRecordList().get(i).getDataLength());
+            if(((Dns) this.applicationProtocol).getAdditionalRecordList().get(i).getDataLength() > 0 )
+                System.out.println("\t  Data: " + ((Dns) this.applicationProtocol).getAdditionalRecordList().get(i).getData());
         }
         if (this.applicationProtocol.getRaw().length() > 0)
             System.out.println("Application DNS raw: " + this.applicationProtocol.getRaw());

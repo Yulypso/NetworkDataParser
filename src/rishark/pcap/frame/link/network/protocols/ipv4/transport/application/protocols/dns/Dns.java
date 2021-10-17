@@ -77,15 +77,21 @@ public class Dns implements ApplicationProtocol {
             currentRaw = query.getRaw();
         }
         for (int i = 0; i < nbAnswers; i++) {
+            System.out.println("nb nbanswer: " + nbAnswers + " nb: " + i);
+            System.out.println(currentRaw);
             Answer answer = new Answer(currentRaw, raw);
             this.answerList.add(answer);
             currentRaw = answer.getRaw();
         }
         for (int i = 0; i < nbAuthority; i++) {
-            System.out.println("nb autority: " + nbAuthority + " nb: " + i);
             AuthoritativeNameserver authoritativeNameserver = new AuthoritativeNameserver(currentRaw, raw);
             this.authoritativeNameserverList.add(authoritativeNameserver);
             currentRaw = authoritativeNameserver.getRaw();
+        }
+        for (int i = 0; i < nbAdditional; i++) {
+            AdditionalRecord additionalRecord = new AdditionalRecord(currentRaw, raw);
+            this.additionalRecordList.add(additionalRecord);
+            currentRaw = additionalRecord.getRaw();
         }
         this.raw = currentRaw; // starts from nb additional
     }

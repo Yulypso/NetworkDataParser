@@ -2,6 +2,8 @@ package rishark.pcap.frame.link.network.protocols.ipv4.transport.application.pro
 
 import utils.Utils;
 
+import java.util.Objects;
+
 public class AuthoritativeNameserver {
 
     private final String authoritativeNameserverName;
@@ -34,12 +36,12 @@ public class AuthoritativeNameserver {
         this.timeToLive = Utils.hexStringToInt(Utils.readBytesFromIndex(raw, 5 + isNotRoot, 4));
         this.dataLength = Utils.hexStringToInt(Utils.readBytesFromIndex(raw, 9 + isNotRoot, 2));
 
-        switch (authoritativeNameserverType) {
-            case 2 -> {  // type = NS
+        switch (Objects.requireNonNull(DNSType.findDnsType(authoritativeNameserverType))) {
+            case NS -> {
                 this.primaryNameServer = (Utils.readBytesFromIndex(raw, 11 + isNotRoot, dataLength));
                 this.raw = Utils.readBytesFromIndex(raw, 11 + isNotRoot + dataLength, (raw.length() / 2) - (11 + isNotRoot + dataLength));
             }
-            case 6 -> {  // type = SOA
+            case SOA -> {
                 StringBuilder qn = new StringBuilder();
                 String currRaw = raw;
                 int nbChar = Utils.hexStringToInt(Utils.readBytesFromIndex(raw, 11 + isNotRoot, 1));

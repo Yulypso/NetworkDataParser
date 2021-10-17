@@ -50,7 +50,6 @@ public class Answer {
         this.timeToLive = Utils.hexStringToInt(Utils.readBytesFromIndex(currRaw, 4, 4));
         this.dataLength = Utils.hexStringToInt(Utils.readBytesFromIndex(currRaw, 8, 2));
         this.data = Utils.readBytesFromIndex(currRaw, 10, dataLength);
-
         this.raw = Utils.readBytesFromIndex(currRaw, 10 + dataLength, (currRaw.length()/2) - (10 + dataLength));
     }
 
