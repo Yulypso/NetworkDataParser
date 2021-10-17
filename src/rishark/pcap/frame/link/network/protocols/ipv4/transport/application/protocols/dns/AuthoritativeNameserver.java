@@ -24,7 +24,8 @@ public class AuthoritativeNameserver {
         if (Utils.hexStringToInt(Utils.readBytesFromIndex(raw, 0, 1)) == 0) { // ROOT
             this.authoritativeNameserverName = "Root";
         } else {
-            this.authoritativeNameserverName = Utils.hexStringToString(Utils.readBytesFromIndex(raw, 0, 2));
+            // TODO : debug this part later
+            this.authoritativeNameserverName = Utils.readBytesFromIndex(raw, 0, 2);
             isNotRoot = 1;
         }
 

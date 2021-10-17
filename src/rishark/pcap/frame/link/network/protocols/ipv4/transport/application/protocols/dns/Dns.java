@@ -77,7 +77,7 @@ public class Dns implements ApplicationProtocol {
             currentRaw = query.getRaw();
         }
         for (int i = 0; i < nbAnswers; i++) {
-            Answer answer = new Answer(currentRaw, this.queryList.get(0).getQueryName());
+            Answer answer = new Answer(currentRaw, raw);
             this.answerList.add(answer);
             currentRaw = answer.getRaw();
         }
