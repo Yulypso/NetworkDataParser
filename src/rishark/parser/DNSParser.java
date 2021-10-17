@@ -61,16 +61,21 @@ public class DNSParser {
                     ", Class: " + ((Dns) this.applicationProtocol).getAuthoritativeNameserverList().get(i).getAuthoritativeNameserverClass());
             System.out.println("\t  Time to live: " + ((Dns) this.applicationProtocol).getAuthoritativeNameserverList().get(i).getTimeToLive());
             System.out.println("\t  Data length: " + ((Dns) this.applicationProtocol).getAuthoritativeNameserverList().get(i).getDataLength());
-            System.out.println("\t  Primary name server: " + ((Dns) this.applicationProtocol).getAuthoritativeNameserverList().get(i).getPrimaryNameServer());
-            if (((Dns) this.applicationProtocol).getAuthoritativeNameserverList().get(i).getAuthoritativeNameserverType() == 6) {
-                System.out.println("\t  Responsible authority's mailbox: " + ((Dns) this.applicationProtocol).getAuthoritativeNameserverList().get(i).getResponsibleAuthorityMailbox());
-                System.out.println("\t  Serial number: " + ((Dns) this.applicationProtocol).getAuthoritativeNameserverList().get(i).getSerialNumber());
-                System.out.println("\t  Refresh interval: " + ((Dns) this.applicationProtocol).getAuthoritativeNameserverList().get(i).getRefreshInterval());
-                System.out.println("\t  Retry interval: " + ((Dns) this.applicationProtocol).getAuthoritativeNameserverList().get(i).getRetryInterval());
-                System.out.println("\t  Expire limit: " + ((Dns) this.applicationProtocol).getAuthoritativeNameserverList().get(i).getExpireLimit());
-                System.out.println("\t  Minimum TTL: " + ((Dns) this.applicationProtocol).getAuthoritativeNameserverList().get(i).getMinimumTTL());
+
+            switch (((Dns) this.applicationProtocol).getAuthoritativeNameserverList().get(i).getAuthoritativeNameserverType()) {
+                case 2 -> System.out.println("\t  Primary name server: " + ((Dns) this.applicationProtocol).getAuthoritativeNameserverList().get(i).getPrimaryNameServer());
+                case 6 -> {
+                    System.out.println("\t  Primary name server: " + ((Dns) this.applicationProtocol).getAuthoritativeNameserverList().get(i).getPrimaryNameServer());
+                    System.out.println("\t  Responsible authority's mailbox: " + ((Dns) this.applicationProtocol).getAuthoritativeNameserverList().get(i).getResponsibleAuthorityMailbox());
+                    System.out.println("\t  Serial number: " + ((Dns) this.applicationProtocol).getAuthoritativeNameserverList().get(i).getSerialNumber());
+                    System.out.println("\t  Refresh interval: " + ((Dns) this.applicationProtocol).getAuthoritativeNameserverList().get(i).getRefreshInterval());
+                    System.out.println("\t  Retry interval: " + ((Dns) this.applicationProtocol).getAuthoritativeNameserverList().get(i).getRetryInterval());
+                    System.out.println("\t  Expire limit: " + ((Dns) this.applicationProtocol).getAuthoritativeNameserverList().get(i).getExpireLimit());
+                    System.out.println("\t  Minimum TTL: " + ((Dns) this.applicationProtocol).getAuthoritativeNameserverList().get(i).getMinimumTTL());
+                }
             }
         }
-        System.out.println("Application DNS raw: " + this.applicationProtocol.getRaw());
+        if (this.applicationProtocol.getRaw().length() > 0)
+            System.out.println("Application DNS raw: " + this.applicationProtocol.getRaw());
     }
 }

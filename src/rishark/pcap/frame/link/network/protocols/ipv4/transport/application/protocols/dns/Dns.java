@@ -82,8 +82,8 @@ public class Dns implements ApplicationProtocol {
             currentRaw = answer.getRaw();
         }
         for (int i = 0; i < nbAuthority; i++) {
-            System.out.println("nb: " + i);
-            AuthoritativeNameserver authoritativeNameserver = new AuthoritativeNameserver(currentRaw, this.queryList.get(0).getQueryName());
+            System.out.println("nb autority: " + nbAuthority + " nb: " + i);
+            AuthoritativeNameserver authoritativeNameserver = new AuthoritativeNameserver(currentRaw, raw);
             this.authoritativeNameserverList.add(authoritativeNameserver);
             currentRaw = authoritativeNameserver.getRaw();
         }
