@@ -30,7 +30,7 @@ public class TransportSegment {
                 {
                     determineProtocol();
                     if(this.appProtocol != null)
-                        this.applicationRishar = new ApplicationRishar(this.getRaw(), this.appProtocol, Protocol.TCP);
+                        this.applicationRishar = new ApplicationRishar(this.getRaw(), this.appProtocol, Protocol.TCP, 0);
                 }
             }
             case UDP -> {
@@ -41,7 +41,7 @@ public class TransportSegment {
                 {
                     determineProtocol();
                     if(this.appProtocol != null)
-                        this.applicationRishar = new ApplicationRishar(this.getRaw(), this.appProtocol, Protocol.UDP);
+                        this.applicationRishar = new ApplicationRishar(this.getRaw(), this.appProtocol, Protocol.UDP, (((Udp) this.getTransportProtocolBase()).getLength() - 8));
                 }
             }
         }

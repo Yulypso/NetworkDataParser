@@ -13,14 +13,14 @@ public class ApplicationRishar {
     private final AppProtocol appProtocol;
     private final Protocol overProtocol;
 
-    public ApplicationRishar(String raw, AppProtocol protocol, Protocol overProtocol) {
+    public ApplicationRishar(String raw, AppProtocol protocol, Protocol overProtocol, long udpDataLength) {
         this.raw = raw;
         this.appProtocol = protocol;
         this.overProtocol = overProtocol;
 
         switch (this.getAppProtocol()) {
             case FTP -> this.applicationProtocol = new Ftp(this.raw, this.overProtocol);
-            case DNS -> this.applicationProtocol = new Dns(this.raw, this.overProtocol);
+            case DNS -> this.applicationProtocol = new Dns(this.raw, this.overProtocol, udpDataLength);
         }
     }
 

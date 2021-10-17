@@ -33,14 +33,22 @@ public class DNSParser {
         System.out.println("Number of answers: " + ((Dns) this.applicationProtocol).getNbAnswers());
         System.out.println("Number of Authoritative nameservers: " + ((Dns) this.applicationProtocol).getNbAuthority());
         System.out.println("Number of Additional records: " + ((Dns) this.applicationProtocol).getNbAdditional());
-        System.out.println("Queries: ");
 
+        System.out.println("Queries: ");
         for (int i = 0; i < ((Dns) this.applicationProtocol).getNbQuestions() ; i++) {
             System.out.println("\t- " + ((Dns) this.applicationProtocol).getQueryList().get(i).getQueryName() +
                     ", Type: " + ((Dns) this.applicationProtocol).getQueryList().get(i).getQueryType() +
                     ", Class: " + ((Dns) this.applicationProtocol).getQueryList().get(i).getQueryClass());
         }
+        System.out.println("Answers: ");
+        for (int i = 0; i < ((Dns) this.applicationProtocol).getNbAnswers() ; i++) {
+            System.out.println("\t- " + ((Dns) this.applicationProtocol).getAnswerList().get(i).getAnswerName() +
+                    ", Type: " + ((Dns) this.applicationProtocol).getAnswerList().get(i).getAnswerType() +
+                    ", Class: " + ((Dns) this.applicationProtocol).getAnswerList().get(i).getAnswerClass());
+            System.out.println("\t  Time to live: " + ((Dns) this.applicationProtocol).getAnswerList().get(i).getTimeToLive());
+            System.out.println("\t  Data length: " + ((Dns) this.applicationProtocol).getAnswerList().get(i).getDataLength());
+            System.out.println("\t  Data: " + ((Dns) this.applicationProtocol).getAnswerList().get(i).getData());
+        }
         System.out.println("Application DNS raw: " + Utils.hexStringToString(this.applicationProtocol.getRaw()));
-
     }
 }

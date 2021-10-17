@@ -11,7 +11,7 @@ public class Query {
     private final String raw;
 
 
-    public Query(String raw) {
+    public Query(String raw, String r) {
         StringBuilder qn = new StringBuilder();
         String currRaw = raw;
         int nbChar = Utils.hexStringToInt(Utils.readBytesFromIndex(raw, 0, 1));

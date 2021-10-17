@@ -10,7 +10,7 @@ import java.util.List;
 
 public class Dns implements ApplicationProtocol {
 
-    private final int length;
+    private final long length;
     private final String transactionId;
     private final String flagResponse;
     private final String flagOpCode;
@@ -35,7 +35,7 @@ public class Dns implements ApplicationProtocol {
     private final String raw;
     private final Protocol overProtocol;
 
-    public Dns(String raw, Protocol overProtocol) {
+    public Dns(String raw, Protocol overProtocol, long udpDataLength) {
         this.overProtocol = overProtocol;
         this.queryList = new ArrayList<>();
         this.answerList = new ArrayList<>();
@@ -48,7 +48,7 @@ public class Dns implements ApplicationProtocol {
             isUDP = 0;
         }
         else {
-            this.length = 0; // TODO : calculer dynamiquement pour UDP ?
+            this.length = udpDataLength;
             isUDP = 2;
         }
 
@@ -70,12 +70,18 @@ public class Dns implements ApplicationProtocol {
         this.nbAdditional = Utils.hexStringToInt(Utils.readBytesFromIndex(raw, 12 - isUDP, 2));
 
         String currentRaw = Utils.readBytesFromIndex(raw, 14 - isUDP, (raw.length()/2) - (14 - isUDP));
+
         for (int i = 0; i < nbQuestions; ++i) {
-            Query query = new Query(currentRaw);
+            Query query = new Query(currentRaw, raw);
             this.queryList.add(query);
             currentRaw = query.getRaw();
         }
-        this.raw =  currentRaw; // starts from nb additional
+        for (int i = 0; i < nbAnswers; ++i) {
+            Answer answer = new Answer(currentRaw, this.queryList.get(0).getQueryName());
+            this.answerList.add(answer);
+            currentRaw = answer.getRaw();
+        }
+        this.raw = currentRaw; // starts from nb additional
     }
 
     public String getRaw() {
@@ -87,7 +93,7 @@ public class Dns implements ApplicationProtocol {
         return overProtocol;
     }
 
-    public int getLength() {
+    public long getLength() {
         return length;
     }
 
