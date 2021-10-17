@@ -2,6 +2,8 @@ package rishark.pcap.frame.link.network.protocols.ipv4.transport.application.pro
 
 import utils.Utils;
 
+import java.util.Objects;
+
 public class Answer {
 
     private String answerName;
@@ -9,7 +11,8 @@ public class Answer {
     private final int answerClass;
     private final int timeToLive;
     private final int dataLength;
-    private final String data;
+    private String preference;
+    private String data;
     private final String raw;
 
     public Answer(String raw, String dnsRaw) {
@@ -49,7 +52,38 @@ public class Answer {
         this.answerClass = Utils.hexStringToInt(Utils.readBytesFromIndex(currRaw, 2, 2));
         this.timeToLive = Utils.hexStringToInt(Utils.readBytesFromIndex(currRaw, 4, 4));
         this.dataLength = Utils.hexStringToInt(Utils.readBytesFromIndex(currRaw, 8, 2));
-        this.data = Utils.readBytesFromIndex(currRaw, 10, dataLength);
+
+        switch (Objects.requireNonNull(DNSType.findDnsType(answerType))) {
+            case A -> this.data = Utils.bytesToIPv4(Utils.readBytesFromIndex(currRaw, 10, dataLength));
+            case AAAA -> this.data = Utils.bytesToIPv6(Utils.readBytesFromIndex(currRaw, 10, dataLength));
+            case MX -> {
+                this.preference = Utils.readBytesFromIndex(currRaw, 10, 2);
+                String tmpRaw = Utils.readBytesFromIndex(currRaw, 12, dataLength - 2);
+                int nbChar = Utils.hexStringToInt(Utils.readBytesFromIndex(tmpRaw, 0, 1));
+                tmpRaw = Utils.readBytesFromIndex(tmpRaw, 1, (tmpRaw.length() / 2) - 1);
+
+                StringBuilder qn = new StringBuilder();
+                while (nbChar != 0) {
+                    for (int i = 0; i < nbChar; i++) {
+                        qn.append(Utils.hexStringToString(Utils.readBytesFromIndex(tmpRaw, i, 1)));
+                    }
+                    qn.append(".");
+                    tmpRaw = Utils.readBytesFromIndex(tmpRaw, nbChar, (tmpRaw.length() / 2) - nbChar);
+                    if (("" + Utils.hexStringToBinary(Utils.readBytesFromIndex(tmpRaw, 0, 1)).charAt(0) + Utils.hexStringToBinary(Utils.readBytesFromIndex(tmpRaw, 0, 1)).charAt(1)).equals("11")) { // pointer detected
+                        // TODO : debug this part later
+                        nbChar = 0;
+                        qn.append(Utils.readBytesFromIndex(tmpRaw, 0, 2)); // append pointer + pointer value
+                        tmpRaw = Utils.readBytesFromIndex(tmpRaw, 2, (tmpRaw.length() / 2) - 2); // save pointer value
+                        this.data = qn.toString();
+                    } else {
+                        nbChar = Utils.hexStringToInt(Utils.readBytesFromIndex(tmpRaw, 0, 1));
+                        tmpRaw = Utils.readBytesFromIndex(tmpRaw, 1, (tmpRaw.length() / 2) - 1);
+                        this.data = qn.substring(0, qn.length() - 1);
+                    }
+                }
+
+            }
+        }
         this.raw = Utils.readBytesFromIndex(currRaw, 10 + dataLength, (currRaw.length()/2) - (10 + dataLength));
     }
 
@@ -79,5 +113,9 @@ public class Answer {
 
     public String getData() {
         return data;
+    }
+
+    public String getPreference() {
+        return preference;
     }
 }

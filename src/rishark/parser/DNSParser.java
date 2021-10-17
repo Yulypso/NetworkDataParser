@@ -52,7 +52,15 @@ public class DNSParser {
                     ", Class: " + DNSClass.findDnsClass(((Dns) this.applicationProtocol).getAnswerList().get(i).getAnswerClass()));
             System.out.println("\t  Time to live: " + ((Dns) this.applicationProtocol).getAnswerList().get(i).getTimeToLive());
             System.out.println("\t  Data length: " + ((Dns) this.applicationProtocol).getAnswerList().get(i).getDataLength());
-            System.out.println("\t  Data: " + ((Dns) this.applicationProtocol).getAnswerList().get(i).getData());
+
+            switch (Objects.requireNonNull(DNSType.findDnsType(((Dns) this.applicationProtocol).getAnswerList().get(i).getAnswerType()))) {
+                case A -> System.out.println("\t  Address: " + ((Dns) this.applicationProtocol).getAnswerList().get(i).getData());
+                case MX -> {
+                    System.out.println("\t  Preference: " + ((Dns) this.applicationProtocol).getAnswerList().get(i).getPreference());
+                    System.out.println("\t  Data: " + ((Dns) this.applicationProtocol).getAnswerList().get(i).getData());
+                }
+                default -> System.out.println("\t  Data: " + ((Dns) this.applicationProtocol).getAnswerList().get(i).getData());
+            }
         }
 
         if (((Dns) this.applicationProtocol).getNbAuthority() > 0)
