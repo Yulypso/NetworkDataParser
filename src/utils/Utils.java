@@ -100,12 +100,22 @@ public class Utils {
         System.out.printf("%04x", i);
     }
 
-    public static String bytesToIP(String bytes){
+    public static String bytesToIPv4(String bytes){
         String[] ss = bytes.replaceAll("(..)(?!$)", "$1%").split("%");
         StringBuilder sb = new StringBuilder();
         for (String s: ss) {
             sb.append(hexStringToInt(s)).append(".");
         }
         return sb.substring(0, sb.length()-1);
+    }
+
+    public static String bytesToIPv6(String bytes){
+        StringBuilder sb = new StringBuilder();
+        for (int i=0; i < 32; i++) {
+            if (i % 4 == 0 && i != 0)
+                sb.append(":");
+            sb.append(bytes.charAt(i));
+        }
+        return sb.toString();
     }
 }

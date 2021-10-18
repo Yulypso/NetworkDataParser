@@ -10,9 +10,6 @@ import rishark.pcap.frame.link.network.protocols.ipv4.transport.protocols.Transp
 import rishark.pcap.frame.link.network.protocols.ipv4.transport.protocols.Udp;
 import utils.Utils;
 
-import javax.lang.model.type.NullType;
-import java.util.Objects;
-
 public class TransportSegment {
 
     private ApplicationRishar applicationRishar;
@@ -29,13 +26,11 @@ public class TransportSegment {
                 this.transportProtocolBase = new Tcp(raw);
                 this.raw = this.transportProtocolBase.getRaw();
 
-                // TODO: methods determine app protocol
-                // TODO: use switch for app protocol
                 if (this.getRaw().length() > 0)
                 {
                     determineProtocol();
                     if(this.appProtocol != null)
-                        this.applicationRishar = new ApplicationRishar(this.getRaw(), this.appProtocol, Protocol.TCP);
+                        this.applicationRishar = new ApplicationRishar(this.getRaw(), this.appProtocol, Protocol.TCP, 0);
                 }
             }
             case UDP -> {
@@ -46,7 +41,7 @@ public class TransportSegment {
                 {
                     determineProtocol();
                     if(this.appProtocol != null)
-                        this.applicationRishar = new ApplicationRishar(this.getRaw(), this.appProtocol, Protocol.UDP);
+                        this.applicationRishar = new ApplicationRishar(this.getRaw(), this.appProtocol, Protocol.UDP, (((Udp) this.getTransportProtocolBase()).getLength() - 8));
                 }
             }
         }
@@ -55,22 +50,15 @@ public class TransportSegment {
     private void determineProtocol(){
         int port = this.transportProtocolBase.getAppPort();
 
-        switch (port){
-            case 21: case 22: {
-                if(FTPCommand.findFtpCommand(Utils.hexStringToString(Utils.readBytesFromIndex(this.getRaw(),0,4)).trim()) != null ||
-                        FTPCode.findFtpCode(Utils.hexStringToString(Utils.readBytesFromIndex(this.getRaw(),0,4)).trim()) != null) {
+        switch (port) {
+            case 21, 22 -> {
+                if (FTPCommand.findFtpCommand(Utils.hexStringToString(Utils.readBytesFromIndex(this.getRaw(), 0, 4)).trim()) != null ||
+                        FTPCode.findFtpCode(Utils.hexStringToString(Utils.readBytesFromIndex(this.getRaw(), 0, 4)).trim()) != null) {
                     this.appProtocol = AppProtocol.findProtocol("ftp");
                 }
-                break;
             }
-            case 53: {
-                this.appProtocol = AppProtocol.findProtocol("dns");
-                break;
-            }
-            default: {
-                this.appProtocol = null;
-                break;
-            }
+            case 53 -> this.appProtocol = AppProtocol.findProtocol("dns");
+            default -> this.appProtocol = null;
         }
     }
 
