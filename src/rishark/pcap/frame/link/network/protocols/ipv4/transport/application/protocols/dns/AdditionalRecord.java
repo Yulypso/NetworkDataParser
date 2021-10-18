@@ -2,6 +2,8 @@ package rishark.pcap.frame.link.network.protocols.ipv4.transport.application.pro
 
 import utils.Utils;
 
+import java.util.Objects;
+
 public class AdditionalRecord { //new.pcap n°7
 
     private final String additionalRecocordName;    // 1/2 bytes
@@ -30,15 +32,15 @@ public class AdditionalRecord { //new.pcap n°7
         }
         this.additionalRecordType = Utils.hexStringToInt(Utils.readBytesFromIndex(raw, 1 + isNotRoot, 2));
 
-        switch (additionalRecordType) {
-            case 1 -> {
+        switch (Objects.requireNonNull(DNSType.findDnsType(additionalRecordType))) {
+            case A -> {
                 this.additonalRecordClass = Utils.hexStringToInt(Utils.readBytesFromIndex(raw, 3 + isNotRoot, 2));
                 this.ttl = Utils.hexStringToLong(Utils.readBytesFromIndex(raw, 5 + isNotRoot, 4));
                 this.dataLength = Utils.hexStringToInt(Utils.readBytesFromIndex(raw, 9 + isNotRoot, 2));
                 this.data = Utils.readBytesFromIndex(raw, 11 + isNotRoot, dataLength);
                 this.raw = Utils.readBytesFromIndex(raw, 11 + isNotRoot + dataLength, (raw.length() / 2) - (11 + isNotRoot + dataLength));
             }
-            case 41 -> {
+            case OPT -> {
                 this.payloadSize = Utils.hexStringToInt(Utils.readBytesFromIndex(raw, 3 + isNotRoot, 2));
                 this.higherBitExtendedRCODE = Utils.hexStringToInt(Utils.readBytesFromIndex(raw, 5 + isNotRoot, 1));
                 this.EDNS0Version = Utils.hexStringToInt(Utils.readBytesFromIndex(raw, 6 + isNotRoot, 1));

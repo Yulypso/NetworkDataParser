@@ -1,6 +1,5 @@
 package rishark.pcap.frame.link.network.protocols.ipv4.transport.application.protocols.dns;
 
-import rishark.pcap.frame.Frame;
 import rishark.pcap.frame.link.network.Protocol;
 import rishark.pcap.frame.link.network.protocols.ipv4.transport.application.protocols.ApplicationProtocol;
 import utils.Utils;
@@ -8,7 +7,7 @@ import utils.Utils;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Dns implements ApplicationProtocol {
+public class Dns implements ApplicationProtocol { // new 7 OPT || dns_cap 17
 
     private final long length;
     private final String transactionId;
