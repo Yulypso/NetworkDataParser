@@ -118,4 +118,31 @@ public class Utils {
         }
         return sb.toString();
     }
+
+    public static String readDataNameFromTmpRaw(String tmpRaw){
+        String data = null;
+        int nbChar = Utils.hexStringToInt(Utils.readBytesFromIndex(tmpRaw, 0, 1));
+        tmpRaw = Utils.readBytesFromIndex(tmpRaw, 1, (tmpRaw.length() / 2) - 1);
+
+        StringBuilder qn = new StringBuilder();
+        while (nbChar != 0) {
+            for (int i = 0; i < nbChar; i++) {
+                qn.append(Utils.hexStringToString(Utils.readBytesFromIndex(tmpRaw, i, 1)));
+            }
+            qn.append(".");
+            tmpRaw = Utils.readBytesFromIndex(tmpRaw, nbChar, (tmpRaw.length() / 2) - nbChar);
+            if (("" + Utils.hexStringToBinary(Utils.readBytesFromIndex(tmpRaw, 0, 1)).charAt(0) + Utils.hexStringToBinary(Utils.readBytesFromIndex(tmpRaw, 0, 1)).charAt(1)).equals("11")) { // pointer detected
+                // TODO : debug this part later
+                nbChar = 0;
+                qn.append(Utils.readBytesFromIndex(tmpRaw, 0, 2)); // append pointer + pointer value
+                tmpRaw = Utils.readBytesFromIndex(tmpRaw, 2, (tmpRaw.length() / 2) - 2); // save pointer value
+                data = qn.toString();
+            } else {
+                nbChar = Utils.hexStringToInt(Utils.readBytesFromIndex(tmpRaw, 0, 1));
+                tmpRaw = Utils.readBytesFromIndex(tmpRaw, 1, (tmpRaw.length() / 2) - 1);
+                data = qn.substring(0, qn.length() - 1);
+            }
+        }
+        return data;
+    }
 }

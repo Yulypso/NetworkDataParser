@@ -24,29 +24,14 @@ public class Answer {
             this.answerName = Utils.readBytesFromIndex(currRaw, 0, 2);
             currRaw = Utils.readBytesFromIndex(currRaw, 2, (currRaw.length() / 2) - 2);
         } else {
-            StringBuilder qn = new StringBuilder();
+            this.answerName = Utils.readDataNameFromTmpRaw(currRaw);
 
-            int nbChar = Utils.hexStringToInt(Utils.readBytesFromIndex(raw, 0, 1));
-            currRaw = Utils.readBytesFromIndex(currRaw, 1, (currRaw.length() / 2) - 1);
-
-            while (nbChar != 0) {
-                for (int i = 0; i < nbChar; i++) {
-                    qn.append(Utils.hexStringToString(Utils.readBytesFromIndex(currRaw, i, 1)));
-                }
-                qn.append(".");
-                currRaw = Utils.readBytesFromIndex(currRaw, nbChar, (currRaw.length() / 2) - nbChar);
-                if (("" + Utils.hexStringToBinary(Utils.readBytesFromIndex(currRaw, 0, 1)).charAt(0) + Utils.hexStringToBinary(Utils.readBytesFromIndex(currRaw, 0, 1)).charAt(1)).equals("11")) { // pointer detected
-                    // TODO : debug this part later
-                    nbChar = 0;
-                    qn.append(Utils.readBytesFromIndex(currRaw, 0, 2)); // append pointer + pointer value
-                    currRaw = Utils.readBytesFromIndex(currRaw, 2, (currRaw.length() / 2) - 2); // save pointer value
-                    this.answerName = qn.toString();
-                } else {
-                    nbChar = Utils.hexStringToInt(Utils.readBytesFromIndex(currRaw, 0, 1));
-                    currRaw = Utils.readBytesFromIndex(currRaw, 1, (currRaw.length() / 2) - 1);
-                    this.answerName = qn.substring(0, qn.length() - 1);
-                }
-            }
+            int readLength = 0;
+            if (this.answerName != null && !this.answerName.contains("c0"))
+                readLength = this.answerName.length() + 2;
+            else if (this.answerName != null && this.answerName.contains("c0"))
+                readLength = this.answerName.length() - 2;
+            currRaw = Utils.readBytesFromIndex(currRaw, readLength, (currRaw.length() / 2) - readLength);
         }
         this.answerType = Utils.hexStringToInt(Utils.readBytesFromIndex(currRaw, 0, 2));
         this.answerClass = Utils.hexStringToInt(Utils.readBytesFromIndex(currRaw, 2, 2));
@@ -59,29 +44,11 @@ public class Answer {
             case MX -> {
                 this.preference = Utils.readBytesFromIndex(currRaw, 10, 2);
                 String tmpRaw = Utils.readBytesFromIndex(currRaw, 12, dataLength - 2);
-                int nbChar = Utils.hexStringToInt(Utils.readBytesFromIndex(tmpRaw, 0, 1));
-                tmpRaw = Utils.readBytesFromIndex(tmpRaw, 1, (tmpRaw.length() / 2) - 1);
-
-                StringBuilder qn = new StringBuilder();
-                while (nbChar != 0) {
-                    for (int i = 0; i < nbChar; i++) {
-                        qn.append(Utils.hexStringToString(Utils.readBytesFromIndex(tmpRaw, i, 1)));
-                    }
-                    qn.append(".");
-                    tmpRaw = Utils.readBytesFromIndex(tmpRaw, nbChar, (tmpRaw.length() / 2) - nbChar);
-                    if (("" + Utils.hexStringToBinary(Utils.readBytesFromIndex(tmpRaw, 0, 1)).charAt(0) + Utils.hexStringToBinary(Utils.readBytesFromIndex(tmpRaw, 0, 1)).charAt(1)).equals("11")) { // pointer detected
-                        // TODO : debug this part later
-                        nbChar = 0;
-                        qn.append(Utils.readBytesFromIndex(tmpRaw, 0, 2)); // append pointer + pointer value
-                        tmpRaw = Utils.readBytesFromIndex(tmpRaw, 2, (tmpRaw.length() / 2) - 2); // save pointer value
-                        this.data = qn.toString();
-                    } else {
-                        nbChar = Utils.hexStringToInt(Utils.readBytesFromIndex(tmpRaw, 0, 1));
-                        tmpRaw = Utils.readBytesFromIndex(tmpRaw, 1, (tmpRaw.length() / 2) - 1);
-                        this.data = qn.substring(0, qn.length() - 1);
-                    }
-                }
-
+                this.data = Utils.readDataNameFromTmpRaw(tmpRaw);
+            }
+            case CNAME -> {
+                String tmpRaw = Utils.readBytesFromIndex(currRaw, 10, dataLength);
+                this.data = Utils.readDataNameFromTmpRaw(tmpRaw);
             }
         }
         this.raw = Utils.readBytesFromIndex(currRaw, 10 + dataLength, (currRaw.length()/2) - (10 + dataLength));

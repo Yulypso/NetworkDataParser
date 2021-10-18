@@ -26,7 +26,6 @@ public class AuthoritativeNameserver {
         if (Utils.hexStringToInt(Utils.readBytesFromIndex(raw, 0, 1)) == 0) { // ROOT
             this.authoritativeNameserverName = "Root";
         } else {
-            // TODO : debug this part later
             this.authoritativeNameserverName = Utils.readBytesFromIndex(raw, 0, 2);
             isNotRoot = 1;
         }
@@ -42,57 +41,31 @@ public class AuthoritativeNameserver {
                 this.raw = Utils.readBytesFromIndex(raw, 11 + isNotRoot + dataLength, (raw.length() / 2) - (11 + isNotRoot + dataLength));
             }
             case SOA -> {
-                StringBuilder qn = new StringBuilder();
-                String currRaw = raw;
-                int nbChar = Utils.hexStringToInt(Utils.readBytesFromIndex(raw, 11 + isNotRoot, 1));
-                currRaw = Utils.readBytesFromIndex(currRaw, 12 + isNotRoot, (currRaw.length() / 2) - (12 + isNotRoot));
+                String tmpRaw = Utils.readBytesFromIndex(raw, 11 + isNotRoot, (raw.length() / 2) - (11 + isNotRoot));
+                this.primaryNameServer = Utils.readDataNameFromTmpRaw(tmpRaw);
 
-                while (nbChar != 0) {
-                    for (int i = 0; i < nbChar; i++) {
-                        qn.append(Utils.hexStringToString(Utils.readBytesFromIndex(currRaw, i, 1)));
-                    }
-                    qn.append(".");
-                    currRaw = Utils.readBytesFromIndex(currRaw, nbChar, (currRaw.length() / 2) - nbChar);
-                    if (("" + Utils.hexStringToBinary(Utils.readBytesFromIndex(currRaw, 0, 1)).charAt(0) + Utils.hexStringToBinary(Utils.readBytesFromIndex(currRaw, 0, 1)).charAt(1)).equals("11")) { // pointer detected
-                        // TODO : debug this part later
-                        nbChar = 0;
-                        qn.append(Utils.readBytesFromIndex(currRaw, 0, 2)); // append pointer + pointer value
-                        currRaw = Utils.readBytesFromIndex(currRaw, 2, (currRaw.length() / 2) - 2); // save pointer value
-                        this.primaryNameServer = qn.toString();
-                    } else {
-                        nbChar = Utils.hexStringToInt(Utils.readBytesFromIndex(currRaw, 0, 1));
-                        currRaw = Utils.readBytesFromIndex(currRaw, 1, (currRaw.length() / 2) - 1);
-                        this.primaryNameServer = qn.substring(0, qn.length() - 1);
-                    }
-                }
+                int readLength = 0;
+                if (this.primaryNameServer != null && !this.primaryNameServer.contains("c0"))
+                    readLength = this.primaryNameServer.length() + 2;
+                else if (this.primaryNameServer != null && this.primaryNameServer.contains("c0"))
+                    readLength = this.primaryNameServer.length() - 2;
+                tmpRaw = Utils.readBytesFromIndex(tmpRaw, readLength, (tmpRaw.length() / 2) - readLength);
 
-                StringBuilder sb = new StringBuilder();
-                nbChar = Utils.hexStringToInt(Utils.readBytesFromIndex(currRaw, 0, 1));
-                currRaw = Utils.readBytesFromIndex(currRaw, 1, (currRaw.length() / 2) - 1);
-                while (nbChar != 0) {
-                    for (int i = 0; i < nbChar; i++) {
-                        sb.append(Utils.hexStringToString(Utils.readBytesFromIndex(currRaw, i, 1)));
-                    }
-                    sb.append(".");
-                    currRaw = Utils.readBytesFromIndex(currRaw, nbChar, (currRaw.length() / 2) - nbChar);
-                    if (("" + Utils.hexStringToBinary(Utils.readBytesFromIndex(currRaw, 0, 1)).charAt(0) + Utils.hexStringToBinary(Utils.readBytesFromIndex(currRaw, 0, 1)).charAt(1)).equals("11")) { // pointer detected
-                        // TODO : debug this part later
-                        nbChar = 0;
-                        sb.append(Utils.readBytesFromIndex(currRaw, 0, 2)); // append pointer + pointer value
-                        currRaw = Utils.readBytesFromIndex(currRaw, 2, (currRaw.length() / 2) - 2); // save pointer value
-                        this.responsibleAuthorityMailbox = sb.toString();
-                    } else {
-                        nbChar = Utils.hexStringToInt(Utils.readBytesFromIndex(currRaw, 0, 1));
-                        currRaw = Utils.readBytesFromIndex(currRaw, 1, (currRaw.length() / 2) - 1);
-                        this.responsibleAuthorityMailbox = sb.substring(0, sb.length() - 1);
-                    }
-                }
-                this.serialNumber = Utils.hexStringToLong(Utils.readBytesFromIndex(currRaw, 0, 4));
-                this.refreshInterval = Utils.hexStringToLong(Utils.readBytesFromIndex(currRaw, 4, 4));
-                this.retryInterval = Utils.hexStringToLong(Utils.readBytesFromIndex(currRaw, 8, 4));
-                this.expireLimit = Utils.hexStringToLong(Utils.readBytesFromIndex(currRaw, 12, 4));
-                this.minimumTTL = Utils.hexStringToLong(Utils.readBytesFromIndex(currRaw, 16, 4));
-                this.raw = Utils.readBytesFromIndex(currRaw, 20, (currRaw.length() / 2) - 20);
+                this.responsibleAuthorityMailbox = Utils.readDataNameFromTmpRaw(tmpRaw);
+
+                readLength = 0;
+                if (this.responsibleAuthorityMailbox != null && !this.responsibleAuthorityMailbox.contains("c0"))
+                    readLength = this.responsibleAuthorityMailbox.length() + 2;
+                else if (this.responsibleAuthorityMailbox != null && this.responsibleAuthorityMailbox.contains("c0"))
+                    readLength = this.responsibleAuthorityMailbox.length() - 2;
+                tmpRaw = Utils.readBytesFromIndex(tmpRaw, readLength, (tmpRaw.length() / 2) - readLength);
+
+                this.serialNumber = Utils.hexStringToLong(Utils.readBytesFromIndex(tmpRaw, 0, 4));
+                this.refreshInterval = Utils.hexStringToLong(Utils.readBytesFromIndex(tmpRaw, 4, 4));
+                this.retryInterval = Utils.hexStringToLong(Utils.readBytesFromIndex(tmpRaw, 8, 4));
+                this.expireLimit = Utils.hexStringToLong(Utils.readBytesFromIndex(tmpRaw, 12, 4));
+                this.minimumTTL = Utils.hexStringToLong(Utils.readBytesFromIndex(tmpRaw, 16, 4));
+                this.raw = Utils.readBytesFromIndex(tmpRaw, 20, (tmpRaw.length() / 2) - 20);
             }
             default -> this.raw = Utils.readBytesFromIndex(raw, 11 + isNotRoot + dataLength, (raw.length() / 2) - (11 + isNotRoot + dataLength));
         }
