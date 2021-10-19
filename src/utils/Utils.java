@@ -2,6 +2,8 @@ package utils;
 
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Utils {
 
@@ -144,5 +146,39 @@ public class Utils {
             }
         }
         return data;
+    }
+
+    public static boolean verifyPointerInName(String name) {
+        Pattern p = Pattern.compile("^([c-f])([0-9a-f]){3}");
+
+        String[] ss = name.split("\\.");
+        for (String s: ss) {
+            if (p.matcher(s).matches())
+                    return true;
+        }
+        return false;
+    }
+
+    public static String readNamePointer(String dnsRaw, String name) {
+        Pattern p = Pattern.compile("^([c-f])([0-9a-f]){3}");
+        String[] ss = name.split("\\.");
+        int pointerValue = 0;
+        int i = 0;
+        for (String s: ss) {
+            if (p.matcher(s).matches()) {
+                pointerValue = Utils.binaryStringToInt(Utils.hexStringToBinary(s).substring(2, 16)) * 2;
+                break;
+            }
+            i++;
+        }
+        if (pointerValue != 0){
+            String a = Utils.readDataNameFromTmpRaw(dnsRaw.substring(pointerValue));
+            StringBuilder sb = new StringBuilder();
+            for (int j = 0; j < i; j++) {
+                sb.append(ss[j]).append(".");
+            }
+            return sb + a;
+        } else
+            return name;
     }
 }

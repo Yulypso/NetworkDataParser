@@ -89,7 +89,7 @@ public class DNSParser {
         if (((Dns) this.applicationProtocol).getNbAdditional() > 0)
             System.out.println("Additional Records: ");
         for (int i = 0; i < ((Dns) this.applicationProtocol).getNbAdditional() ; i++) {
-            System.out.println("\t- " + ((Dns) this.applicationProtocol).getAdditionalRecordList().get(i).getAdditionalRecocordName() +
+            System.out.println("\t- " + ((Dns) this.applicationProtocol).getAdditionalRecordList().get(i).getAdditionalRecordName() +
                     ", Type: " + DNSType.findDnsType(((Dns) this.applicationProtocol).getAdditionalRecordList().get(i).getAdditionalRecordType()));
             switch (Objects.requireNonNull(DNSType.findDnsType(((Dns) this.applicationProtocol).getAdditionalRecordList().get(i).getAdditionalRecordType()))) {
                 case A -> {

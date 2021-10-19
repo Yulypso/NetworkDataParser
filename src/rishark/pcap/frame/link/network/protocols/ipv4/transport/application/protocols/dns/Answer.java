@@ -1,12 +1,13 @@
 package rishark.pcap.frame.link.network.protocols.ipv4.transport.application.protocols.dns;
 
+import rishark.pcap.frame.link.network.Protocol;
 import utils.Utils;
 
 import java.util.Objects;
 
 public class Answer {
 
-    private String answerName;
+    private final String answerName;
     private final int answerType;
     private final int answerClass;
     private final int timeToLive;
@@ -15,19 +16,26 @@ public class Answer {
     private String data;
     private final String raw;
 
-    public Answer(String raw, String dnsRaw) {
+    public Answer(String raw, String dnsRaw, Protocol overProtocol) {
+        if(overProtocol == Protocol.TCP) // to skip length from DNS over TCP
+            dnsRaw = Utils.readBytesFromIndex(dnsRaw, 2, (dnsRaw.length() / 2) - 2);
 
         String currRaw = raw;
         String st = Utils.hexStringToBinary(Utils.readBytesFromIndex(raw, 0, 2));
 
-        if (("" + st.charAt(0) + st.charAt(1)).equals("11")) { // pointeur signication
-            this.answerName = Utils.readBytesFromIndex(currRaw, 0, 2);
+        if (st.startsWith("11")) { // pointeur signication
+            String answerNameTmp = Utils.readBytesFromIndex(currRaw, 0, 2);
+            answerNameTmp = Utils.readNamePointer(dnsRaw, answerNameTmp);
+            while (Utils.verifyPointerInName(answerNameTmp))
+                answerNameTmp = Utils.readNamePointer(dnsRaw, answerNameTmp);
+            this.answerName = answerNameTmp;
+
             currRaw = Utils.readBytesFromIndex(currRaw, 2, (currRaw.length() / 2) - 2);
         } else {
             this.answerName = Utils.readDataNameFromTmpRaw(currRaw);
 
             int readLength = 0;
-            if (this.answerName != null && !this.answerName.contains("c0"))
+            if (this.answerName != null && !this.answerName.contains("c0")) //TODO review if condition
                 readLength = this.answerName.length() + 2;
             else if (this.answerName != null && this.answerName.contains("c0"))
                 readLength = this.answerName.length() - 2;
@@ -44,11 +52,18 @@ public class Answer {
             case MX -> {
                 this.preference = Utils.readBytesFromIndex(currRaw, 10, 2);
                 String tmpRaw = Utils.readBytesFromIndex(currRaw, 12, dataLength - 2);
-                this.data = Utils.readDataNameFromTmpRaw(tmpRaw);
+                String dataTmp = Utils.readDataNameFromTmpRaw(tmpRaw);
+                while (Utils.verifyPointerInName(dataTmp))
+                    dataTmp = Utils.readNamePointer(dnsRaw, dataTmp);
+                this.data = dataTmp;
             }
             case CNAME -> {
                 String tmpRaw = Utils.readBytesFromIndex(currRaw, 10, dataLength);
-                this.data = Utils.readDataNameFromTmpRaw(tmpRaw);
+                String dataTmp = Utils.readDataNameFromTmpRaw(tmpRaw);
+                dataTmp = Utils.readNamePointer(dnsRaw, dataTmp);
+                while (Utils.verifyPointerInName(dataTmp))
+                    dataTmp = Utils.readNamePointer(dnsRaw, dataTmp);
+                this.data = dataTmp;
             }
         }
         this.raw = Utils.readBytesFromIndex(currRaw, 10 + dataLength, (currRaw.length()/2) - (10 + dataLength));

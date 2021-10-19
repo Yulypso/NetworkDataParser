@@ -80,7 +80,7 @@ public class Dns implements ApplicationProtocol { // new 7 OPT || Rishark 170
         for (int i = 0; i < nbAnswers; i++) {
             System.out.println("nb nbanswer: " + nbAnswers + " nb: " + i);
             System.out.println(currentRaw);
-            Answer answer = new Answer(currentRaw, raw);
+            Answer answer = new Answer(currentRaw, raw, overProtocol);
             this.answerList.add(answer);
             currentRaw = answer.getRaw();
         }

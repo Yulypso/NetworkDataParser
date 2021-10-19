@@ -6,7 +6,7 @@ import java.util.Objects;
 
 public class AdditionalRecord { //new.pcap n°7
 
-    private final String additionalRecocordName;    // 1/2 bytes
+    private final String additionalRecordName;    // 1/2 bytes
     private final int additionalRecordType;         // 2 bytes
 
     private int additonalRecordClass;
@@ -24,10 +24,10 @@ public class AdditionalRecord { //new.pcap n°7
     public AdditionalRecord (String raw, String dnsRaw) {
         int isNotRoot = 0;
         if (Utils.hexStringToInt(Utils.readBytesFromIndex(raw, 0, 1)) == 0) { // ROOT
-            this.additionalRecocordName = "Root";
+            this.additionalRecordName = "Root";
         } else {
             // TODO : debug this part later
-            this.additionalRecocordName = Utils.readBytesFromIndex(raw, 0, 2);
+            this.additionalRecordName = Utils.readBytesFromIndex(raw, 0, 2);
             isNotRoot = 1;
         }
         this.additionalRecordType = Utils.hexStringToInt(Utils.readBytesFromIndex(raw, 1 + isNotRoot, 2));
@@ -53,8 +53,8 @@ public class AdditionalRecord { //new.pcap n°7
         }
     }
 
-    public String getAdditionalRecocordName() {
-        return additionalRecocordName;
+    public String getAdditionalRecordName() {
+        return additionalRecordName;
     }
 
     public int getAdditionalRecordType() {
