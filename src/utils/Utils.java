@@ -2,7 +2,6 @@ package utils;
 
 import java.io.FileInputStream;
 import java.io.InputStream;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Utils {
@@ -149,7 +148,7 @@ public class Utils {
     }
 
     public static boolean verifyPointerInName(String name) {
-        Pattern p = Pattern.compile("^([c-f])([0-9a-f]){3}");
+        Pattern p = Pattern.compile("^([c])([0-9a-f]){3}");
 
         String[] ss = name.split("\\.");
         for (String s: ss) {
@@ -160,7 +159,7 @@ public class Utils {
     }
 
     public static String readNamePointer(String dnsRaw, String name) {
-        Pattern p = Pattern.compile("^([c-f])([0-9a-f]){3}");
+        Pattern p = Pattern.compile("^([c])([0-9a-f]){3}");
         String[] ss = name.split("\\.");
         int pointerValue = 0;
         int i = 0;

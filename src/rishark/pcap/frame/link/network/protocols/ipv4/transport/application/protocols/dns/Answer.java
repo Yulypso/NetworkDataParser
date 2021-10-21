@@ -59,11 +59,23 @@ public class Answer {
             }
             case CNAME -> {
                 String tmpRaw = Utils.readBytesFromIndex(currRaw, 10, dataLength);
-                String dataTmp = Utils.readDataNameFromTmpRaw(tmpRaw);
-                dataTmp = Utils.readNamePointer(dnsRaw, dataTmp);
-                while (Utils.verifyPointerInName(dataTmp))
+                st = Utils.hexStringToBinary(Utils.readBytesFromIndex(tmpRaw, 0, 2));
+
+                if (st.startsWith("11")) { // pointeur signication
+                    String dataTmp = Utils.readBytesFromIndex(tmpRaw, 0, 2);
                     dataTmp = Utils.readNamePointer(dnsRaw, dataTmp);
-                this.data = dataTmp;
+                    while (Utils.verifyPointerInName(dataTmp))
+                        dataTmp = Utils.readNamePointer(dnsRaw, dataTmp);
+                    this.data = dataTmp;
+                }
+                else{
+                    String dataTmp = Utils.readDataNameFromTmpRaw(tmpRaw);
+                    dataTmp = Utils.readNamePointer(dnsRaw, dataTmp);
+                    while (Utils.verifyPointerInName(dataTmp)) {
+                        dataTmp = Utils.readNamePointer(dnsRaw, dataTmp); //TODO: debug
+                    }
+                    this.data = dataTmp;
+                }
             }
         }
         this.raw = Utils.readBytesFromIndex(currRaw, 10 + dataLength, (currRaw.length()/2) - (10 + dataLength));
