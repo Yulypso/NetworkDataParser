@@ -26,7 +26,6 @@ public class AdditionalRecord { //new.pcap n°7
         if (Utils.hexStringToInt(Utils.readBytesFromIndex(raw, 0, 1)) == 0) { // ROOT
             this.additionalRecordName = "Root";
         } else {
-            // TODO : debug this part later
             this.additionalRecordName = Utils.readBytesFromIndex(raw, 0, 2);
             isNotRoot = 1;
         }
