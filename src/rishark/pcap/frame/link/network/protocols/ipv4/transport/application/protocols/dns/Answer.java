@@ -52,16 +52,27 @@ public class Answer {
             case MX -> {
                 this.preference = Utils.readBytesFromIndex(currRaw, 10, 2);
                 String tmpRaw = Utils.readBytesFromIndex(currRaw, 12, dataLength - 2);
-                String dataTmp = Utils.readDataNameFromTmpRaw(tmpRaw);
-                while (Utils.verifyPointerInName(dataTmp))
+                st = Utils.hexStringToBinary(Utils.readBytesFromIndex(tmpRaw, 0, 2));
+
+                if (st.startsWith("11")) {
+                    String dataTmp = Utils.readBytesFromIndex(tmpRaw, 0, 2);
                     dataTmp = Utils.readNamePointer(dnsRaw, dataTmp);
-                this.data = dataTmp;
+                    while (Utils.verifyPointerInName(dataTmp))
+                        dataTmp = Utils.readNamePointer(dnsRaw, dataTmp);
+                    this.data = dataTmp;
+                }
+                else{
+                    String dataTmp = Utils.readDataNameFromTmpRaw(tmpRaw);
+                    while (Utils.verifyPointerInName(dataTmp))
+                        dataTmp = Utils.readNamePointer(dnsRaw, dataTmp);
+                    this.data = dataTmp;
+                }
             }
             case CNAME -> {
                 String tmpRaw = Utils.readBytesFromIndex(currRaw, 10, dataLength);
                 st = Utils.hexStringToBinary(Utils.readBytesFromIndex(tmpRaw, 0, 2));
 
-                if (st.startsWith("11")) { // pointeur signication
+                if (st.startsWith("11")) {
                     String dataTmp = Utils.readBytesFromIndex(tmpRaw, 0, 2);
                     dataTmp = Utils.readNamePointer(dnsRaw, dataTmp);
                     while (Utils.verifyPointerInName(dataTmp))
@@ -72,7 +83,7 @@ public class Answer {
                     String dataTmp = Utils.readDataNameFromTmpRaw(tmpRaw);
                     dataTmp = Utils.readNamePointer(dnsRaw, dataTmp);
                     while (Utils.verifyPointerInName(dataTmp)) {
-                        dataTmp = Utils.readNamePointer(dnsRaw, dataTmp); //TODO: debug
+                        dataTmp = Utils.readNamePointer(dnsRaw, dataTmp);
                     }
                     this.data = dataTmp;
                 }
