@@ -3,7 +3,7 @@ package rishark.pcap.frame.link.network.protocols.ipv4.transport.application.pro
 import rishark.pcap.frame.link.protocols.arp.HardwareType;
 import utils.Utils;
 
-public class ClientIdentifier {
+public class ClientIdentifier implements OptionInterface {
 
     private final HardwareType hardwareType;
     private final String macAddress;

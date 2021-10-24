@@ -2,7 +2,7 @@ package rishark.pcap.frame.link.network.protocols.ipv4.transport.application.pro
 
 import utils.Utils;
 
-public class IpAddressLeaseTime {
+public class IpAddressLeaseTime implements OptionInterface {
 
     private final int leaseTimeSeconds; // seconds
 

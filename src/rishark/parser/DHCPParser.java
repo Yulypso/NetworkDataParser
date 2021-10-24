@@ -1,7 +1,10 @@
 package rishark.parser;
 
 import rishark.pcap.frame.link.network.protocols.ipv4.transport.application.protocols.ApplicationProtocol;
+import rishark.pcap.frame.link.network.protocols.ipv4.transport.application.protocols.dhcp.DHCPOptionsCode;
 import rishark.pcap.frame.link.network.protocols.ipv4.transport.application.protocols.dhcp.Dhcp;
+import rishark.pcap.frame.link.network.protocols.ipv4.transport.application.protocols.dhcp.Option;
+import rishark.pcap.frame.link.network.protocols.ipv4.transport.application.protocols.dhcp.options.*;
 
 public class DHCPParser {
 
@@ -33,6 +36,27 @@ public class DHCPParser {
 
         System.out.println("Application UDP data length: " + ((Dhcp)this.applicationProtocol).getUdpDataLength());
 
+        for (Option o: ((Dhcp)this.applicationProtocol).getOptionList()) {
+            switch (DHCPOptionsCode.findDhcpOptionsCode(o.getCode())){
+                case SUBNET_MASK -> System.out.println("Subnet Mask: " + ((SubnetMask) o.getOption()).getSubnetMask());
+                case ROUTER -> System.out.println("Router IP address: " + ((Router) o.getOption()).getRouterIpAddress());
+                case DNS_IP -> System.out.println("DNS IP address: " + ((DnsIp) o.getOption()).getDnsIpAddress());
+                case STATIC_ROUTE -> System.out.println("Static route address: " + ((StaticRoute) o.getOption()).getStaticRouteAddress());
+                case REQUESTED_IP_ADDRESS -> System.out.println("Requested IP address: " + ((RequestedIpAddress) o.getOption()).getRequestedIpAddress());
+                case IP_ADDRESS_LEASE_TIME -> System.out.println("IP address Lease time: " + ((IpAddressLeaseTime) o.getOption()).getLeaseTimeSeconds());
+                case DHCP_MESSAGE_TYPE -> System.out.println("DHCP message type: " + ((DhcpMessageType) o.getOption()).getMessageType());
+                case DHCP_SERVER_IDENTIFIER -> System.out.println("DHCP server identifier: " + ((DhcpServerIdentifier) o.getOption()).getServerIdentifierIpAddress());
+                case PARAMETER_REQUEST_LIST -> System.out.println("Parameter request list: " + ((ParameterRequestList) o.getOption()).getMessageTypeList());
+                case RENEWAL_TIME_VALUE -> System.out.println("Renewal time: " + ((RenewalTimeValue) o.getOption()).getRenewalTimeSeconds());
+                case REBINDING_TIME_VALUE -> System.out.println("Rebinding time: " + ((RebindingTimeValue) o.getOption()).getRebindingTimeSeconds());
+                case CLIENT_IDENTIFIER -> {
+                    System.out.println("Client identifier: ");
+                    System.out.println("\t- Hardware type: " + ((ClientIdentifier) o.getOption()).getHardwareType());
+                    System.out.println("\t- Mac address " + ((ClientIdentifier) o.getOption()).getMacAddress());
+                }
+                case null, default -> {}
+            }
+        }
         if (this.applicationProtocol.getRaw().length() > 0)
             System.out.println("Application DHCP raw: " + this.applicationProtocol.getRaw());
     }

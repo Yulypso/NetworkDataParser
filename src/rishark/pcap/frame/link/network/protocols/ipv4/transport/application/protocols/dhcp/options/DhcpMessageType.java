@@ -2,7 +2,7 @@ package rishark.pcap.frame.link.network.protocols.ipv4.transport.application.pro
 
 import utils.Utils;
 
-public class DhcpMessageType {
+public class DhcpMessageType implements OptionInterface {
 
     private final MessageType messageType;
 

@@ -59,7 +59,7 @@ public class Dhcp implements ApplicationProtocol {
 
         String currRaw = Utils.readBytesFromIndex(raw, 240, ((int) udpDataLength - 240));
         DHCPOptionsCode currOption;
-        // TODO while do isntead
+
         do {
             Option option = new Option(currRaw);
             this.optionList.add(option);

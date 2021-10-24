@@ -1,8 +1,9 @@
 package rishark.pcap.frame.link.network.protocols.ipv4.transport.application.protocols.dhcp.options;
 
+import rishark.pcap.frame.link.network.protocols.ipv4.transport.application.protocols.dhcp.Option;
 import utils.Utils;
 
-public class DhcpServerIdentifier {
+public class DhcpServerIdentifier implements OptionInterface {
 
     private final String serverIdentifierIpAddress;
 

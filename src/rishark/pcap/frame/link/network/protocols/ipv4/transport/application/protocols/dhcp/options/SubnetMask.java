@@ -2,7 +2,7 @@ package rishark.pcap.frame.link.network.protocols.ipv4.transport.application.pro
 
 import utils.Utils;
 
-public class SubnetMask {
+public class SubnetMask implements OptionInterface {
 
     private final String subnetMask;
 

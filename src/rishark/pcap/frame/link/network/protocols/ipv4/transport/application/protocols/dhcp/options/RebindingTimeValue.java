@@ -2,7 +2,7 @@ package rishark.pcap.frame.link.network.protocols.ipv4.transport.application.pro
 
 import utils.Utils;
 
-public class RebindingTimeValue {
+public class RebindingTimeValue implements OptionInterface {
 
     private final int rebindingTimeSeconds; // seconds
 
