@@ -29,8 +29,8 @@ public class IPv4Parser {
         System.out.println("Time to Live (TTL): " + ((Ipv4) this.networkProtocol).getTtl());
         System.out.println("Protocol: " + Objects.requireNonNull(Protocol.findProtocol(this.networkProtocol.getIpProtocol())).toString().replaceAll("_"," "));
         System.out.println("Header Checksum: 0x" + ((Ipv4) this.networkProtocol).getChecksum());
-        System.out.println("Source Address: " + Utils.bytesToIPv4(((Ipv4) this.networkProtocol).getSrcAddress()));
-        System.out.println("Destination Address: " + Utils.bytesToIPv4(((Ipv4) this.networkProtocol).getDestAddress()));
+        System.out.println("Source Address: " + ((Ipv4) this.networkProtocol).getSrcAddress());
+        System.out.println("Destination Address: " + ((Ipv4) this.networkProtocol).getDestAddress());
         if (((Ipv4) this.networkProtocol).getOptions().length() > 0)
             System.out.println("Options: " + ((Ipv4) this.networkProtocol).getOptions());
     }

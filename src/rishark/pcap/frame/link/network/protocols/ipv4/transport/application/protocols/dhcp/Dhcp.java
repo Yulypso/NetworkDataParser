@@ -4,6 +4,9 @@ import rishark.pcap.frame.link.network.Protocol;
 import rishark.pcap.frame.link.network.protocols.ipv4.transport.application.protocols.ApplicationProtocol;
 import utils.Utils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Dhcp implements ApplicationProtocol {
                                                 // 240 bytes
     private final DHCPOpCode opCode;            // 1 byte
@@ -24,11 +27,16 @@ public class Dhcp implements ApplicationProtocol {
     private final String bootFileName;          // 128 bytes
     private final String magicCookie;           // 4 bytes
 
+    private final List<Option> optionList;      // variable length
+    private final String padding;
+
     private final String raw;
     private final long udpDataLength;
     private final Protocol overProtocol;
 
     public Dhcp(String raw, Protocol overProtocol, long udpDataLength) {
+        this.optionList = new ArrayList<>();
+
         this.udpDataLength = udpDataLength;
         this.opCode = DHCPOpCode.findDhcpOpCode(Utils.hexStringToInt(Utils.readBytesFromIndex(raw, 0, 1)));
         this.hardwareType = Utils.hexStringToInt(Utils.readBytesFromIndex(raw, 1, 1));
@@ -41,17 +49,27 @@ public class Dhcp implements ApplicationProtocol {
         this.flagReserved = "" + flag.substring(1);
         this.clientIpAddress = Utils.readBytesFromIndex(raw, 12, 4);
         this.yourIpAddress = Utils.readBytesFromIndex(raw, 16, 4);
-        this.serverIpAddress = Utils.readBytesFromIndex(raw, 20, 4);
-        this.gatewayIpAddress = Utils.readBytesFromIndex(raw, 24, 4);
+        this.serverIpAddress = Utils.bytesToIPv4(Utils.readBytesFromIndex(raw, 20, 4));
+        this.gatewayIpAddress = Utils.bytesToIPv4(Utils.readBytesFromIndex(raw, 24, 4));
         this.clientMacAddress = Utils.readBytesFromIndex(raw, 28, 6);
         this.clientHardwarePadding = Utils.readBytesFromIndex(raw, 34, 10);
         this.serverHostName = Utils.readBytesFromIndex(raw, 44, 64);
         this.bootFileName = Utils.readBytesFromIndex(raw, 108, 128);
         this.magicCookie = Utils.readBytesFromIndex(raw, 236, 4);
 
+        String currRaw = Utils.readBytesFromIndex(raw, 240, ((int) udpDataLength - 240));
+        DHCPOptionsCode currOption;
+        // TODO while do isntead
+        do {
+            Option option = new Option(currRaw);
+            this.optionList.add(option);
+            currRaw = option.getRaw();
+            currOption = DHCPOptionsCode.findDhcpOptionsCode(option.getCode());
+        } while (currOption != DHCPOptionsCode.END);
 
+        this.padding = currRaw;
+        this.raw = padding;
 
-        this.raw = Utils.readBytesFromIndex(raw, 240, ((int) udpDataLength - 240));
         this.overProtocol = overProtocol;
     }
 
@@ -133,5 +151,13 @@ public class Dhcp implements ApplicationProtocol {
 
     public String getMagicCookie() {
         return magicCookie;
+    }
+
+    public List<Option> getOptionList() {
+        return optionList;
+    }
+
+    public String getPadding() {
+        return padding;
     }
 }

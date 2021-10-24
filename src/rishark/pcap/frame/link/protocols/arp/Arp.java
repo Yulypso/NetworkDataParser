@@ -23,9 +23,9 @@ public class Arp implements LinkProtocol {
         this.hardwareSize = Utils.hexStringToInt(Utils.readBytesFromIndex(raw, 4, 1));
         this.protocolSize = Utils.hexStringToInt(Utils.readBytesFromIndex(raw, 5, 1));
         this.opCode = Utils.hexStringToInt(Utils.readBytesFromIndex(raw, 6, 2));
-        this.senderMacAddress = Utils.readBytesFromIndex(raw, 8, 6);
+        this.senderMacAddress = Utils.bytesToMAC(Utils.readBytesFromIndex(raw, 8, 6));
         this.senderIpAddress = Utils.readBytesFromIndex(raw, 14, 4);
-        this.targetMacAddress = Utils.readBytesFromIndex(raw, 18, 6);
+        this.targetMacAddress = Utils.bytesToMAC(Utils.readBytesFromIndex(raw, 18, 6));
         this.targetIpAddress = Utils.readBytesFromIndex(raw, 24, 4);
 
         this.padding = Utils.readBytesFromIndex(raw, (int) this.getSize(), (int) ((raw.length() / 2) - this.getSize()));

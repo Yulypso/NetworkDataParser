@@ -103,6 +103,10 @@ public class Utils {
         System.out.printf("%04x", i);
     }
 
+    public static String bytesToMAC(String bytes){
+        return bytes.replaceAll("(..)(?!$)", "$1:");
+    }
+
     public static String bytesToIPv4(String bytes){
         String[] ss = bytes.replaceAll("(..)(?!$)", "$1%").split("%");
         StringBuilder sb = new StringBuilder();

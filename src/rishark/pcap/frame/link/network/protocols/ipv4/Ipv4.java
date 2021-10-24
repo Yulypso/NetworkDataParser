@@ -32,8 +32,8 @@ public class Ipv4 implements NetworkProtocol {
         this.ttl = Utils.hexStringToInt(Utils.readBytesFromIndex(raw, 8, 1));
         this.protocol = Utils.hexStringToInt(Utils.readBytesFromIndex(raw, 9, 1));
         this.checksum = Utils.readBytesFromIndex(raw, 10, 2);
-        this.srcAddress = Utils.readBytesFromIndex(raw, 12, 4);
-        this.destAddress = Utils.readBytesFromIndex(raw, 16, 4);
+        this.srcAddress = Utils.bytesToIPv4(Utils.readBytesFromIndex(raw, 12, 4));
+        this.destAddress = Utils.bytesToIPv4(Utils.readBytesFromIndex(raw, 16, 4));
         this.options = Utils.readBytesFromIndex(raw, 20, this.headerLength - 20);
         this.raw = Utils.readBytesFromIndex(raw, this.headerLength, (raw.length()/2) - this.headerLength);
     }

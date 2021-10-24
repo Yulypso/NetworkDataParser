@@ -24,9 +24,9 @@ public class ARPParser {
         System.out.println("Hardware size: " + ((Arp) this.linkProtocol).getHardwareSize());
         System.out.println("Protocol size: " + ((Arp) this.linkProtocol).getProtocolSize());
         System.out.println("OpCode: " + Objects.requireNonNull(OpCode.findOpCode(((Arp) this.linkProtocol).getOpCode())).toString().replaceAll("_"," "));
-        System.out.println("Sender MAC Address: " + ((Arp) this.linkProtocol).getSenderMacAddress().replaceAll("(..)(?!$)", "$1:"));
+        System.out.println("Sender MAC Address: " + ((Arp) this.linkProtocol).getSenderMacAddress());
         System.out.println("Sender IP Address: " + Utils.bytesToIPv4(((Arp) this.linkProtocol).getSenderIpAddress()));
-        System.out.println("Target MAC Address: " + ((Arp) this.linkProtocol).getTargetMacAddress().replaceAll("(..)(?!$)", "$1:"));
+        System.out.println("Target MAC Address: " + ((Arp) this.linkProtocol).getTargetMacAddress());
         System.out.println("Target IP Address: " + Utils.bytesToIPv4(((Arp) this.linkProtocol).getTargetIpAddress()));
         System.out.println((((Arp) this.linkProtocol).getPadding() != null) ?
                 "Padding: " + ((Arp) this.linkProtocol).getPadding()

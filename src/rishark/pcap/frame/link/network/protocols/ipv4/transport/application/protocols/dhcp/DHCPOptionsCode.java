@@ -4,7 +4,7 @@ public enum DHCPOptionsCode {
 
     SUBNET_MASK(1), // o a
     ROUTER(3),
-    DNS(6),
+    DNS_IP(6),
     STATIC_ROUTE(33),
     REQUESTED_IP_ADDRESS(50), // d r
     IP_ADDRESS_LEASE_TIME(51), // o a
