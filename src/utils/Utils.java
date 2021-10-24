@@ -133,7 +133,6 @@ public class Utils {
             qn.append(".");
             tmpRaw = Utils.readBytesFromIndex(tmpRaw, nbChar, (tmpRaw.length() / 2) - nbChar);
             if (("" + Utils.hexStringToBinary(Utils.readBytesFromIndex(tmpRaw, 0, 1)).charAt(0) + Utils.hexStringToBinary(Utils.readBytesFromIndex(tmpRaw, 0, 1)).charAt(1)).equals("11")) { // pointer detected
-                // TODO : debug this part later
                 nbChar = 0;
                 qn.append(Utils.readBytesFromIndex(tmpRaw, 0, 2)); // append pointer + pointer value
                 tmpRaw = Utils.readBytesFromIndex(tmpRaw, 2, (tmpRaw.length() / 2) - 2); // save pointer value

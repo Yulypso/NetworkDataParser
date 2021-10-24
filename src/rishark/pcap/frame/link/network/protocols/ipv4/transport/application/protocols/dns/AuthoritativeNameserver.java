@@ -26,8 +26,12 @@ public class AuthoritativeNameserver { // TODO : totodns.pcap 232
         if (Utils.hexStringToInt(Utils.readBytesFromIndex(raw, 0, 1)) == 0) { // ROOT
             this.authoritativeNameserverName = "Root";
         } else {
-            this.authoritativeNameserverName = Utils.readBytesFromIndex(raw, 0, 2);
             isNotRoot = 1;
+            String authoritativeNameserverNameTmp = Utils.readBytesFromIndex(raw, 0, 2);
+            authoritativeNameserverNameTmp = Utils.readNamePointer(dnsRaw, authoritativeNameserverNameTmp);
+            while (Utils.verifyPointerInName(authoritativeNameserverNameTmp))
+                authoritativeNameserverNameTmp = Utils.readNamePointer(dnsRaw, authoritativeNameserverNameTmp);
+            this.authoritativeNameserverName = authoritativeNameserverNameTmp;
         }
 
         this.authoritativeNameserverType = Utils.hexStringToInt(Utils.readBytesFromIndex(raw, 1 + isNotRoot, 2));
@@ -42,22 +46,55 @@ public class AuthoritativeNameserver { // TODO : totodns.pcap 232
             }
             case SOA -> {
                 String tmpRaw = Utils.readBytesFromIndex(raw, 11 + isNotRoot, (raw.length() / 2) - (11 + isNotRoot));
-                this.primaryNameServer = Utils.readDataNameFromTmpRaw(tmpRaw);
-
+                String st = Utils.hexStringToBinary(Utils.readBytesFromIndex(tmpRaw, 0, 2));
                 int readLength = 0;
-                if (this.primaryNameServer != null && !this.primaryNameServer.contains("c0"))
-                    readLength = this.primaryNameServer.length() + 2;
-                else if (this.primaryNameServer != null && this.primaryNameServer.contains("c0"))
-                    readLength = this.primaryNameServer.length() - 2;
+
+                String primaryNameServerTmp;
+                if (st.startsWith("11")) {
+                    primaryNameServerTmp = Utils.readNamePointer(dnsRaw, tmpRaw);
+                    readLength += 2;
+
+                    while (Utils.verifyPointerInName(primaryNameServerTmp)) {
+                        primaryNameServerTmp = Utils.readNamePointer(dnsRaw, primaryNameServerTmp);
+                        readLength += 2;
+                    }
+                } else {
+                    primaryNameServerTmp = Utils.readDataNameFromTmpRaw(tmpRaw);
+                    if(Utils.verifyPointerInName(primaryNameServerTmp))
+                        readLength = primaryNameServerTmp.length() - 2;
+                    else
+                        readLength = primaryNameServerTmp.length() + 2; //null byte
+                    while (Utils.verifyPointerInName(primaryNameServerTmp)) {
+                        primaryNameServerTmp = Utils.readNamePointer(dnsRaw, primaryNameServerTmp);
+                    }
+                }
+                this.primaryNameServer = primaryNameServerTmp;
+
                 tmpRaw = Utils.readBytesFromIndex(tmpRaw, readLength, (tmpRaw.length() / 2) - readLength);
-
-                this.responsibleAuthorityMailbox = Utils.readDataNameFromTmpRaw(tmpRaw);
-
+                st = Utils.hexStringToBinary(Utils.readBytesFromIndex(tmpRaw, 0, 2));
                 readLength = 0;
-                if (this.responsibleAuthorityMailbox != null && !this.responsibleAuthorityMailbox.contains("c0"))
-                    readLength = this.responsibleAuthorityMailbox.length() + 2;
-                else if (this.responsibleAuthorityMailbox != null && this.responsibleAuthorityMailbox.contains("c0"))
-                    readLength = this.responsibleAuthorityMailbox.length() - 2;
+
+                String responsibleAuthorityMailboxTmp;
+                if (st.startsWith("11")) {
+                    responsibleAuthorityMailboxTmp = Utils.readNamePointer(dnsRaw, tmpRaw);
+                    readLength += 2;
+
+                    while (Utils.verifyPointerInName(responsibleAuthorityMailboxTmp)) {
+                        responsibleAuthorityMailboxTmp = Utils.readNamePointer(dnsRaw, responsibleAuthorityMailboxTmp);
+                        readLength += 2;
+                    }
+                } else {
+                    responsibleAuthorityMailboxTmp = Utils.readDataNameFromTmpRaw(tmpRaw);
+                    if(Utils.verifyPointerInName(responsibleAuthorityMailboxTmp))
+                        readLength = responsibleAuthorityMailboxTmp.length() - 2;
+                    else
+                        readLength = responsibleAuthorityMailboxTmp.length() + 2; //null byte
+                    while (Utils.verifyPointerInName(responsibleAuthorityMailboxTmp)) {
+                        responsibleAuthorityMailboxTmp = Utils.readNamePointer(dnsRaw, responsibleAuthorityMailboxTmp);
+                    }
+                }
+                this.responsibleAuthorityMailbox = responsibleAuthorityMailboxTmp;
+
                 tmpRaw = Utils.readBytesFromIndex(tmpRaw, readLength, (tmpRaw.length() / 2) - readLength);
 
                 this.serialNumber = Utils.hexStringToLong(Utils.readBytesFromIndex(tmpRaw, 0, 4));
