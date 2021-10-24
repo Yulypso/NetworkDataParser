@@ -44,8 +44,8 @@ public class Dhcp implements ApplicationProtocol {
         this.serverIpAddress = Utils.readBytesFromIndex(raw, 20, 4);
         this.gatewayIpAddress = Utils.readBytesFromIndex(raw, 24, 4);
         this.clientMacAddress = Utils.readBytesFromIndex(raw, 28, 6);
-        this.serverHostName = Utils.readBytesFromIndex(raw, 34, 10);
-        this.clientHardwarePadding = Utils.readBytesFromIndex(raw, 46, 64);
+        this.clientHardwarePadding = Utils.readBytesFromIndex(raw, 34, 10);
+        this.serverHostName = Utils.readBytesFromIndex(raw, 44, 64);
         this.bootFileName = Utils.readBytesFromIndex(raw, 108, 128);
         this.magicCookie = Utils.readBytesFromIndex(raw, 236, 4);
 
