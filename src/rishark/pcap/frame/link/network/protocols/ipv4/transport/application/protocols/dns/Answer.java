@@ -41,6 +41,7 @@ public class Answer {
                 readLength = this.answerName.length() - 2;
             currRaw = Utils.readBytesFromIndex(currRaw, readLength, (currRaw.length() / 2) - readLength);
         }
+
         this.answerType = Utils.hexStringToInt(Utils.readBytesFromIndex(currRaw, 0, 2));
         this.answerClass = Utils.hexStringToInt(Utils.readBytesFromIndex(currRaw, 2, 2));
         this.timeToLive = Utils.hexStringToInt(Utils.readBytesFromIndex(currRaw, 4, 4));
@@ -52,41 +53,13 @@ public class Answer {
             case MX -> {
                 this.preference = Utils.readBytesFromIndex(currRaw, 10, 2);
                 String tmpRaw = Utils.readBytesFromIndex(currRaw, 12, dataLength - 2);
-                st = Utils.hexStringToBinary(Utils.readBytesFromIndex(tmpRaw, 0, 2));
-
-                if (st.startsWith("11")) {
-                    String dataTmp = Utils.readBytesFromIndex(tmpRaw, 0, 2);
-                    dataTmp = Utils.readNamePointer(dnsRaw, dataTmp);
-                    while (Utils.verifyPointerInName(dataTmp))
-                        dataTmp = Utils.readNamePointer(dnsRaw, dataTmp);
-                    this.data = dataTmp;
-                }
-                else{
-                    String dataTmp = Utils.readDataNameFromTmpRaw(tmpRaw);
-                    while (Utils.verifyPointerInName(dataTmp))
-                        dataTmp = Utils.readNamePointer(dnsRaw, dataTmp);
-                    this.data = dataTmp;
-                }
+                Tmp tmp1 = Utils.retrievesTmp(new Tmp(tmpRaw, dnsRaw));
+                this.data = tmp1.getS();
             }
             case CNAME -> {
                 String tmpRaw = Utils.readBytesFromIndex(currRaw, 10, dataLength);
-                st = Utils.hexStringToBinary(Utils.readBytesFromIndex(tmpRaw, 0, 2));
-
-                if (st.startsWith("11")) {
-                    String dataTmp = Utils.readBytesFromIndex(tmpRaw, 0, 2);
-                    dataTmp = Utils.readNamePointer(dnsRaw, dataTmp);
-                    while (Utils.verifyPointerInName(dataTmp))
-                        dataTmp = Utils.readNamePointer(dnsRaw, dataTmp);
-                    this.data = dataTmp;
-                }
-                else{
-                    String dataTmp = Utils.readDataNameFromTmpRaw(tmpRaw);
-                    dataTmp = Utils.readNamePointer(dnsRaw, dataTmp);
-                    while (Utils.verifyPointerInName(dataTmp)) {
-                        dataTmp = Utils.readNamePointer(dnsRaw, dataTmp);
-                    }
-                    this.data = dataTmp;
-                }
+                Tmp tmp2 = Utils.retrievesTmp(new Tmp(tmpRaw, dnsRaw));
+                this.data = tmp2.getS();
             }
         }
         this.raw = Utils.readBytesFromIndex(currRaw, 10 + dataLength, (currRaw.length()/2) - (10 + dataLength));

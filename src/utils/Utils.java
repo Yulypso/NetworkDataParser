@@ -1,5 +1,7 @@
 package utils;
 
+import rishark.pcap.frame.link.network.protocols.ipv4.transport.application.protocols.dns.Tmp;
+
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.regex.Pattern;
@@ -178,5 +180,31 @@ public class Utils {
             return sb + a;
         } else
             return name;
+    }
+
+    public static Tmp retrievesTmp(Tmp tmp) {
+        String tmpRaw = tmp.getTmpRaw();
+        String dnsRaw = tmp.getDnsRaw();
+
+        String st = Utils.hexStringToBinary(Utils.readBytesFromIndex(tmpRaw, 0, 2));
+        if (st.startsWith("11")) {
+            tmp.s = Utils.readNamePointer(dnsRaw, tmpRaw);
+            tmp.l += 2;
+
+            while (Utils.verifyPointerInName(tmp.s)) {
+                tmp.s = Utils.readNamePointer(dnsRaw, tmp.s);
+                tmp.l += 2;
+            }
+        } else {
+            tmp.s = Utils.readDataNameFromTmpRaw(tmpRaw);
+            if(Utils.verifyPointerInName(tmp.s))
+                tmp.l = tmp.s.length() - 2; // remove pointer (4 char)
+            else
+                tmp.l = tmp.s.length() + 2; //null byte
+            while (Utils.verifyPointerInName(tmp.s)) {
+                tmp.s = Utils.readNamePointer(dnsRaw, tmp.s);
+            }
+        }
+        return tmp;
     }
 }
