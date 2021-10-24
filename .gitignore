@@ -1,1 +1,2 @@
-arp-storm.pcap
+# Project exclude paths
+/out/
