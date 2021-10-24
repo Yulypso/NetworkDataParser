@@ -32,12 +32,7 @@ public class Option {
                 case PARAMETER_REQUEST_LIST -> new ParameterRequestList(this.data, this.length);
                 case RENEWAL_TIME_VALUE -> new RenewalTimeValue(this.data, this.length);
                 case REBINDING_TIME_VALUE -> new RebindingTimeValue(this.data, this.length);
-                case VENDOR_CLASS_IDENTIFIER -> new VendorClassIdentifier(this.data, this.length);
                 case CLIENT_IDENTIFIER -> new ClientIdentifier(this.data, this.length);
-                case TFTP_SERVER_NAME -> new TftpServerName(this.data, this.length);
-                case BOOT_FILE_NAME -> new BootFileName(this.data, this.length);
-                case CLASSLESS_STATIC_ROUTE -> new ClasslessStaticRoute(this.data, this.length);
-                case TFTP_SERVER_ADDRESS -> new TftpServerAddress(this.data, this.length);
                 case null, default -> {}
             }
         } else {
