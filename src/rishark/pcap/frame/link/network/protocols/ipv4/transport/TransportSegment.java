@@ -59,6 +59,7 @@ public class TransportSegment {
             }
             case 53 -> this.appProtocol = AppProtocol.findProtocol("dns");
             case 67, 68 -> this.appProtocol = AppProtocol.findProtocol("dhcp");
+            case 80 -> this.appProtocol = AppProtocol.findProtocol("http");
             default -> this.appProtocol = null;
         }
     }

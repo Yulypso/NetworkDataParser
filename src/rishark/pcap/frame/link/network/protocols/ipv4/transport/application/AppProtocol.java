@@ -4,7 +4,8 @@ public enum AppProtocol {
 
     FTP("ftp"),
     DNS("dns"),
-    DHCP("dhcp");
+    DHCP("dhcp"),
+    HTTP("http");
 
     private final String appProtocol;
 
