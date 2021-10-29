@@ -81,12 +81,12 @@ public class Dns implements ApplicationProtocol { // new 7 OPT || Rishark 170
             currentRaw = answer.getRaw();
         }
         for (int i = 0; i < nbAuthority; i++) {
-            AuthoritativeNameserver authoritativeNameserver = new AuthoritativeNameserver(currentRaw, raw);
+            AuthoritativeNameserver authoritativeNameserver = new AuthoritativeNameserver(currentRaw, raw, overProtocol);
             this.authoritativeNameserverList.add(authoritativeNameserver);
             currentRaw = authoritativeNameserver.getRaw();
         }
         for (int i = 0; i < nbAdditional; i++) {
-            AdditionalRecord additionalRecord = new AdditionalRecord(currentRaw, raw);
+            AdditionalRecord additionalRecord = new AdditionalRecord(currentRaw, raw, overProtocol);
             this.additionalRecordList.add(additionalRecord);
             currentRaw = additionalRecord.getRaw();
         }

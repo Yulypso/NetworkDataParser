@@ -1,7 +1,6 @@
 import rishark.debug.PcapDebugger;
 import rishark.parser.PcapParser;
 import rishark.pcap.Pcap;
-import rishark.pcap.frame.PacketHeader;
 import utils.Utils;
 
 import java.util.Arrays;
@@ -27,12 +26,11 @@ public class RiShark {
                     case "-i", "--input" -> inputFileName = args[i + 1];
                     case "-n", "--number" -> {
                         boolean isNumber = true;
-                        int nb = 0;
+                        int nb;
                         ++i;
                         while (isNumber && i < args.length) {
                             try {
                                 nb = Integer.parseInt(args[i]);
-                                System.out.println(nb);
                                 numberList.add(String.valueOf(nb));
                                 ++i;
                             } catch (Exception e) {

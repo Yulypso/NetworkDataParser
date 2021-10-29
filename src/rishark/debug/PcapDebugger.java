@@ -24,6 +24,7 @@ public class PcapDebugger {
     }
 
     public void parseGlobalHeader() {
+        System.out.println("File opened:" + this.pcap.getFile());
         System.out.println("\n--- [GlobalHeader] ---");
         System.out.println("Magic number: " + Utils.toHexString(this.pcap.getGlobalHeader().getMagicNumber()));
         System.out.println("Major version number: " + this.pcap.getGlobalHeader().getVersionMajor());

@@ -1,5 +1,6 @@
 package rishark.pcap.frame.link.network.protocols.ipv4.transport.application.protocols.dns;
 
+import rishark.pcap.frame.link.network.Protocol;
 import utils.Utils;
 
 import java.util.Objects;
@@ -21,7 +22,10 @@ public class AuthoritativeNameserver { // TODO : totodns.pcap 232
 
     private final String raw;
 
-    public AuthoritativeNameserver (String raw, String dnsRaw) {
+    public AuthoritativeNameserver (String raw, String dnsRaw, Protocol overProtocol) {
+        if(overProtocol == Protocol.TCP) // to skip length from DNS over TCP
+            dnsRaw = Utils.readBytesFromIndex(dnsRaw, 2, (dnsRaw.length() / 2) - 2);
+
         int isNotRoot = 0;
         if (Utils.hexStringToInt(Utils.readBytesFromIndex(raw, 0, 1)) == 0) { // ROOT
             this.authoritativeNameserverName = "Root";

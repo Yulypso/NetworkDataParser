@@ -13,8 +13,6 @@ public class Utils {
 
         try {
             InputStream inputstream = new FileInputStream(path);
-            System.out.println("File opened:" + path);
-
             StringBuilder sb = new StringBuilder();
             int b = inputstream.read();
             while (b != -1) {
@@ -26,7 +24,6 @@ public class Utils {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return raw;
     }
 

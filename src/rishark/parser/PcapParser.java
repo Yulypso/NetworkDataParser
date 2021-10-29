@@ -1,6 +1,9 @@
 package rishark.parser;
 
 import rishark.debug.debuggers.*;
+import rishark.parser.parsers.DHCPParser;
+import rishark.parser.parsers.IPv4Parser;
+import rishark.parser.parsers.UDPParser;
 import rishark.pcap.Pcap;
 import rishark.pcap.frame.link.EtherType;
 import rishark.pcap.frame.link.network.Protocol;
@@ -16,14 +19,14 @@ public class PcapParser {
 
     public PcapParser(Pcap pcap) {
         this.pcap = pcap;
-        System.out.println("--- [RiShark] ---");
     }
 
 
     public void parseGlobalHeader() {
+        System.out.println("File: " + this.pcap.getFile());
         System.out.print("Data link type: " + (this.pcap.getGlobalHeader().getNetwork() == 1
-                ? "1 [Ethernet]         "
-                : (this.pcap.getGlobalHeader().getNetwork() + " [Not Ethernet, Untreated]       ")));
+                ? "1 [Ethernet]\t\t"
+                : (this.pcap.getGlobalHeader().getNetwork() + " [Not Ethernet, Untreated]\t\t")));
         System.out.println("Total frames: " + this.pcap.getFrameList().size());
     }
 
@@ -39,20 +42,18 @@ public class PcapParser {
                         try{
                             s--; // test
                             System.out.println("\n- [Frame n°" + (s + 1) + "] -");
-                            System.out.println("***** [Frame Header] *****");
-                            System.out.println("--- [Physical layer Bits] ---");
+                            System.out.println("[Frame Header]");
                             this.parseFrameHeader(s);
-                            System.out.println("***** [Frame Data] *****");
-                            System.out.println("--- [Data Link layer Frame] ---");
+                            System.out.println("[Data Link layer Frame]");
                             if (this.parseLinkFrame(s))
                                 continue;
-                            System.out.println("--- [Network layer Packet] ---");
+                            System.out.println("[Network layer Packet]");
                             if(this.parseNetworkPacket(s))
                                 continue;
-                            System.out.println("--- [Transport layer Segment/Datagram] ---");
+                            System.out.println("[Transport layer Segment/Datagram]");
                             if(this.parseTransportSegment(s))
                                 continue;
-                            System.out.println("--- [Application layer Rishar] ---");
+                            System.out.println("[Application layer]");
                             this.parseApplicationRishar(s);
                         } catch (Exception e) {
                             System.err.println("\nWarning: Frame n°" + (s+1) + " protocol not implemented. Skipping it...");
@@ -66,25 +67,22 @@ public class PcapParser {
     }
 
     private void parseFrameHeader(int s) {
-        /* Physical layer (bits) (equivalent to packet header in Wireshark) */
         Calendar c = Calendar.getInstance();
         String reformat = "" + this.pcap.getFrameList().get(s).getPacketHeader().getTsSec() + "000";
         c.setTimeInMillis(Long.parseLong(reformat, 10));
-        System.out.println("Timestamp in seconds: " + this.pcap.getFrameList().get(s).getPacketHeader().getTsSec() + " [" + c.getTime() + "]");
-        System.out.println("Timestamp in microseconds: " + this.pcap.getFrameList().get(s).getPacketHeader().getTsUsec());
-        System.out.println("Number of octets of packet saved in file: " + this.pcap.getFrameList().get(s).getPacketHeader().getInclLen());
-        System.out.println("Actual length of packet: " + this.pcap.getFrameList().get(s).getPacketHeader().getOrigLen());
+        System.out.print("\t\tFrame length: " + this.pcap.getFrameList().get(s).getPacketHeader().getOrigLen() + "      ");
+        System.out.println("\t\t\t\t\tTimestamp: " + c.getTime());
     }
 
     private boolean parseLinkFrame(int s) {
         /* Data Link layer (Data Frames) */
-        System.out.println("Destination MAC address: " + this.pcap.getFrameList().get(s).getLinkFrame().getDestAdress().replaceAll("(..)(?!$)", "$1:"));
-        System.out.println("Source MAC address: " + this.pcap.getFrameList().get(s).getLinkFrame().getSrcAdress().replaceAll("(..)(?!$)", "$1:"));
+        System.out.print("\t\tDest. MAC address: " + this.pcap.getFrameList().get(s).getLinkFrame().getDestAdress().replaceAll("(..)(?!$)", "$1:"));
+        System.out.print("\tSource MAC address: " + this.pcap.getFrameList().get(s).getLinkFrame().getSrcAdress().replaceAll("(..)(?!$)", "$1:"));
         EtherType e;
         if ((e = EtherType.findEtherType(this.pcap.getFrameList().get(s).getLinkFrame().getEtherType())) != null) {
-            System.out.println("Ether type: " + e);
+            System.out.println("\tEther type: " + e);
 
-            switch (Objects.requireNonNull(e)) {
+            switch (Objects.requireNonNull(e)) { //TODO
                 case ARP -> {
                     new ARPDebugger(this.pcap.getFrameList().get(s).getLinkFrame().getLinkProtocol()).parse();
                     return (this.pcap.getFrameList().get(s).getPacketHeader().getOrigLen() ==
@@ -102,14 +100,14 @@ public class PcapParser {
         /* Network layer (Data Frames) */
         EtherType e = EtherType.findEtherType(this.pcap.getFrameList().get(s).getLinkFrame().getEtherType());
         switch (Objects.requireNonNull(e)) {
-            case IPv4 -> new IPv4Debugger(this.pcap.getFrameList().get(s).getLinkFrame().getNetworkPacket().getNetworkProtocolBase()).parse();
+            case IPv4 -> new IPv4Parser(this.pcap.getFrameList().get(s).getLinkFrame().getNetworkPacket().getNetworkProtocolBase()).parse();
             case IPv6 -> {return true;}
             default -> {return true;}
         }
 
         Protocol p = Protocol.findProtocol(this.pcap.getFrameList().get(s).getLinkFrame().getNetworkPacket().getIpProtocol());
         switch (Objects.requireNonNull(p)) {
-            case ICMP -> {
+            case ICMP -> { //TODO
                 new ICMPDebugger(this.pcap.getFrameList().get(s).getLinkFrame().getNetworkPacket().getNetworkProtocol()).parse();
                 return (this.pcap.getFrameList().get(s).getLinkFrame().getNetworkPacket().getNetworkProtocol().getRaw().length() == 0); // End of packet, no more layer above ICMP
             }
@@ -122,12 +120,12 @@ public class PcapParser {
         /* Transport layer (Transport Segments or Datagrams) */
         Protocol p = Protocol.findProtocol(this.pcap.getFrameList().get(s).getLinkFrame().getNetworkPacket().getIpProtocol());
         switch (Objects.requireNonNull(p)) {
-            case TCP -> {
+            case TCP -> { //TODO
                 new TCPDebugger(this.pcap.getFrameList().get(s).getLinkFrame().getNetworkPacket().getTransportSegment().getTransportProtocolBase()).parse();
                 return (this.pcap.getFrameList().get(s).getLinkFrame().getNetworkPacket().getTransportSegment().getTransportProtocolBase().getRaw().length() == 0);
             }
             case UDP -> {
-                new UDPDebugger(this.pcap.getFrameList().get(s).getLinkFrame().getNetworkPacket().getTransportSegment().getTransportProtocolBase()).parse();
+                new UDPParser(this.pcap.getFrameList().get(s).getLinkFrame().getNetworkPacket().getTransportSegment().getTransportProtocolBase()).parse();
                 return (this.pcap.getFrameList().get(s).getLinkFrame().getNetworkPacket().getTransportSegment().getTransportProtocolBase().getRaw().length() == 0);
             }
             default -> {return false;}
@@ -141,7 +139,7 @@ public class PcapParser {
             switch (ap) {
                 case FTP -> new FTPDebugger(this.pcap.getFrameList().get(s).getLinkFrame().getNetworkPacket().getTransportSegment().getApplicationRishar().getApplicationProtocol()).parse();
                 case DNS -> new DNSDebugger(this.pcap.getFrameList().get(s).getLinkFrame().getNetworkPacket().getTransportSegment().getApplicationRishar().getApplicationProtocol()).parse();
-                case DHCP -> new DHCPDebugger(this.pcap.getFrameList().get(s).getLinkFrame().getNetworkPacket().getTransportSegment().getApplicationRishar().getApplicationProtocol()).parse();
+                case DHCP -> new DHCPParser(this.pcap.getFrameList().get(s).getLinkFrame().getNetworkPacket().getTransportSegment().getApplicationRishar().getApplicationProtocol()).parse();
                 case HTTP -> new HTTPDebugger(this.pcap.getFrameList().get(s).getLinkFrame().getNetworkPacket().getTransportSegment().getApplicationRishar().getApplicationProtocol()).parse();
             }
         } else {

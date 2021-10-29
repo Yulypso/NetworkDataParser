@@ -1,5 +1,6 @@
 package rishark.pcap.frame.link.network.protocols.ipv4.transport.application.protocols.dns;
 
+import rishark.pcap.frame.link.network.Protocol;
 import utils.Utils;
 
 import java.util.Objects;
@@ -21,13 +22,20 @@ public class AdditionalRecord { //new.pcap n°7
 
     private final String raw;
 
-    public AdditionalRecord (String raw, String dnsRaw) {
+    public AdditionalRecord (String raw, String dnsRaw, Protocol overProtocol) {
+        if(overProtocol == Protocol.TCP) // to skip length from DNS over TCP
+            dnsRaw = Utils.readBytesFromIndex(dnsRaw, 2, (dnsRaw.length() / 2) - 2);
+
         int isNotRoot = 0;
         if (Utils.hexStringToInt(Utils.readBytesFromIndex(raw, 0, 1)) == 0) { // ROOT
             this.additionalRecordName = "Root";
         } else {
-            this.additionalRecordName = Utils.readBytesFromIndex(raw, 0, 2);
             isNotRoot = 1;
+            String additionalRecordNameTmp = Utils.readBytesFromIndex(raw, 0, 2);
+            additionalRecordNameTmp = Utils.readNamePointer(dnsRaw, additionalRecordNameTmp);
+            while (Utils.verifyPointerInName(additionalRecordNameTmp))
+                additionalRecordNameTmp = Utils.readNamePointer(dnsRaw, additionalRecordNameTmp);
+            this.additionalRecordName = additionalRecordNameTmp;
         }
         this.additionalRecordType = Utils.hexStringToInt(Utils.readBytesFromIndex(raw, 1 + isNotRoot, 2));
 

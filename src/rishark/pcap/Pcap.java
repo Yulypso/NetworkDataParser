@@ -11,9 +11,12 @@ public class Pcap {
     private final boolean isBigEndian;
     private final GlobalHeader globalHeader;
     private final List<Frame> frameList;
+    private final String file;
 
 
     public Pcap(String path) {
+        this.file = path;
+        System.out.println("--- [RiShark] ---");
 
         /* GlobalHeader */
         String raw = Utils.readPcap(path);
@@ -60,5 +63,9 @@ public class Pcap {
 
     public List<Frame> getFrameList() {
         return frameList;
+    }
+
+    public String getFile() {
+        return file;
     }
 }

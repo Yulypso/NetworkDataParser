@@ -48,10 +48,10 @@ public class Dhcp implements ApplicationProtocol {
         this.flagBroadcast = "" + flag.charAt(0);
         this.flagReserved = "" + flag.substring(1);
         this.clientIpAddress = Utils.readBytesFromIndex(raw, 12, 4);
-        this.yourIpAddress = Utils.readBytesFromIndex(raw, 16, 4);
+        this.yourIpAddress = Utils.bytesToIPv4(Utils.readBytesFromIndex(raw, 16, 4));
         this.serverIpAddress = Utils.bytesToIPv4(Utils.readBytesFromIndex(raw, 20, 4));
         this.gatewayIpAddress = Utils.bytesToIPv4(Utils.readBytesFromIndex(raw, 24, 4));
-        this.clientMacAddress = Utils.readBytesFromIndex(raw, 28, 6);
+        this.clientMacAddress = Utils.bytesToMAC(Utils.readBytesFromIndex(raw, 28, 6));
         this.clientHardwarePadding = Utils.readBytesFromIndex(raw, 34, 10);
         this.serverHostName = Utils.readBytesFromIndex(raw, 44, 64);
         this.bootFileName = Utils.readBytesFromIndex(raw, 108, 128);
