@@ -52,8 +52,8 @@ public class TransportSegment {
 
         switch (port) {
             case 21, 22 -> {
-                if (FTPCommand.findFtpCommand(Utils.hexStringToString(Utils.readBytesFromIndex(this.getRaw(), 0, 4)).trim()) != null ||
-                        FTPCode.findFtpCode(Utils.hexStringToString(Utils.readBytesFromIndex(this.getRaw(), 0, 4)).trim()) != null) {
+                if (FTPCommand.findFtpCommand(Utils.hexStringToString(Utils.readBytesFromIndex(this.getRaw(), 0, 4)).trim()) != null
+                        || FTPCode.findFtpCode(Integer.parseInt(Utils.hexStringToString(Utils.readBytesFromIndex(this.getRaw(), 0, 4)).trim())) != null) {
                     this.appProtocol = AppProtocol.findProtocol("ftp");
                 }
             }
