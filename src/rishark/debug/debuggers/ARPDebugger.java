@@ -1,4 +1,4 @@
-package rishark.parser;
+package rishark.debug.debuggers;
 
 import rishark.pcap.frame.link.EtherType;
 import rishark.pcap.frame.link.protocols.arp.Arp;
@@ -10,11 +10,11 @@ import utils.Utils;
 import java.util.Objects;
 
 
-public class ARPParser {
+public class ARPDebugger {
 
     private final LinkProtocol linkProtocol;
 
-    public ARPParser(LinkProtocol arp) {
+    public ARPDebugger(LinkProtocol arp) {
         this.linkProtocol = arp;
     }
 

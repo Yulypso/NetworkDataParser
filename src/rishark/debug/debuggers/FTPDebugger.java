@@ -1,14 +1,13 @@
-package rishark.parser;
+package rishark.debug.debuggers;
 
 import rishark.pcap.frame.link.network.protocols.ipv4.transport.application.protocols.ApplicationProtocol;
 import rishark.pcap.frame.link.network.protocols.ipv4.transport.application.protocols.ftp.Ftp;
-import utils.Utils;
 
-public class FTPParser {
+public class FTPDebugger {
 
     private final ApplicationProtocol applicationProtocol;
 
-    public FTPParser(ApplicationProtocol ftp) {
+    public FTPDebugger(ApplicationProtocol ftp) {
         this.applicationProtocol = ftp;
     }
 

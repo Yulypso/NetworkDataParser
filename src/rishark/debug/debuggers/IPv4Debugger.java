@@ -1,4 +1,4 @@
-package rishark.parser;
+package rishark.debug.debuggers;
 
 import rishark.pcap.frame.link.network.protocols.NetworkProtocol;
 import rishark.pcap.frame.link.network.protocols.ipv4.IpVersion;
@@ -8,11 +8,11 @@ import utils.Utils;
 
 import java.util.Objects;
 
-public class IPv4Parser {
+public class IPv4Debugger {
 
     private final NetworkProtocol networkProtocol;
 
-    public IPv4Parser(NetworkProtocol ipv4) {
+    public IPv4Debugger(NetworkProtocol ipv4) {
         this.networkProtocol = ipv4;
     }
 

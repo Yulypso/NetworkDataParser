@@ -1,13 +1,13 @@
-package rishark.parser;
+package rishark.debug.debuggers;
 
 import rishark.pcap.frame.link.network.protocols.ipv4.transport.application.protocols.ApplicationProtocol;
 import rishark.pcap.frame.link.network.protocols.ipv4.transport.application.protocols.http.Http;
 
-public class HTTPParser {
+public class HTTPDebugger {
 
     private final ApplicationProtocol applicationProtocol;
 
-    public HTTPParser(ApplicationProtocol applicationProtocol) {
+    public HTTPDebugger(ApplicationProtocol applicationProtocol) {
         this.applicationProtocol = applicationProtocol;
     }
 

@@ -1,4 +1,4 @@
-package rishark.parser;
+package rishark.debug.debuggers;
 
 import rishark.pcap.frame.link.network.Protocol;
 import rishark.pcap.frame.link.network.protocols.ipv4.transport.application.protocols.ApplicationProtocol;
@@ -8,11 +8,11 @@ import rishark.pcap.frame.link.network.protocols.ipv4.transport.application.prot
 
 import java.util.Objects;
 
-public class DNSParser {
+public class DNSDebugger {
 
     private final ApplicationProtocol applicationProtocol;
 
-    public DNSParser(ApplicationProtocol applicationProtocol) {
+    public DNSDebugger(ApplicationProtocol applicationProtocol) {
         this.applicationProtocol = applicationProtocol;
     }
 

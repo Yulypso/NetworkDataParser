@@ -1,4 +1,4 @@
-package rishark.parser;
+package rishark.debug.debuggers;
 
 import rishark.pcap.frame.link.network.protocols.ipv4.transport.application.protocols.ApplicationProtocol;
 import rishark.pcap.frame.link.network.protocols.ipv4.transport.application.protocols.dhcp.DHCPOptionsCode;
@@ -6,11 +6,11 @@ import rishark.pcap.frame.link.network.protocols.ipv4.transport.application.prot
 import rishark.pcap.frame.link.network.protocols.ipv4.transport.application.protocols.dhcp.Option;
 import rishark.pcap.frame.link.network.protocols.ipv4.transport.application.protocols.dhcp.options.*;
 
-public class DHCPParser {
+public class DHCPDebugger {
 
     private final ApplicationProtocol applicationProtocol;
 
-    public DHCPParser(ApplicationProtocol applicationProtocol) {
+    public DHCPDebugger(ApplicationProtocol applicationProtocol) {
         this.applicationProtocol = applicationProtocol;
     }
 

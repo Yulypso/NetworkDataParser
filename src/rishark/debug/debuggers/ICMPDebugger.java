@@ -1,4 +1,4 @@
-package rishark.parser;
+package rishark.debug.debuggers;
 
 import rishark.pcap.frame.link.network.protocols.NetworkProtocol;
 import rishark.pcap.frame.link.network.protocols.ipv4.icmp.Code;
@@ -6,14 +6,13 @@ import rishark.pcap.frame.link.network.protocols.ipv4.icmp.Icmp;
 import rishark.pcap.frame.link.network.protocols.ipv4.icmp.Type;
 import utils.Utils;
 
-import java.io.UnsupportedEncodingException;
 import java.util.Objects;
 
-public class ICMPParser {
+public class ICMPDebugger {
 
     NetworkProtocol networkProtocol;
 
-    public ICMPParser (NetworkProtocol icmp) {
+    public ICMPDebugger(NetworkProtocol icmp) {
         this.networkProtocol = icmp;
     }
 

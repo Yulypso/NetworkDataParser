@@ -71,22 +71,16 @@ public class Dns implements ApplicationProtocol { // new 7 OPT || Rishark 170
         String currentRaw = Utils.readBytesFromIndex(raw, 14 - isUDP, (raw.length()/2) - (14 - isUDP));
 
         for (int i = 0; i < nbQuestions; i++) {
-            System.out.println("nb query: " + nbQuestions + " nb: " + i);
-            System.out.println(currentRaw);
             Query query = new Query(currentRaw, raw);
             this.queryList.add(query);
             currentRaw = query.getRaw();
         }
         for (int i = 0; i < nbAnswers; i++) {
-            System.out.println("nb nbanswer: " + nbAnswers + " nb: " + i);
-            System.out.println(currentRaw);
             Answer answer = new Answer(currentRaw, raw, overProtocol);
             this.answerList.add(answer);
             currentRaw = answer.getRaw();
         }
         for (int i = 0; i < nbAuthority; i++) {
-            System.out.println("nb authority: " + nbAuthority + " nb: " + i);
-            System.out.println(currentRaw);
             AuthoritativeNameserver authoritativeNameserver = new AuthoritativeNameserver(currentRaw, raw);
             this.authoritativeNameserverList.add(authoritativeNameserver);
             currentRaw = authoritativeNameserver.getRaw();

@@ -1,14 +1,14 @@
-package rishark.parser;
+package rishark.debug.debuggers;
 
 import rishark.pcap.frame.link.network.protocols.ipv4.transport.protocols.Tcp;
 import rishark.pcap.frame.link.network.protocols.ipv4.transport.protocols.TransportProtocol;
 import utils.Utils;
 
-public class TCPParser {
+public class TCPDebugger {
 
     private final TransportProtocol transportProtocol;
 
-    public TCPParser(TransportProtocol tcp) {
+    public TCPDebugger(TransportProtocol tcp) {
         this.transportProtocol = tcp;
     }
 

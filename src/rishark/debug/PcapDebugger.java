@@ -1,4 +1,4 @@
-package rishark.parser;
+package rishark.debug;
 
 import rishark.debug.debuggers.*;
 import rishark.pcap.Pcap;
@@ -11,20 +11,27 @@ import java.util.Calendar;
 import java.util.Objects;
 import java.util.stream.IntStream;
 
-public class PcapParser {
+public class PcapDebugger {
+
     private final Pcap pcap;
 
-    public PcapParser(Pcap pcap) {
+    public PcapDebugger(Pcap pcap) {
         this.pcap = pcap;
-        System.out.println("--- [RiShark] ---");
     }
 
+    public void numberOfFrames() {
+        System.out.println("Total number of frames: " + this.pcap.getFrameList().size());
+    }
 
     public void parseGlobalHeader() {
-        System.out.print("Data link type: " + (this.pcap.getGlobalHeader().getNetwork() == 1
-                ? "1 [Ethernet]         "
-                : (this.pcap.getGlobalHeader().getNetwork() + " [Not Ethernet, Untreated]       ")));
-        System.out.println("Total frames: " + this.pcap.getFrameList().size());
+        System.out.println("\n--- [GlobalHeader] ---");
+        System.out.println("Magic number: " + Utils.toHexString(this.pcap.getGlobalHeader().getMagicNumber()));
+        System.out.println("Major version number: " + this.pcap.getGlobalHeader().getVersionMajor());
+        System.out.println("Minor version number: " + this.pcap.getGlobalHeader().getVersionMinor());
+        System.out.println("GMT to local correction: " + this.pcap.getGlobalHeader().getThisZone());
+        System.out.println("Accuracy of timestamps: " + this.pcap.getGlobalHeader().getSigFigs());
+        System.out.println("Max length of captured packets in bytes: " + this.pcap.getGlobalHeader().getSnapLen());
+        System.out.println("Data link type: " + (this.pcap.getGlobalHeader().getNetwork() == 1 ? "1 [Ethernet]" : (this.pcap.getGlobalHeader().getNetwork() + " [Not Ethernet, Untreated]")));
     }
 
     public void parseFrame(int... selected) {
@@ -36,9 +43,10 @@ public class PcapParser {
                     if (s < 1 || s > this.pcap.getFrameList().size()) {
                         throw new Exception();
                     } else {
+
                         try{
                             s--; // test
-                            System.out.println("\n- [Frame n°" + (s + 1) + "] -");
+                            System.out.println("\n******** [Frame n°" + (s + 1) + "] ********");
                             System.out.println("***** [Frame Header] *****");
                             System.out.println("--- [Physical layer Bits] ---");
                             this.parseFrameHeader(s);

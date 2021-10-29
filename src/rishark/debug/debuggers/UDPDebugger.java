@@ -1,13 +1,13 @@
-package rishark.parser;
+package rishark.debug.debuggers;
 
 import rishark.pcap.frame.link.network.protocols.ipv4.transport.protocols.TransportProtocol;
 import rishark.pcap.frame.link.network.protocols.ipv4.transport.protocols.Udp;
 
-public class UDPParser {
+public class UDPDebugger {
 
     private final TransportProtocol transportProtocol;
 
-    public UDPParser(TransportProtocol udp) {
+    public UDPDebugger(TransportProtocol udp) {
         this.transportProtocol = udp;
     }
 

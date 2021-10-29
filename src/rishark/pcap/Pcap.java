@@ -32,8 +32,7 @@ public class Pcap {
 
         int i = 0;
         while (currentPos != pcapLength) {
-            System.out.println(i);
-            i++;
+            ++i;
             Frame frame = new Frame(raw, currentPos, this.isBigEndian());
             this.frameList.add(frame);
             currentPos = frame.getLastPos();
