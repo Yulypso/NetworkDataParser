@@ -69,16 +69,16 @@ public class PcapParser {
         String reformat = "" + this.pcap.getFrameList().get(s).getPacketHeader().getTsSec() + "000";
         c.setTimeInMillis(Long.parseLong(reformat, 10));
         System.out.print("\t\tFrame length: " + this.pcap.getFrameList().get(s).getPacketHeader().getOrigLen() + "      ");
-        System.out.println("\t\t\t\t\tTimestamp: " + c.getTime());
+        System.out.println("\t\t\t\t\t\tTimestamp: " + c.getTime());
     }
 
     private boolean parseLinkFrame(int s) {
         /* Data Link layer (Data Frames) */
         System.out.print("\t\tDest. MAC address: " + this.pcap.getFrameList().get(s).getLinkFrame().getDestAdress().replaceAll("(..)(?!$)", "$1:"));
-        System.out.print("\tSource MAC address: " + this.pcap.getFrameList().get(s).getLinkFrame().getSrcAdress().replaceAll("(..)(?!$)", "$1:"));
+        System.out.print("\t\t\t\tSource MAC address: " + this.pcap.getFrameList().get(s).getLinkFrame().getSrcAdress().replaceAll("(..)(?!$)", "$1:"));
         EtherType e;
         if ((e = EtherType.findEtherType(this.pcap.getFrameList().get(s).getLinkFrame().getEtherType())) != null) {
-            System.out.println("\tEther type: " + e);
+            System.out.println("\t\t\tEther type: " + e);
 
             switch (Objects.requireNonNull(e)) { //TODO
                 case ARP -> {
@@ -89,7 +89,6 @@ public class PcapParser {
                 default -> {return false;}
             }
         } else {
-            System.out.println("Ether type: Unknown");
             return true;
         }
     }
@@ -140,8 +139,6 @@ public class PcapParser {
                 case DHCP -> new DHCPParser(this.pcap.getFrameList().get(s).getLinkFrame().getNetworkPacket().getTransportSegment().getApplicationRishar().getApplicationProtocol()).parse();
                 case HTTP -> new HTTPParser(this.pcap.getFrameList().get(s).getLinkFrame().getNetworkPacket().getTransportSegment().getApplicationRishar().getApplicationProtocol()).parse();
             }
-        } else {
-            System.out.println("Unknown protocol raw: " + this.pcap.getFrameList().get(s).getLinkFrame().getNetworkPacket().getTransportSegment().getTransportProtocolBase().getRaw());
         }
     }
 }

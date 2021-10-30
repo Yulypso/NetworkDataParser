@@ -17,11 +17,11 @@ public class DHCPParser {
     public void parse() {
         System.out.print("\t\tOpCode: " + ((Dhcp)this.applicationProtocol).getOpCode());
         System.out.print("\t\t\t\t\t\tHops: " + ((Dhcp)this.applicationProtocol).getHops());
-        System.out.println("\t\t\t\t\t\t\t\t\tTransaction ID: " + ((Dhcp)this.applicationProtocol).getTransactionId());
+        System.out.println("\t\t\t\t\t\t\tTransaction ID: " + ((Dhcp)this.applicationProtocol).getTransactionId());
         System.out.print("\t\tClient MAC address: " + ((Dhcp)this.applicationProtocol).getClientMacAddress());
-        System.out.println("\tClient IP address: " + ((Dhcp)this.applicationProtocol).getYourIpAddress());
+        System.out.println("\t\t\t\tClient IP address: " + ((Dhcp)this.applicationProtocol).getYourIpAddress());
         System.out.print("\t\tGateway IP address: " + ((Dhcp)this.applicationProtocol).getGatewayIpAddress());
-        System.out.println("\t\t\t\tServer IP address: " + ((Dhcp)this.applicationProtocol).getServerIpAddress());
+        System.out.println("\t\t\t\t\tServer IP address: " + ((Dhcp)this.applicationProtocol).getServerIpAddress());
 
         for (Option o: ((Dhcp)this.applicationProtocol).getOptionList()) {
             switch (DHCPOptionsCode.findDhcpOptionsCode(o.getCode())){

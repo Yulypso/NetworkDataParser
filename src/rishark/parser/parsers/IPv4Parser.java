@@ -31,7 +31,7 @@ public class IPv4Parser {
 
         String r = "";
         r += "Reserved bit: " + (reserved == 1 ? "Set (1)    " : "Not set (0)");
-        r += "\t\t\t\tDon't fragment: " + (dontFragment == 1 ? "Set (1)    " : "Not set (0)");
+        r += "\t\t\t\t\tDon't fragment: " + (dontFragment == 1 ? "Set (1)    " : "Not set (0)");
         r += "\t\t\t\tMore fragment: " + (moreFragment == 1 ? "Set (1)    " : "Not set (0)");
         return r;
     }
