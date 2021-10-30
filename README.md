@@ -68,3 +68,26 @@ $ bash RiShark.sh -i RiShark.pcap -n 1 2 5 256 -d
 </p>
 
 <br/>
+
+---
+
+## Field explanation (FR)
+
+### [Frame Header]
+
+### [Data Link layer]
+#### [ARP]
+
+### [Network layer]
+#### [ICMP]
+#### [IPv4]
+
+### [Transport layer]
+#### [TCP]
+#### [UDP]
+
+### [Application layer]
+#### [DHCP]
+#### [DNS]
+#### [HTTP]
+#### [FTP]
