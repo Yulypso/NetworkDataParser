@@ -41,6 +41,7 @@ public class DNSParser {
             switch (Objects.requireNonNull(DNSType.findDnsType(((Dns) this.applicationProtocol).getAnswerList().get(i).getAnswerType()))) {
                 case A -> System.out.println("\t\tAddress: " + ((Dns) this.applicationProtocol).getAnswerList().get(i).getData());
                 case MX -> System.out.println("\t\t\tData: " + ((Dns) this.applicationProtocol).getAnswerList().get(i).getData());
+                default -> System.out.println("");
             }
         }
 

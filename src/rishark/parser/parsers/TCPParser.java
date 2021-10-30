@@ -15,7 +15,7 @@ public class TCPParser {
 
     public void parse() {
         System.out.print("\t\tSource Port: " + ((Tcp) this.transportProtocol).getSourcePort());
-        System.out.println("\t\t\t\t\t\t\tDestination Port: " + ((Tcp) this.transportProtocol).getDestPort());
+        System.out.println("\t\t\t\t\t\tDestination Port: " + ((Tcp) this.transportProtocol).getDestPort());
         System.out.print("\t\tWindow: " + ((Tcp) this.transportProtocol).getWindow() + " bytes");
         System.out.print("\t\t\t\t\t\tSequence Number: " + ((Tcp) this.transportProtocol).getSequenceNumber());
         System.out.println("\t\t\t\tAcknowledgment Number: " + ((Tcp) this.transportProtocol).getAcknowledgmentNumber());
@@ -36,7 +36,7 @@ public class TCPParser {
         r += "\t\t\t\tPush: " + (push == 1 ? "Set (1)    " : "Not set (0)");
         r += "\n\t\tReset: " + (reset == 1 ? "Set (1)    " : "Not set (0)");
         r += "\t\t\t\t\t\tSyn: " + (syn == 1 ? "Set (1)    " : "Not set (0)");
-        r += "\t\t\t\t\t\tFin: " + (fin == 1 ? "Set (1)    " : "Not set (0)");
+        r += "\t\t\t\t\tFin: " + (fin == 1 ? "Set (1)    " : "Not set (0)");
         return r;
     }
 }

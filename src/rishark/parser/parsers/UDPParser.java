@@ -13,6 +13,6 @@ public class UDPParser {
 
     public void parse() {
         System.out.print("\t\tSource Port: " + ((Udp) this.transportProtocol).getSourcePort());
-        System.out.println("\t\t\t\t\t\t\tDestination Port: " + ((Udp) this.transportProtocol).getDestPort());
+        System.out.println("\t\t\t\t\t\tDestination Port: " + ((Udp) this.transportProtocol).getDestPort());
     }
 }
