@@ -19,7 +19,7 @@ public class ARPDebugger {
     }
 
     public void parse() {
-        System.out.println("Protocol type: " + HardwareType.findHardwareType(((Arp) this.linkProtocol).getHardwareType()));
+        System.out.println("Hardware type: " + HardwareType.findHardwareType(((Arp) this.linkProtocol).getHardwareType()));
         System.out.println("Protocol type: " + Objects.requireNonNull(EtherType.findEtherType(((Arp) this.linkProtocol).getProtocolType())).toString().replaceAll("_"," "));
         System.out.println("Hardware size: " + ((Arp) this.linkProtocol).getHardwareSize());
         System.out.println("Protocol size: " + ((Arp) this.linkProtocol).getProtocolSize());

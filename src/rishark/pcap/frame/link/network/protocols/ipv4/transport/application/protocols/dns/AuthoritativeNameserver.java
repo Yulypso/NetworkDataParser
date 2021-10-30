@@ -45,7 +45,11 @@ public class AuthoritativeNameserver { // TODO : totodns.pcap 232
 
         switch (Objects.requireNonNull(DNSType.findDnsType(authoritativeNameserverType))) {
             case NS -> {
-                this.primaryNameServer = (Utils.readBytesFromIndex(raw, 11 + isNotRoot, dataLength));
+                String primaryNameServerTmp = Utils.readBytesFromIndex(raw, 0, 2);
+                primaryNameServerTmp = Utils.readNamePointer(dnsRaw, primaryNameServerTmp);
+                while (Utils.verifyPointerInName(primaryNameServerTmp))
+                    primaryNameServerTmp = Utils.readNamePointer(dnsRaw, primaryNameServerTmp);
+                this.primaryNameServer = primaryNameServerTmp;
                 this.raw = Utils.readBytesFromIndex(raw, 11 + isNotRoot + dataLength, (raw.length() / 2) - (11 + isNotRoot + dataLength));
             }
             case SOA -> {
