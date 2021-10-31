@@ -19,12 +19,24 @@ public class Http implements ApplicationProtocol {
 
     public Http(String raw, Protocol overProtocol) {
         List<String> dataList = Arrays.asList(Utils.hexStringToString(Utils.readBytesFromIndex(raw, 0, raw.length()/2)).split(" "));
-        if (httpVerbs.findHttpVerb(dataList.get(0).toLowerCase()) != null)
-            this.verb = dataList.get(0);
-        if (dataList.get(1).contains("/"))
-            this.path = dataList.get(1);
-        if (dataList.get(2).contains("HTTP/"))
-            this.version = dataList.get(2).split("\n")[0];
+        try {
+            if (httpVerbs.findHttpVerb(dataList.get(0).toLowerCase()) != null)
+                this.verb = dataList.get(0);
+        } catch (Exception e){
+            this.verb = null;
+        }
+        try{
+            if (dataList.get(1).contains("/"))
+                this.path = dataList.get(1);
+        } catch (Exception e){
+            this.path = null;
+        }
+        try {
+            if (dataList.get(2).contains("HTTP/"))
+                this.version = dataList.get(2).split("\n")[0];
+        } catch (Exception e){
+            this.version = null;
+        }
 
         if (this.verb != null && this.path != null && this.version != null)
             this.data = Utils.hexStringToString(Utils.readBytesFromIndex(raw, (this.verb.length() + this.path.length() + this.version.length() + 1), raw.length() / 2 - (this.verb.length() + this.path.length() + this.version.length() + 1)));

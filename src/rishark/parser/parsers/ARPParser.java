@@ -20,8 +20,8 @@ public class ARPParser {
 
     public void parse() {
         System.out.print("\t\tSender MAC Address: " + ((Arp) this.linkProtocol).getSenderMacAddress());
-        System.out.println("\tSender IP Address: " + Utils.bytesToIPv4(((Arp) this.linkProtocol).getSenderIpAddress()));
+        System.out.println("\t\t\t\tSender IP Address: " + Utils.bytesToIPv4(((Arp) this.linkProtocol).getSenderIpAddress()));
         System.out.print("\t\tTarget MAC Address: " + ((Arp) this.linkProtocol).getTargetMacAddress());
-        System.out.println("\tTarget IP Address: " + Utils.bytesToIPv4(((Arp) this.linkProtocol).getTargetIpAddress()));
+        System.out.println("\t\t\t\tTarget IP Address: " + Utils.bytesToIPv4(((Arp) this.linkProtocol).getTargetIpAddress()));
     }
 }

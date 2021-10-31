@@ -68,7 +68,7 @@ public class PcapParser {
         Calendar c = Calendar.getInstance();
         String reformat = "" + this.pcap.getFrameList().get(s).getPacketHeader().getTsSec() + "000";
         c.setTimeInMillis(Long.parseLong(reformat, 10));
-        System.out.print("\t\tFrame length: " + this.pcap.getFrameList().get(s).getPacketHeader().getOrigLen() + "      ");
+        System.out.print("\t\tFrame length: " + this.pcap.getFrameList().get(s).getPacketHeader().getOrigLen());
         System.out.println("\t\t\t\t\t\tTimestamp: " + c.getTime());
     }
 

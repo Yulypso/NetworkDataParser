@@ -5,7 +5,7 @@ import utils.Utils;
 
 import java.util.Objects;
 
-public class AuthoritativeNameserver { // TODO : totodns.pcap 232
+public class AuthoritativeNameserver {
 
     private final String authoritativeNameserverName;
     private final int authoritativeNameserverType;
