@@ -71,23 +71,49 @@ $ bash RiShark.sh -i RiShark.pcap -n 1 2 5 256 -d
 
 ---
 
-## Field explanation (FR)
+## Explications des champs affichés (FR)
+
+### Pcap Header
+- **File**: Nom du fichier pcap analysé.
+- **Data link type**: Type d'interface traité. (Ethernet (1) uniquement dans notre cas)
+- **Total frames**: Nombre de frames inclus dans le fichier pcap.
 
 ### [Frame Header]
+- **Frame length**: Taille de la frame en octets
+- **Timestamp**: Date et heure à laquelle la frame a été envoyé dans le réseau.
 
 ### [Data Link layer]
+- **Destination Mac address**: L'adresse MAC du destinataire.
+- **Source Mac address**: L'adresse MAC de l'expéditeur.
+- **Ether type**: Indique le protocole encapsulé dans la frame du Data Link layer.
+
 #### [ARP]
 
 ### [Network layer]
-#### [ICMP]
 #### [IPv4]
+- **Don't fragment**: Flag permettant de signaler si le datagram doit être fragmenté ou pas.
+- **More fragment**: Flag permettant de signaler si le datagram contient d'autres fragments.
+- **Fragment offset**: Permet de connaître l'offset des fragments afin de pouvoir les réassembler à la reception.
+- **Source Ip Address**: L'adresse IP de l'expéditeur.
+- **Destination Ip Address**: L'adresse IP du destinataire.
+- **Protocol**: Indique le protocole encapsulé dans le paquet du Network layer.
+
+#### [ICMP]
+
 
 ### [Transport layer]
 #### [TCP]
+- ****
+
 #### [UDP]
+- **Source port**: Port de l'expéditeur.
+- **Destination port**: Port du destinataire.
 
 ### [Application layer]
 #### [DHCP]
+
 #### [DNS]
+
 #### [HTTP]
+
 #### [FTP]
