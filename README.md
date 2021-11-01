@@ -91,6 +91,7 @@ $ bash RiShark.sh -i RiShark.pcap -n 1 2 5 256 -d
 
 ### [Network layer]
 #### [IPv4]
+- **Identification**: Valeur unique permettant d'identifier les fragments du datagram.
 - **Don't fragment**: Flag permettant de signaler si le datagram doit être fragmenté ou pas.
 - **More fragment**: Flag permettant de signaler si le datagram contient d'autres fragments.
 - **Fragment offset**: Permet de connaître l'offset des fragments afin de pouvoir les réassembler à la reception.
@@ -103,7 +104,12 @@ $ bash RiShark.sh -i RiShark.pcap -n 1 2 5 256 -d
 
 ### [Transport layer]
 #### [TCP]
-- ****
+- **Source port**: Port de l'expéditeur.
+- **Destination port**: Port du destinataire.
+- **Window**: Calculée et définie par le destinataire en fonction de la bande passante et du RTT. (round trip time: temps nécessaire pour qu'un signal soit envoyé et acquitté par le recepteur) La Window nous permet donc de calculer par la suite le nombre de Segments de taille maximale 1460 octets (en-tête exclu) à envoyer par l'expéditeur.
+- **Sequence number**:
+- **Acknowledgment number**
+- **Flag: **
 
 #### [UDP]
 - **Source port**: Port de l'expéditeur.

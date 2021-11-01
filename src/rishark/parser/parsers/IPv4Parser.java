@@ -17,7 +17,8 @@ public class IPv4Parser {
     }
 
     public void parse() {
-        System.out.println("\t\t" + this.parseFlag(((Ipv4) this.networkProtocol).getFlag()));
+        System.out.print("\t\t" + this.parseFlag(((Ipv4) this.networkProtocol).getFlag()));
+        System.out.println("\t\t\t\tIdentification: 0x" + ((Ipv4) this.networkProtocol).getIdentification() + " (" + Utils.hexStringToInt(((Ipv4) this.networkProtocol).getIdentification()) + ")");
         System.out.print("\t\tFragment offset: " + ((Ipv4) this.networkProtocol).getFragmentOffset());
         System.out.println("\t\t\t\t\t\tSource IP Address: " + ((Ipv4) this.networkProtocol).getSrcAddress());
         System.out.print("\t\tProtocol: " + Objects.requireNonNull(Protocol.findProtocol(this.networkProtocol.getIpProtocol())).toString().replaceAll("_"," "));
@@ -30,8 +31,8 @@ public class IPv4Parser {
         int moreFragment = Utils.binaryStringToInt(b.substring(2,3));
 
         String r = "";
-        r += "Don't fragment: " + (dontFragment == 1 ? "Set (1)" : "Not set (0)");
-        r += "\t\t\t\t\tMore fragment: " + (moreFragment == 1 ? "Set (1)" : "Not set (0)");
+        r += "Don't fragment: " + (dontFragment == 1 ? "Set (1)    " : "Not set (0)");
+        r += "\t\t\t\t\tMore fragment: " + (moreFragment == 1 ? "Set (1)    " : "Not set (0)");
         return r;
     }
 }
