@@ -88,6 +88,20 @@ $ bash RiShark.sh -i RiShark.pcap -n 1 2 5 256 -d
 - **Ether type**: Indique le protocole encapsulé dans la frame du Data Link layer.
 
 #### [ARP]
+Étant donné que le protocole ARP permet la résolution d'adresse physique MAC par adresse IP. Nous avons besoin de connaître l'adresse MAC associé à l'adresse IP demandé par la source.
+L'émetteur demande qui possède l'adresse IP X.X.X.X et le destinataire qui vérifie la question répond en lui donnant son adresse MAC. 
+- **Sender MAC Address**: 
+  - Request: L'adresse mac de l'émetteur
+  - Reply: L'adresse mac du destinataire qui répond à l'émetteur pour faire la résolution d'adresse IP/MAC.
+- **Sender IP Address**:
+  - Request: L'adresse IP de l'émetteur
+  - Reply: L'adresse IP du destinataire qui répond à l'émetteur
+- **Target MAC Address**:
+  - Request: L'adresse MAC est initialisé à 0 car on ne connaît pas l'adresse MAC correspondant à l'adresse IP. C'est l'objet de notre question. 
+  - Reply: L'adresse MAC de l'émetteur lors de la réponse.
+- **Target IP Address**:
+  - Request: L'adresse IP demandé par l'émetteur sur le réseau. 
+  - Reply: L'adresse IP de l'émetteur.
 
 ### [Network layer]
 #### [IPv4]
