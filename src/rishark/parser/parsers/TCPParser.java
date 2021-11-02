@@ -33,7 +33,6 @@ public class TCPParser {
         String r = "";
         r += "\t\tUrgent: " + (urg == 1 ? "Set (1)    " : "Not set (0)");
         r += "\t\t\t\t\t\tAcknowledgment: " + (ack == 1 ? "Set (1)    " : "Not set (0)");
-        r += "\t\t\t\tPush: " + (push == 1 ? "Set (1)    " : "Not set (0)");
         r += "\n\t\tReset: " + (reset == 1 ? "Set (1)    " : "Not set (0)");
         r += "\t\t\t\t\t\tSyn: " + (syn == 1 ? "Set (1)    " : "Not set (0)");
         r += "\t\t\t\t\tFin: " + (fin == 1 ? "Set (1)    " : "Not set (0)");

@@ -126,8 +126,13 @@ L'émetteur demande qui possède l'adresse IP X.X.X.X et le destinataire qui vé
 - **Destination port**: Port du destinataire.
 - **Window**: Calculée et définie par le destinataire en fonction de la bande passante et du RTT. (round trip time: temps nécessaire pour qu'un signal soit envoyé et acquitté par le recepteur) La Window nous permet donc de calculer par la suite le nombre de Segments de taille maximale 1460 octets (en-tête exclu) à envoyer par l'expéditeur.
 - **Sequence number**:
-- **Acknowledgment number**
-- **Flag: **
+- **Acknowledgment number**:
+- **Flag**:
+  - **Acknowledgment**: Permet de confirmer la réception de paquets par l'hôte. La valeur du ACK=1 permet de confirmer que la connexion a bien été établie.
+  - **Push**: Ce flag permet de prévenir l'hôte qu'il faut immédiatement envoyer la donnée vers la couche applicative. On peut vérifier s'il y a une attaque PUSH+ACK Flood où le flag PUSH force le serveur récepteur à vider sa pile (buffer) et de retourner une réponse ACK. (DDoS)
+  - **Reset**: Reset permet de terminer une connexion internet et permet de vérifier s'il y a une attaque TCP reset. L'utilisation du flag reset se fait généralement lorsqu'on sent qu'il y a un probleme avec la connexion TCP où on aurait reçu un paquet non attendu.
+  - **Syn**: Premiere étape pour établir une connexion. On peut vérifier s'il y a potentiellement une attaque SYN Flood où on tenterait d'établir plusieurs connexions légitimes d'affilées dans le but de rendre un service non fonctionnel. (DDoS)
+  - **Fin**: Le flag Fin permet de terminer une connexion correctement a la fin d'une conversation.
 
 #### [UDP]
 - **Source port**: Port de l'expéditeur.
