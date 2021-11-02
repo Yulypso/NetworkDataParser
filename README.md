@@ -100,7 +100,11 @@ $ bash RiShark.sh -i RiShark.pcap -n 1 2 5 256 -d
 - **Protocol**: Indique le protocole encapsulé dans le paquet du Network layer.
 
 #### [ICMP]
-
+- **Type & Code**: Permettent généralement de connaître s'il s'agit d'une requête ou d'une réponse mais aussi s'il y a des erreurs.
+- **Identifier**: L'identifiant permet de définir et reconnaître l'émetteur.
+- **Sequence number**: Le numéro de séquence nous permet de savoir s'il manque un paquet lors des échanges entre émetteurs et récepteurs.
+- **Timestamp**: Le timestamp est important car il nous permet de connaître la date et l'heure à laquelle les paquets sont reçus/envoyés.
+- **Data**: Le champ data est affiché car il nous permet de voir s'il y a de l'exfiltration de données si un pattern a été choisi lors de la commande ping.
 
 ### [Transport layer]
 #### [TCP]
