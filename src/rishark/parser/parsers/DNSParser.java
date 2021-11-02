@@ -17,11 +17,7 @@ public class DNSParser {
     }
 
     public void parse() {
-        System.out.print("\t\tTransaction ID:  " + ((Dns) this.applicationProtocol).getTransactionId());
-        System.out.print("\t\t\t\t\t\tNumber of Queries: " + ((Dns) this.applicationProtocol).getNbQuestions());
-        System.out.println("\t\t\t\t\tNumber of Authoritative nameservers: " + ((Dns) this.applicationProtocol).getNbAuthority());
-        System.out.print("\t\tNumber of Answers: " + ((Dns) this.applicationProtocol).getNbAnswers());
-        System.out.println("\t\t\t\t\t\tNumber of Additional records: " + ((Dns) this.applicationProtocol).getNbAdditional());
+        System.out.println("\t\tTransaction ID:  " + ((Dns) this.applicationProtocol).getTransactionId());
 
         if (((Dns) this.applicationProtocol).getNbQuestions() > 0)
             System.out.println("\tQueries: ");

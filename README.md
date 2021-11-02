@@ -79,7 +79,7 @@ $ bash RiShark.sh -i RiShark.pcap -n 1 2 5 256 -d
 - **Total frames**: Nombre de frames inclus dans le fichier pcap.
 
 ### [Frame Header]
-- **Frame length**: Taille de la frame en octets
+- **Frame length**: Taille de la frame en octets.
 - **Timestamp**: Date et heure à laquelle la frame a été envoyé dans le réseau.
 
 ### [Data Link layer]
@@ -91,11 +91,11 @@ $ bash RiShark.sh -i RiShark.pcap -n 1 2 5 256 -d
 Étant donné que le protocole ARP permet la résolution d'adresse physique MAC par adresse IP. Nous avons besoin de connaître l'adresse MAC associé à l'adresse IP demandé par la source.
 L'émetteur demande qui possède l'adresse IP X.X.X.X et le destinataire qui vérifie la question répond en lui donnant son adresse MAC. 
 - **Sender MAC Address**: 
-  - Request: L'adresse mac de l'émetteur
+  - Request: L'adresse mac de l'émetteur.
   - Reply: L'adresse mac du destinataire qui répond à l'émetteur pour faire la résolution d'adresse IP/MAC.
 - **Sender IP Address**:
-  - Request: L'adresse IP de l'émetteur
-  - Reply: L'adresse IP du destinataire qui répond à l'émetteur
+  - Request: L'adresse IP de l'émetteur.
+  - Reply: L'adresse IP du destinataire qui répond à l'émetteur.
 - **Target MAC Address**:
   - Request: L'adresse MAC est initialisé à 0 car on ne connaît pas l'adresse MAC correspondant à l'adresse IP. C'est l'objet de notre question. 
   - Reply: L'adresse MAC de l'émetteur lors de la réponse.
@@ -140,9 +140,33 @@ L'émetteur demande qui possède l'adresse IP X.X.X.X et le destinataire qui vé
 
 ### [Application layer]
 #### [DHCP]
+- **OpCode**: Permet de savoir s'il s'agit d'une requête ou bien d'une réponse.
+- **Transaction ID**: Permet de connaître l'identifiant de la requête et de sa réponse.
+- **Client MAC address**: L'adresse MAC du client.
+- **Client IP address**: L'adresse IP donnée au client.
+- **Server IP address**: L'adresse IP du serveur DHCP.
+- **DHCP message type**: Permet de connaître le type de message tels que Discover, Offer, Request et ACK et de ce fait, de connaître à quelle étape nous nous situons dans l'adressage dynamique d'adresse IP par DHCP. 
+- **IP address Lease time**: Temps accordé à l'utilisation d'une adresse IP par un appareil dans le réseau.
+- **Requested IP address**: L'adresse IP demandée au serveur DHCP.
 
 #### [DNS]
+- **Transaction ID**: Permet de connaître l'identifiant de la requête et de sa réponse.
+- **Queries**: Affiche la liste des questions pour connaître l'adresse ip du nom de domaine demandé.
+- **Answer**: Affiche les réponses avec la résolution des nom de domaines. (avec l'adresse ip associé)
+- **Authoritative Nameserver**: Affiche le nom de domaine racine auquel le nom de domaine appartient. (ICANN)
+- **Additional Records** Affiche les données supplémentaires. (non demandées dans la question) envoyées par le serveur.
 
 #### [HTTP]
+- **Verb**: Verbe HTTP utilisé dans la requête.
+- **Path**: Le chemin de la ressource demandée.
+- **Version**: La version du protocole HTTP utilisé.
+- **Data**: Le contenu de la requête HTTP. (header + body)
+
 
 #### [FTP]
+- **Request**:
+  - **Request command**: Commande utilisé lors de la requête. (USER, PASSV, etc.)
+  - **Request arguments**: Les arguments de la requêtes.
+- **Reply**:
+  - **Response code**: Le code de la réponse vis-à-vis de la requête. (prêt à recevoir un user par exemple)
+  - **Response arguments**: Les arguments de la réponse.
